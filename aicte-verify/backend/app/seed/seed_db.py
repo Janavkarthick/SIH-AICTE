@@ -176,6 +176,7 @@ async def seed_database(db: AsyncSession) -> None:
         category="extension_of_approval",
         academic_year="2025-2026",
         status="under_review",
+        submission_date=date(2025, 4, 10),
         submitted_by=4,  # college1
         assigned_officer=2,  # officer1
         risk_score=28.5,
@@ -189,6 +190,7 @@ async def seed_database(db: AsyncSession) -> None:
         category="increase_of_intake",
         academic_year="2025-2026",
         status="deficient",
+        submission_date=date(2025, 4, 10),
         submitted_by=5,  # college2
         assigned_officer=2,
         risk_score=68.0,

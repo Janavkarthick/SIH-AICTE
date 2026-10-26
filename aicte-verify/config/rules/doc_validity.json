@@ -1,9 +1,11 @@
 {
   "_meta": {
-    "description": "Document validity periods for expiry checking in AICTE-Verify",
+    "description": "Document validity periods and grace window for expiry checking in AICTE-Verify",
     "illustrative": "replace with Approval Process Handbook values",
     "simulated": true
   },
+  "grace_period_days": 30,
+  "grace_period_notes": "Illustrative, configurable: 30-day window permitted where renewal has been applied for, subject to Approval Process Handbook provisions",
   "validity_periods": {
     "fire_safety_certificate": {"validity_years": 1, "label": "Fire Safety Certificate"},
     "noc": {"validity_years": 1, "label": "No Objection Certificate"},

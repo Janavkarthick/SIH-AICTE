@@ -103,6 +103,11 @@ class GraphService:
                         target_node = self.g.nodes.get(target, {})
                         inst_obj = resolve_institution(target_node)
                         connected_inst_edges.append((edge_data.get("relation_id"), target_node, inst_obj))
+                for source, _, edge_data in self.g.in_edges(node_id, data=True):
+                    if edge_data.get("relation_type") in ["employed_at", "employs_faculty"]:
+                        source_node = self.g.nodes.get(source, {})
+                        inst_obj = resolve_institution(source_node)
+                        connected_inst_edges.append((edge_data.get("relation_id"), source_node, inst_obj))
 
                 if len(connected_inst_edges) > 1:
                     # Require unique faculty identifier (PID, PAN hash, Aadhaar hash) - never match solely on common names
@@ -118,22 +123,38 @@ class GraphService:
                             trusts.add(inst.trust_name.strip().lower())
                             cities.add(inst.city.strip().lower())
 
-                    # If all institutions belong to the same sponsoring trust and same campus/city:
-                    if len(trusts) == 1 and len(cities) <= 1:
-                        shared_reason = (
-                            f"SHARED SPONSOR: Faculty '{data.get('name')}' (ID: {faculty_unique_id}) "
-                            f"teaches across sister campuses under common trust '{list(trusts)[0]}'. Permitted."
+                    # Impermissible full-time faculty duplication:
+                    # Sister campuses (same trust) may legitimately share land parcels, but a single person
+                    # CANNOT hold multiple full-time teaching appointments, especially across different cities.
+                    if len(cities) > 1:
+                        conflict_reason = (
+                            f"CRITICAL GHOST FACULTY: Faculty member with Unique ID '{faculty_unique_id}' ({data.get('name')}) "
+                            f"is concurrently claimed as full-time teaching staff across {len(connected_inst_edges)} institutions "
+                            f"in different cities ({', '.join(cities)}). Concurrent full-time teaching appointments across cities "
+                            f"are physically incompatible and prohibited, regardless of common sponsoring trust."
                         )
                         for rel_id, _, _ in connected_inst_edges:
                             if rel_id in relations_db:
-                                relations_db[rel_id].is_flagged = False
-                                relations_db[rel_id].flag_reason = shared_reason
-                    else:
-                        # Unrelated trusts or physically incompatible multi-city employment
+                                relations_db[rel_id].is_flagged = True
+                                relations_db[rel_id].flag_reason = conflict_reason
+                                flagged_count += 1
+                    elif len(trusts) > 1:
                         conflict_reason = (
                             f"CRITICAL GHOST FACULTY: Faculty member with Unique ID '{faculty_unique_id}' ({data.get('name')}) "
                             f"is simultaneously listed as full-time staff across {len(connected_inst_edges)} institutions "
-                            f"with differing trusts/cities ({', '.join(cities) if cities else 'Multiple cities'})."
+                            f"under distinct, unrelated trusts ({', '.join(trusts)})."
+                        )
+                        for rel_id, _, _ in connected_inst_edges:
+                            if rel_id in relations_db:
+                                relations_db[rel_id].is_flagged = True
+                                relations_db[rel_id].flag_reason = conflict_reason
+                                flagged_count += 1
+                    else:
+                        # Same city, same trust: still prohibited for concurrent full-time appointments per APH norms
+                        conflict_reason = (
+                            f"DUPLICATE FACULTY RECORD: Faculty Unique ID '{faculty_unique_id}' ({data.get('name')}) "
+                            f"is claimed full-time by multiple sister colleges under trust '{list(trusts)[0]}'. "
+                            f"Each institution must maintain a dedicated full-time faculty roster."
                         )
                         for rel_id, _, _ in connected_inst_edges:
                             if rel_id in relations_db:

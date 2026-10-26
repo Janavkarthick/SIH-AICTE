@@ -4,7 +4,7 @@
     "simulated": true,
     "neutral_filenames": true,
     "naming_scheme": "DOC_0001.pdf / DOC_XXXX.jpg (no semantic hints in filenames)",
-    "generated_at": "2026-10-27T00:37:34.521202",
+    "generated_at": "2026-10-27T01:22:25.938060",
     "total_documents": 295,
     "total_planted_faults": 160,
     "total_clean_controls": 125
@@ -54,9 +54,9 @@
       "fault_type": "name_mismatch",
       "document": "DOC_0130.pdf",
       "institution_id": "INST005",
-      "description": "Institution name 'Kalam Technical University College' in document mismatches registered 'Kalam Technical University College'.",
+      "description": "Institution name 'Kalam Technical University Polytechnic' in document mismatches registered 'Kalam Technical University College'.",
       "details": {
-        "found": "Kalam Technical University College",
+        "found": "Kalam Technical University Polytechnic",
         "expected": "Kalam Technical University College"
       }
     },
@@ -64,9 +64,9 @@
       "fault_type": "name_mismatch",
       "document": "DOC_0131.pdf",
       "institution_id": "INST006",
-      "description": "Institution name 'Savitribai Phule Polytechnic' in document mismatches registered 'Savitribai Phule Polytechnic'.",
+      "description": "Institution name 'Savitribai Phule Engineering College' in document mismatches registered 'Savitribai Phule Polytechnic'.",
       "details": {
-        "found": "Savitribai Phule Polytechnic",
+        "found": "Savitribai Phule Engineering College",
         "expected": "Savitribai Phule Polytechnic"
       }
     },
@@ -84,9 +84,9 @@
       "fault_type": "name_mismatch",
       "document": "DOC_0133.pdf",
       "institution_id": "INST008",
-      "description": "Institution name 'Malaviya Polytechnic Global Academy' in document mismatches registered 'Malaviya Engineering Institute'.",
+      "description": "Institution name 'Malaviya Polytechnic Institute' in document mismatches registered 'Malaviya Engineering Institute'.",
       "details": {
-        "found": "Malaviya Polytechnic Global Academy",
+        "found": "Malaviya Polytechnic Institute",
         "expected": "Malaviya Engineering Institute"
       }
     },
@@ -94,9 +94,9 @@
       "fault_type": "name_mismatch",
       "document": "DOC_0134.pdf",
       "institution_id": "INST009",
-      "description": "Institution name 'Visvesvaraya Technical Campus' in document mismatches registered 'Visvesvaraya Technical Campus'.",
+      "description": "Institution name 'Visvesvaraya Technical Global Institute' in document mismatches registered 'Visvesvaraya Technical Campus'.",
       "details": {
-        "found": "Visvesvaraya Technical Campus",
+        "found": "Visvesvaraya Technical Global Institute",
         "expected": "Visvesvaraya Technical Campus"
       }
     },

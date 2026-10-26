@@ -1,7 +1,7 @@
 """Application lifecycle management endpoints with role-based access filtering."""
 
 import json
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import desc, select
@@ -147,6 +147,7 @@ async def create_application(
         category=payload.category,
         academic_year=payload.academic_year,
         status="draft",
+        submission_date=payload.submission_date or date.today(),
         submitted_by=current_user.id,
         risk_score=0.0,
         risk_level="Low",

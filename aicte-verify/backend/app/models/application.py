@@ -1,8 +1,8 @@
 """Application models for AICTE approval workflows and versioned change history."""
 
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from typing import List, Optional
-from sqlalchemy import DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import Date, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
 
@@ -25,6 +25,7 @@ class Application(Base):
         default="draft",
         index=True
     )  # draft, submitted, under_review, verified, deficient, approved, rejected
+    submission_date: Mapped[Optional[date]] = mapped_column(Date, nullable=True)
     submitted_by: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     assigned_officer: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     

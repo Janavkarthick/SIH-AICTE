@@ -37,6 +37,8 @@ def normalize_institution_name(name: str) -> str:
         r"\bpoly\b": "polytechnic",
         r"\bgovt\b": "government",
         r"\buniv\b": "university",
+        r"\bacad\b": "academy",
+        r"\bmgmt\b": "management",
     }
     for pattern, repl in abbreviations.items():
         text = re.sub(pattern, repl, text)
@@ -68,13 +70,36 @@ def are_field_values_equivalent(field_name: str, val1: str, val2: str) -> bool:
         n2 = normalize_institution_name(val2)
         if n1 == n2:
             return True
+
+        # Mutually exclusive institutional types cannot match
+        incompatible_pairs = [
+            ("polytechnic", "engineering"),
+            ("global academy", "institute"),
+            ("polytechnic", "institute"),
+            ("university", "polytechnic"),
+        ]
+        for type_a, type_b in incompatible_pairs:
+            if (type_a in n1 and type_b in n2) or (type_b in n1 and type_a in n2):
+                return False
+
+        # Filter stopwords for token matching
+        stopwords = {"of", "the", "and", "in", "at", "for"}
+        t1 = set(w for w in n1.split() if w not in stopwords)
+        t2 = set(w for w in n2.split() if w not in stopwords)
+        if t1 == t2:
+            return True
+
+        # Jaccard similarity on core tokens
+        if t1 and t2:
+            jaccard = len(t1.intersection(t2)) / len(t1.union(t2))
+            if jaccard >= 0.85:
+                return True
+
         ratio = difflib.SequenceMatcher(None, n1, n2).ratio()
-        if ratio >= 0.85:
+        if ratio >= 0.90:
             return True
-        # Check token set containment
-        s1, s2 = set(n1.split()), set(n2.split())
-        if len(s1.intersection(s2)) >= min(len(s1), len(s2)) * 0.8:
-            return True
+
+        return False
 
     if any(k in field_name.lower() for k in ["survey", "khasra", "plot", "land"]):
         s1 = normalize_survey_number(val1)
@@ -206,8 +231,13 @@ class ValidationService:
                 )
 
         # B. Check validity and date logic on uploaded documents
-        submission_date = application.created_at.date() if application.created_at else date.today()
-        GRACE_PERIOD_DAYS = 30
+        # Rule #2: Use explicit application.submission_date field, NEVER created_at or DB insert time
+        submission_date = getattr(application, "submission_date", None)
+        if not submission_date:
+            submission_date = date.today()
+
+        validity_cfg = self._doc_validity or {}
+        grace_period_days = validity_cfg.get("grace_period_days", 30)
 
         for doc in documents:
             dtype = doc.document_type
@@ -253,7 +283,7 @@ class ValidationService:
             if expiry_date:
                 if expiry_date < submission_date:
                     days_past = (submission_date - expiry_date).days
-                    if days_past <= GRACE_PERIOD_DAYS:
+                    if days_past <= grace_period_days:
                         new_flags.append(
                             Flag(
                                 application_id=application.id,
@@ -261,9 +291,9 @@ class ValidationService:
                                 flag_type="validation",
                                 severity="medium",
                                 code="VAL-DOC-GRACE-PERIOD",
-                                title="Statutory Document Renewal in Progress (30-Day Grace Period)",
-                                reason=f"Document expired on {expiry_date} ({days_past} days prior to submission date {submission_date}). Falls within 30-day grace period; requires proof of renewal application.",
-                                evidence_json=json.dumps({"expiry_date": str(expiry_date), "submission_date": str(submission_date), "days_past": days_past}),
+                                title=f"Statutory Document Renewal in Progress ({grace_period_days}-Day Grace Period)",
+                                reason=f"Document expired on {expiry_date} ({days_past} days prior to application submission date {submission_date}). Falls within illustrative {grace_period_days}-day grace window (configurable); requires proof of renewal application.",
+                                evidence_json=json.dumps({"expiry_date": str(expiry_date), "submission_date": str(submission_date), "days_past": days_past, "grace_period_days": grace_period_days}),
                                 rule_id="DOC-GRACE-CHECK",
                                 check_name="Validity Window Grace Check",
                             )
@@ -278,8 +308,8 @@ class ValidationService:
                                 severity="high",
                                 code="VAL-DOC-EXPIRED",
                                 title="Statutory Document Expired Prior to Submission",
-                                reason=f"The document expired on {expiry_date} prior to submission date {submission_date} (exceeds 30-day grace window).",
-                                evidence_json=json.dumps({"expiry_date": str(expiry_date), "submission_date": str(submission_date)}),
+                                reason=f"The document expired on {expiry_date} prior to application submission date {submission_date} (exceeds illustrative {grace_period_days}-day grace window; configurable).",
+                                evidence_json=json.dumps({"expiry_date": str(expiry_date), "submission_date": str(submission_date), "grace_period_days": grace_period_days}),
                                 rule_id="DOC-EXPIRY-CHECK",
                                 check_name="Validity Window Check",
                             )

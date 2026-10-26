@@ -40,3 +40,12 @@ desktop.ini
 **/.env.*
 !.env.example
 !**/.env.example
+*.pem
+*.key
+*.token
+
+# Uploaded documents and synthetic upload dirs
+**/data/uploads/
+**/data/uploads/**
+**/uploads/
+**/uploads/**

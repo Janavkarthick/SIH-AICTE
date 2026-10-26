@@ -127,7 +127,7 @@ export const ApplicationsListPage: React.FC = () => {
             <option value="verified">Verified</option>
             <option value="deficiency_issued">Deficiency Issued</option>
             <option value="approved">Approved</option>
-            <option value="rejected">Rejected</option>
+            <option value="rejected">Recommend Rejection</option>
           </select>
 
           {/* Risk Level Filter */}

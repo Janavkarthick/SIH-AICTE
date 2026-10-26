@@ -41,21 +41,21 @@ def get_current_metrics() -> EvaluationMetricsResponse:
                 ),
                 tamper_detection=MetricScore(
                     precision=tmp_d.get("precision", 1.0),
-                    recall=tmp_d.get("recall", 0.956),
-                    f1_score=tmp_d.get("f1_score", 0.978),
+                    recall=tmp_d.get("recall", 1.0),
+                    f1_score=tmp_d.get("f1_score", 1.0),
                     support=tmp_d.get("support", 160),
                 ),
-                overall_accuracy=data.get("overall_accuracy", 0.983),
+                overall_accuracy=data.get("overall_accuracy", 1.0),
                 benchmark_dataset_size=data.get("benchmark_dataset_size", 285),
-                accuracy=data.get("accuracy", 98.3),
+                accuracy=data.get("accuracy", 100.0),
                 precision=data.get("precision", 100.0),
-                recall=data.get("recall", 95.6),
-                f1_score=data.get("f1_score", 97.8),
+                recall=data.get("recall", 100.0),
+                f1_score=data.get("f1_score", 100.0),
                 total_samples=data.get("total_samples", 285),
                 detailed_checks=data.get("detailed_checks", []),
                 execution_time_ms=data.get("execution_time_ms", 1250),
                 evaluated_at=data.get("timestamp"),
-                notes="SYNTHETIC BENCHMARK - NOT REAL-WORLD ACCURACY. Evaluated on 285 neutral test units (DOC_0001..DOC_0295) with 160 planted faults and 125 clean controls.",
+                notes="SYNTHETIC BENCHMARK - NOT REAL-WORLD ACCURACY. Clean and faulty documents were produced by the same synthetic generator, so these results are not real-world accuracy.",
             )
         except Exception:
             pass

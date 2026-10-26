@@ -4,6 +4,7 @@
 
 > ⚠️ **Decision-support only. Final decisions rest with authorised AICTE officials.**
 > 
+> **DEMO DATA ONLY:** All passwords, seed entities, and cryptographic fixtures are simulated for hackathon evaluation.
 > All verification services, institutions, and data in this prototype are **SIMULATED**. This is a hackathon prototype (SIH 2026, PS SIH26261).
 
 ## Quick Start

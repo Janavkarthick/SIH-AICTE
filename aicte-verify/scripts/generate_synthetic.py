@@ -629,7 +629,19 @@ def generate_benchmark_suite():
     for v in range(10):
         inst = INSTITUTIONS[v]
         fname, fpath = get_next_neutral_filename(is_photo=False)
-        mismatched_name = inst["name"].replace("Engineering", "Polytechnic").replace("Institute", "Global Academy")
+        orig = inst["name"]
+        if "Engineering" in orig:
+            mismatched_name = orig.replace("Engineering", "Polytechnic")
+        elif "Institute" in orig:
+            mismatched_name = orig.replace("Institute", "Global Academy")
+        elif "College" in orig:
+            mismatched_name = orig.replace("College", "Polytechnic")
+        elif "Polytechnic" in orig:
+            mismatched_name = orig.replace("Polytechnic", "Engineering College")
+        elif "Campus" in orig:
+            mismatched_name = orig.replace("Campus", "Global Institute")
+        else:
+            mismatched_name = orig + " Alternative Academy"
         lines = [
             "AFFIDAVIT ON STAMP PAPER",
             "=" * 50,

@@ -33,11 +33,16 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className = ''
       break;
     case 'rejected':
       style = 'bg-rose-50 text-rose-800 border-rose-300';
+      formattedText = 'Recommend rejection';
       break;
 
     // Document / verification statuses
     case 'processing':
       style = 'bg-purple-50 text-purple-700 border-purple-300 animate-pulse';
+      break;
+    case 'not_run':
+      style = 'bg-slate-100 text-slate-600 border-slate-300 italic';
+      formattedText = 'Not Run';
       break;
     case 'flagged':
       style = 'bg-amber-100 text-amber-900 border-amber-400 font-semibold';

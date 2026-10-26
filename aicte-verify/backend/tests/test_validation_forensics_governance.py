@@ -178,4 +178,164 @@ def test_deficiency_notice_draft_clauses():
     assert "*** DRAFT DEFICIENCY NOTICE" in res.content
     assert "[Clause reference - verify against Approval Process Handbook]" in res.content
     assert "PENDING REGIONAL OFFICER SCRUTINY" in res.content
+    assert "Final decision rests with the competent authority" in res.content
     assert res.status == "draft"
+
+
+@pytest.mark.asyncio
+async def test_same_trust_faculty_duplication_across_cities_flagged(in_memory_db):
+    """Test (a): Faculty member claimed full-time at two institutions in different cities
+
+    under the SAME trust is strictly flagged as CRITICAL GHOST FACULTY.
+    Sister campuses may share land (SHARED SPONSOR), but NOT full-time faculty.
+    """
+    # 1. Two institutions under the SAME trust in DIFFERENT cities
+    inst1 = Institution(
+        id=10,
+        name="Shree Ram College of Engineering",
+        code="1-901",
+        city="Pune",
+        state="Maharashtra",
+        region="Western",
+        address="100 Station Road, Pune",
+        trust_name="Shree Ram Educational Trust",
+        trust_registration_number="TR-SHREE-01",
+    )
+    inst2 = Institution(
+        id=20,
+        name="Shree Ram Institute of Technology",
+        code="1-902",
+        city="Nagpur",
+        state="Maharashtra",
+        region="Western",
+        address="45 Hingna Road, Nagpur",
+        trust_name="Shree Ram Educational Trust",
+        trust_registration_number="TR-SHREE-01",
+    )
+    in_memory_db.add_all([inst1, inst2])
+
+    # 2. Graph entities
+    e_inst1 = GraphEntity(id=10, entity_type="institution", entity_id="1-901", name="Shree Ram College", metadata_json="{}")
+    e_inst2 = GraphEntity(id=20, entity_type="institution", entity_id="1-902", name="Shree Ram Institute", metadata_json="{}")
+    e_faculty = GraphEntity(id=30, entity_type="faculty", entity_id="FAC_RAM_01", name="Dr. A. K. Sharma", metadata_json="{}")
+    e_land = GraphEntity(id=40, entity_type="land", entity_id="77/A", name="Survey 77/A", metadata_json="{}")
+    in_memory_db.add_all([e_inst1, e_inst2, e_faculty, e_land])
+
+    # 3. Relations: Both claim the same faculty full-time, and both share a land parcel
+    r_fac1 = GraphRelation(id=101, source_entity_id=30, target_entity_id=10, relation_type="employed_at", is_flagged=False)
+    r_fac2 = GraphRelation(id=102, source_entity_id=30, target_entity_id=20, relation_type="employed_at", is_flagged=False)
+    r_land1 = GraphRelation(id=103, source_entity_id=10, target_entity_id=40, relation_type="owns_land", is_flagged=False)
+    r_land2 = GraphRelation(id=104, source_entity_id=20, target_entity_id=40, relation_type="owns_land", is_flagged=False)
+    in_memory_db.add_all([r_fac1, r_fac2, r_land1, r_land2])
+    await in_memory_db.commit()
+
+    # 4. Run Graph Collusion Detection
+    graph_service = GraphService()
+    await graph_service.detect_anomalies_and_flag(in_memory_db)
+
+    # 5. Fetch relations from DB
+    res_rels = (await in_memory_db.execute(select(GraphRelation))).scalars().all()
+    rel_map = {r.id: r for r in res_rels}
+
+    # Faculty duplication across cities MUST be flagged CRITICAL GHOST FACULTY
+    assert rel_map[101].is_flagged is True
+    assert "CRITICAL GHOST FACULTY" in rel_map[101].flag_reason
+    assert "different cities" in rel_map[101].flag_reason.lower()
+
+    # Land sharing under the same trust MUST be marked legitimate SHARED SPONSOR (not flagged)
+    assert rel_map[103].is_flagged is False
+    assert "SHARED SPONSOR" in rel_map[103].flag_reason
+
+
+@pytest.mark.asyncio
+async def test_submission_date_used_never_created_at_for_expiry(in_memory_db):
+    """Test (b): Expiry checking strictly uses application.submission_date,
+
+    never created_at or DB insert timestamp.
+    """
+    from datetime import datetime, timezone
+    from app.services.validate.service import ValidationService
+    from app.models.application import Application
+    from app.models.document import Document, ExtractedData
+
+    # Inst
+    inst = Institution(
+        id=50, name="Apex Engg", code="1-501", city="Chennai",
+        state="TN", region="Southern", address="OMR",
+        trust_name="Apex Trust", trust_registration_number="TR-50",
+    )
+    in_memory_db.add(inst)
+
+    # Application where created_at is 2025-01-01 (DB insert time),
+    # but actual submission_date is 2025-04-10
+    app = Application(
+        id=50,
+        institution_id=50,
+        category="extension_of_approval",
+        academic_year="2025-2026",
+        status="under_review",
+        submission_date=date(2025, 4, 10),
+        created_at=datetime(2025, 1, 1, 10, 0, tzinfo=timezone.utc),
+    )
+    in_memory_db.add(app)
+
+    # Document expiring on 2025-02-15
+    # Relative to created_at (2025-01-01): it would be VALID (future).
+    # Relative to submission_date (2025-04-10): it is EXPIRED (54 days past, exceeds 30-day grace).
+    doc = Document(
+        id=501,
+        application_id=50,
+        institution_id=50,
+        document_type="fire_safety_certificate",
+        filename="fire_cert.pdf",
+        original_filename="fire_cert.pdf",
+        file_path="/dummy/fire_cert.pdf",
+        file_hash_sha256="dummyhash123",
+        status="verified",
+    )
+    ext_issue = ExtractedData(
+        id=501,
+        document_id=501,
+        field_name="issue_date",
+        field_value="2024-02-15",
+    )
+    ext_expiry = ExtractedData(
+        id=502,
+        document_id=501,
+        field_name="expiry_date",
+        field_value="2025-02-15",
+    )
+    in_memory_db.add_all([doc, ext_issue, ext_expiry])
+    await in_memory_db.commit()
+
+    val_service = ValidationService()
+    report = await val_service.validate_application(in_memory_db, application_id=50, persist_flags=False)
+
+    # Must find VAL-DOC-EXPIRED flag
+    expiry_flags = [f for f in report.flags if f.code == "VAL-DOC-EXPIRED"]
+    assert len(expiry_flags) == 1, "Document expiring on 2025-02-15 must be flagged expired against submission_date 2025-04-10"
+    assert "2025-04-10" in expiry_flags[0].reason
+    assert "submission date 2025-04-10" in expiry_flags[0].reason
+
+
+def test_font_check_returns_not_run_when_pymupdf_missing(tmp_path, monkeypatch):
+    """Test (c): When PyMuPDF is unavailable, font consistency check reports
+
+    status='not_run', passed=False (never passed=True), with clear reason.
+    """
+    import app.services.forensics.service as fmod
+    monkeypatch.setattr(fmod, "HAS_FITZ", False)
+    monkeypatch.setattr(fmod, "fitz", None)
+
+    forensics = ForensicsService()
+    test_pdf = tmp_path / "sample.pdf"
+    create_test_pdf(test_pdf, producer="Sample PDF Producer")
+
+    findings = forensics.check_font_consistency(str(test_pdf))
+    assert len(findings) == 1
+    finding = findings[0]
+
+    assert finding.status == "not_run"
+    assert finding.passed is False, "Must NEVER report passed=True when check was not run"
+    assert "PyMuPDF library unavailable" in finding.reason
+

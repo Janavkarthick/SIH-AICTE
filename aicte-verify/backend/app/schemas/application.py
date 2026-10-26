@@ -1,6 +1,6 @@
 """Pydantic schemas for applications, validation reports, and risk breakdown."""
 
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, ConfigDict, Field
 from app.schemas.document import DocumentResponse
@@ -17,6 +17,7 @@ class ApplicationBase(BaseModel):
     academic_year: str = Field("2025-2026", max_length=20)
     intake_applied: int = Field(0, ge=0)
     current_intake: int = Field(0, ge=0)
+    submission_date: Optional[date] = Field(None, description="Official statutory application submission date (not DB insert time)")
 
 
 class ApplicationCreate(ApplicationBase):

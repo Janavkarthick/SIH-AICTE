@@ -293,7 +293,7 @@ export interface EvaluationCheckMetric {
   recall: number;
   f1: number;
   sample_count: number;
-  status: 'pass' | 'fail';
+  status: 'pass' | 'fail' | 'PASS' | 'NOT RUN' | 'REVIEW' | string;
 }
 
 export interface EvaluationResult {

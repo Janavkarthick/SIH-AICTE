@@ -61,7 +61,7 @@ Special Scrutiny Notes:
 
 The institution is hereby requested to provide clarification, upload verified replacement documents, or submit a formal representation on the AICTE Portal within {{ deadline_days }} days from the date of formal dispatch of this notice (on or before {{ deadline_date }}).
 
-NOTE: This communication is a draft prepared for Expert Scrutiny Committee review. Formal action is subject to Competent Authority endorsement.
+NOTE: This communication is a draft prepared for Expert Scrutiny Committee review. Final decision rests with the competent authority.
 
 Regional Officer
 Approval Process Bureau
@@ -71,7 +71,7 @@ All India Council for Technical Education
 TAMIL_TEMPLATE = """*** வரைவு குறைபாடு அறிவிப்பு - மண்டல அதிகாரி ஒப்புதலுக்கு உட்பட்டது ***
 
 அகில இந்திய தொழில்நுட்பக் கல்விக் குழு (AICTE)
-நெல்சன் மண்டேலா மார்க், வசந்த் குஞ்ச், புது தில்லி-110070
+Nelson Mandela Marg, Vasant Kunj, New Delhi-110070
 
 குறிப்பு எண்: AICTE/APB/DEF/{{ application.academic_year }}/{{ application.id }}
 நாள்: {{ today }}
@@ -97,6 +97,8 @@ TAMIL_TEMPLATE = """*** வரைவு குறைபாடு அறிவி
 {% endfor %}
 
 மேற்கண்ட குறைபாடுகளை {{ deadline_days }} நாட்களுக்குள் (கடைசி நாள்: {{ deadline_date }}) சரிசெய்து இணையதளத்தில் பதிவேற்றுமாறு அறிவுறுத்தப்படுகிறீர்கள்.
+
+குறிப்பு: இத்தொடர்பு வரைவு மட்டுமே. இறுதி முடிவு தகுதிவாய்ந்த அதிகாரியின் முடிவுக்கு உட்பட்டது. Final decision rests with the competent authority.
 
 உரிய அதிகாரி,
 அகில இந்திய தொழில்நுட்பக் கல்விக் குழு
@@ -132,7 +134,7 @@ HINDI_TEMPLATE = """*** प्रारूप कमी सूचना - क्
 
 अतः आपको निर्देशित किया जाता है कि {{ deadline_days }} दिनों के भीतर (अंतिम तिथि: {{ deadline_date }}) तक इन कमियों का निवारण प्रस्तुत करें।
 
-नोट: यह संचार क्षेत्रीय जांच समिति के मूल्यांकन हेतु एक प्रारूप है।
+नोट: यह संचार क्षेत्रीय जांच समिति के मूल्यांकन हेतु एक प्रारूप है। अंतिम निर्णय सक्षम प्राधिकारी के अधीन है। Final decision rests with the competent authority.
 
 सक्षम प्राधिकारी के आदेश से,
 क्षेत्रीय अधिकारी, AICTE

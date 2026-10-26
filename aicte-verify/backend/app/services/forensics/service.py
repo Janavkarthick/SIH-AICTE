@@ -62,7 +62,7 @@ class ForensicsService:
             findings.append(
                 ForensicsFinding(
                     check="PDF Metadata Examination",
-                    passed=True,
+                    passed=False,
                     status="not_run",
                     reason="Not a PDF document (image file format)",
                     details="Metadata check skipped for non-PDF image asset.",
@@ -214,14 +214,14 @@ class ForensicsService:
         return findings
 
     def check_font_consistency(self, file_path: str) -> List[ForensicsFinding]:
-        """Detect mixed font families and abrupt style switches in the same text zones."""
+        """Detect intra-line mixed font families and abrupt style switches in the same text line at identical size."""
         findings: List[ForensicsFinding] = []
         path = Path(file_path)
         if path.suffix.lower() != ".pdf":
             findings.append(
                 ForensicsFinding(
                     check="Font Consistency Zone Analysis",
-                    passed=True,
+                    passed=False,
                     status="not_run",
                     reason="Not a PDF document (raster image asset)",
                     details="Font span analysis applies exclusively to vector PDF documents with embedded font dictionaries.",
@@ -232,59 +232,13 @@ class ForensicsService:
             return findings
 
         if not HAS_FITZ or not fitz:
-            # Fallback: inspect font resources using pypdf
-            try:
-                reader = pypdf.PdfReader(file_path)
-                distinct_families = set()
-                for page in reader.pages:
-                    res = page.get("/Resources", {})
-                    if hasattr(res, "get"):
-                        font_dict = res.get("/Font", {})
-                        if hasattr(font_dict, "values"):
-                            for font_obj in font_dict.values():
-                                try:
-                                    resolved = font_obj.get_object() if hasattr(font_obj, "get_object") else font_obj
-                                    base_font = str(resolved.get("/BaseFont", ""))
-                                    clean_name = base_font.replace("/", "").split("+")[-1].split("-")[0]
-                                    if clean_name:
-                                        distinct_families.add(clean_name)
-                                except Exception:
-                                    pass
-                if len(distinct_families) > 2 or ("Courier" in distinct_families and "Helvetica" in distinct_families):
-                    findings.append(
-                        ForensicsFinding(
-                            check="Font Consistency Zone Analysis",
-                            passed=False,
-                            status="flagged",
-                            details=f"Detected discordant font families in document resource stream: {', '.join(sorted(distinct_families))} (pypdf typography inspection fallback).",
-                            severity="medium",
-                            confidence="medium",
-                            indicator=self.HUMAN_VERIFICATION_TAG,
-                        )
-                    )
-                    return findings
-                elif distinct_families:
-                    findings.append(
-                        ForensicsFinding(
-                            check="Font Consistency Zone Analysis",
-                            passed=True,
-                            status="passed",
-                            details=f"Document typography consistent: single dominant font family ({', '.join(sorted(distinct_families))}).",
-                            severity="info",
-                            indicator=self.HUMAN_VERIFICATION_TAG,
-                        )
-                    )
-                    return findings
-            except Exception:
-                pass
-
             findings.append(
                 ForensicsFinding(
                     check="Font Consistency Zone Analysis",
-                    passed=True,
+                    passed=False,
                     status="not_run",
-                    reason="PyMuPDF library unavailable in current environment (pypdf text fallback active)",
-                    details="Detailed glyph span typography inspection skipped; prerequisite library PyMuPDF not loaded.",
+                    reason="PyMuPDF library unavailable in current environment",
+                    details="Detailed intra-line glyph span typography inspection skipped; prerequisite library PyMuPDF (fitz) is not installed.",
                     severity="info",
                     indicator=self.HUMAN_VERIFICATION_TAG,
                 )
@@ -300,10 +254,19 @@ class ForensicsService:
                     if "lines" in block:
                         for line in block["lines"]:
                             spans = line.get("spans", [])
-                            if len(spans) > 1:
-                                fonts_in_line = set(s.get("font", "").split("+")[-1] for s in spans)
-                                if len(fonts_in_line) > 1:
-                                    suspicious_lines += 1
+                            text_spans = [s for s in spans if s.get("text", "").strip()]
+                            if len(text_spans) > 1:
+                                # Intra-line splice: font family change within the same line at the same size
+                                size_groups: Dict[float, set] = {}
+                                for s in text_spans:
+                                    sz = round(float(s.get("size", 0.0)), 1)
+                                    font_name = str(s.get("font", "")).split("+")[-1].split("-")[0].lower()
+                                    if font_name:
+                                        size_groups.setdefault(sz, set()).add(font_name)
+                                for sz, fonts in size_groups.items():
+                                    if len(fonts) > 1:
+                                        suspicious_lines += 1
+                                        break
             doc.close()
 
             if suspicious_lines >= 3:
@@ -312,9 +275,10 @@ class ForensicsService:
                         check="Font Consistency Zone Analysis",
                         passed=False,
                         status="flagged",
-                        details=f"Detected {suspicious_lines} lines with abruptly spliced font families in single text spans.",
-                        severity="medium",
-                        confidence="medium",
+                        reason=f"Detected {suspicious_lines} lines with discordant font families within the same line at identical font size.",
+                        details=f"Detected {suspicious_lines} text lines with spliced font families at matching font size. Low-weight forensic signal; requires corroboration with OCR or visual inspection.",
+                        severity="low",
+                        confidence="low",
                         indicator=self.HUMAN_VERIFICATION_TAG,
                     )
                 )
@@ -324,7 +288,7 @@ class ForensicsService:
                         check="Font Consistency Zone Analysis",
                         passed=True,
                         status="passed",
-                        details="Document typographic layout and font families are consistent across spans.",
+                        details="Document typographic layout and intra-line font families are consistent across spans.",
                         severity="info",
                         indicator=self.HUMAN_VERIFICATION_TAG,
                     )
@@ -334,10 +298,10 @@ class ForensicsService:
             findings.append(
                 ForensicsFinding(
                     check="Font Consistency Zone Analysis",
-                    passed=True,
+                    passed=False,
                     status="not_run",
                     reason=f"Typography inspection error: {str(e)}",
-                    details=f"Typography examination notice: {str(e)}",
+                    details=f"Typography examination skipped due to error: {str(e)}",
                     severity="info",
                     indicator=self.HUMAN_VERIFICATION_TAG,
                 )
@@ -388,7 +352,7 @@ class ForensicsService:
             if img is None:
                 return ForensicsFinding(
                     check="Copy-Move Cloned Region Detection",
-                    passed=True,
+                    passed=False,
                     status="not_run",
                     reason="Image could not be decoded for keypoint analysis",
                     details="Copy-move inspection skipped; image unreadable.",
@@ -461,7 +425,7 @@ class ForensicsService:
         except Exception as e:
             return ForensicsFinding(
                 check="Copy-Move Cloned Region Detection",
-                passed=True,
+                passed=False,
                 status="not_run",
                 reason=f"Copy-move evaluation skipped: {str(e)}",
                 details=f"Copy-move evaluation error: {str(e)}",
@@ -483,7 +447,7 @@ class ForensicsService:
             findings.append(
                 ForensicsFinding(
                     check="Cryptographic Digital Signature Validation",
-                    passed=True,
+                    passed=False,
                     status="not_run",
                     reason="Not a PDF document (raster image asset)",
                     details="Digital signature check skipped for non-PDF image asset.",
@@ -675,7 +639,7 @@ class ForensicsService:
                 img_checks.append(
                     ForensicsFinding(
                         check="Image Forensics Examination",
-                        passed=True,
+                        passed=False,
                         status="not_run",
                         reason=f"Processing exception: {str(e)}",
                         details=f"Notice: {str(e)}",
@@ -687,7 +651,7 @@ class ForensicsService:
             img_checks.append(
                 ForensicsFinding(
                     check="Error Level Analysis (ELA) Heatmap",
-                    passed=True,
+                    passed=False,
                     status="not_run",
                     reason="Rendered raster page image unavailable for pixel-level ELA",
                     details="Error Level Analysis visual aid skipped; raster page image asset not generated.",
@@ -698,7 +662,7 @@ class ForensicsService:
             img_checks.append(
                 ForensicsFinding(
                     check="Copy-Move Cloned Region Detection",
-                    passed=True,
+                    passed=False,
                     status="not_run",
                     reason="Rendered raster page image unavailable for ORB keypoint analysis",
                     details="Copy-move keypoint inspection skipped.",

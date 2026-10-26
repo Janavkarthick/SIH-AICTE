@@ -76,6 +76,20 @@ export const EvaluationPage: React.FC = () => {
         </div>
       </div>
 
+      {/* Mandatory Synthetic Evaluation Methodology Banner */}
+      <div className="p-4 bg-amber-50 border-l-4 border-amber-500 rounded-r-xl text-xs text-amber-950 shadow-sm space-y-1">
+        <p className="font-bold">Synthetic Benchmark Methodology — Not Real-World Accuracy</p>
+        <p className="text-amber-900 leading-relaxed">
+          Clean and faulty documents were produced by the same synthetic generator, so these results are not real-world accuracy.
+          All tests use neutral filenames (<code>DOC_0001.pdf</code>..<code>DOC_0295.jpg</code>) with zero hints.
+        </p>
+        <div className="pt-1 text-[11px] text-amber-800 flex flex-wrap gap-4 font-mono">
+          <span>• Host: Windows 11 / Python 3.14.6</span>
+          <span>• PyMuPDF Native: Not Available (reports <code>not_run</code>)</span>
+          <span>• Docker Production: Linux Debian 12 / PyMuPDF 1.24.10</span>
+        </div>
+      </div>
+
       {/* Dataset & Overall KPI Strip */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
@@ -148,13 +162,29 @@ export const EvaluationPage: React.FC = () => {
                 <tr key={idx} className="hover:bg-slate-50 transition">
                   <td className="py-3.5 px-4 font-sans font-bold text-slate-900">{check.check_name}</td>
                   <td className="py-3.5 px-4 text-slate-600">{check.sample_count} Docs</td>
-                  <td className="py-3.5 px-4 font-semibold text-blue-700">{check.precision.toFixed(1)}%</td>
-                  <td className="py-3.5 px-4 font-semibold text-indigo-700">{check.recall.toFixed(1)}%</td>
-                  <td className="py-3.5 px-4 font-bold text-slate-900">{check.f1.toFixed(1)}%</td>
+                  <td className="py-3.5 px-4 font-semibold text-blue-700">
+                    {check.status === 'NOT RUN' ? 'N/A' : `${check.precision.toFixed(1)}%`}
+                  </td>
+                  <td className="py-3.5 px-4 font-semibold text-indigo-700">
+                    {check.status === 'NOT RUN' ? 'N/A' : `${check.recall.toFixed(1)}%`}
+                  </td>
+                  <td className="py-3.5 px-4 font-bold text-slate-900">
+                    {check.status === 'NOT RUN' ? 'N/A' : `${check.f1.toFixed(1)}%`}
+                  </td>
                   <td className="py-3.5 px-4 text-right font-sans">
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                      ✓ PASS
-                    </span>
+                    {check.status === 'NOT RUN' ? (
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-300">
+                        ○ NOT RUN
+                      </span>
+                    ) : check.status === 'REVIEW' ? (
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">
+                        ⚠ REVIEW
+                      </span>
+                    ) : (
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                        ✓ PASS
+                      </span>
+                    )}
                   </td>
                 </tr>
               ))}

@@ -248,7 +248,7 @@ export const ApplicationDetailPage: React.FC = () => {
                 onClick={() => handleOpenStatusModal('rejected')}
                 className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-lg shadow-sm"
               >
-                Reject
+                Recommend Rejection
               </button>
             </div>
           )}
@@ -419,9 +419,14 @@ export const ApplicationDetailPage: React.FC = () => {
           {application.risk_breakdown && (
             <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 className="text-base font-bold text-slate-900">
-                  Composite Risk Index Assessment
-                </h3>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900">
+                    Composite Risk Index Assessment
+                  </h3>
+                  <p className="text-[11px] text-slate-500 mt-0.5">
+                    Score out of 100 with weighted component breakdown. Thresholds and weights are illustrative and configurable per AICTE Approval Process Handbook norms.
+                  </p>
+                </div>
                 <RiskBadge level={application.risk_level} score={application.risk_score} />
               </div>
 
@@ -894,9 +899,13 @@ export const ApplicationDetailPage: React.FC = () => {
       {/* Status Update Confirmation Modal */}
       <ConfirmModal
         isOpen={statusModalOpen}
-        title={`Confirm Application Status: ${targetStatus.replace('_', ' ').toUpperCase()}`}
-        message={`You are modifying the statutory status of application ${application.application_number} to "${targetStatus.replace('_', ' ').toUpperCase()}". This official determination affects institutional affiliation eligibility.`}
-        confirmLabel="Execute Status Change"
+        title={targetStatus === 'rejected' ? 'Recommend Application Rejection' : `Confirm Application Status: ${targetStatus.replace('_', ' ').toUpperCase()}`}
+        message={
+          targetStatus === 'rejected'
+            ? `You are submitting an officer recommendation to reject application ${application.application_number}. Final decision rests with the competent authority. Please record mandatory statutory remarks below.`
+            : `You are modifying the statutory status of application ${application.application_number} to "${targetStatus.replace('_', ' ').toUpperCase()}". Final decision rests with the competent authority.`
+        }
+        confirmLabel={targetStatus === 'rejected' ? 'Submit Rejection Recommendation' : 'Execute Status Change'}
         confirmVariant={targetStatus === 'approved' ? 'primary' : targetStatus === 'rejected' ? 'danger' : 'warning'}
         requiresNotes={true}
         notesPlaceholder="Enter mandatory statutory remarks for the AICTE record..."
