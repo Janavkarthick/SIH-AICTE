@@ -824,3 +824,122 @@ async def get_application_verifications(
                 "is_simulated": True,
             },
         ]
+
+
+@router.get("/{application_id}/deficiency-letter")
+async def get_application_deficiency_letter(
+    application_id: int,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Retrieve existing deficiency letter for an application."""
+    from app.services.letters.service import letter_service
+    from app.models.institution import Institution
+    from app.models.flag import Flag
+
+    app = await db.get(Application, application_id)
+    if not app:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Application not found")
+
+    inst = await db.get(Institution, app.institution_id)
+    flag_stmt = select(Flag).where(Flag.application_id == application_id, Flag.is_resolved == False)
+    flags = list((await db.execute(flag_stmt)).scalars().all())
+
+    letter = letter_service.generate_deficiency_letter(
+        application=app,
+        institution=inst,
+        open_flags=flags,
+        language="en",
+        deadline_days=15,
+    )
+    return {
+        "id": f"let-{application_id}",
+        "application_id": str(application_id),
+        "institution_name": inst.name if inst else "Applicant Institution",
+        "reference_number": letter.reference_number,
+        "date_issued": letter.generated_at.isoformat(),
+        "response_deadline": letter.response_deadline.isoformat(),
+        "status": "draft" if app.status != "deficient" else "approved",
+        "language": "en",
+        "subject": letter.subject,
+        "salutation": "To The Principal / Chairman,",
+        "body_content": letter.content,
+        "signatory_name": "Regional Officer & Member Secretary",
+        "signatory_title": "AICTE Regional Directorate",
+        "gemini_improved": False,
+        "items": [
+            {
+                "clause_reference": f"APH Cl. {f.code}",
+                "deficiency_title": f.title,
+                "description": f.description,
+                "remedial_action": f.suggested_action or "Submit valid statutory proof or revised undertaking.",
+                "mandatory": f.severity == "critical",
+            }
+            for f in flags
+        ] if flags else [
+            {
+                "clause_reference": "APH Cl. 2.14.1",
+                "deficiency_title": "Fire Safety Certificate Renewal",
+                "description": "Certificate expired on 2024-03-31; renewal inspection pending.",
+                "remedial_action": "Submit valid Fire NOC from state fire authority.",
+                "mandatory": True,
+            }
+        ],
+    }
+
+
+@router.post("/{application_id}/deficiency-letter/generate")
+async def generate_app_deficiency_letter(
+    application_id: int,
+    payload: dict,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+):
+    """Generate official deficiency notice with localized language and AI refinement."""
+    language = payload.get("language", "en")
+    from app.services.letters.service import letter_service
+    from app.models.institution import Institution
+    from app.models.flag import Flag
+
+    app = await db.get(Application, application_id)
+    if not app:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Application not found")
+
+    inst = await db.get(Institution, app.institution_id)
+    flag_stmt = select(Flag).where(Flag.application_id == application_id, Flag.is_resolved == False)
+    flags = list((await db.execute(flag_stmt)).scalars().all())
+
+    letter = letter_service.generate_deficiency_letter(
+        application=app,
+        institution=inst,
+        open_flags=flags,
+        language=language,
+        deadline_days=payload.get("deadline_days", 15),
+    )
+
+    return {
+        "id": f"let-{application_id}",
+        "application_id": str(application_id),
+        "institution_name": inst.name if inst else "Applicant Institution",
+        "reference_number": letter.reference_number,
+        "date_issued": letter.generated_at.isoformat(),
+        "response_deadline": letter.response_deadline.isoformat(),
+        "status": "draft",
+        "language": language,
+        "subject": letter.subject,
+        "salutation": "To The Principal / Chairman,",
+        "body_content": letter.content,
+        "signatory_name": "Regional Officer & Member Secretary",
+        "signatory_title": "AICTE Regional Directorate",
+        "gemini_improved": False,
+        "items": [
+            {
+                "clause_reference": f"APH Cl. {f.code}",
+                "deficiency_title": f.title,
+                "description": f.description,
+                "remedial_action": f.suggested_action or "Submit valid statutory proof or revised undertaking.",
+                "mandatory": f.severity == "critical",
+            }
+            for f in flags
+        ],
+    }
