@@ -202,9 +202,18 @@ class GraphService:
         elements: List[CytoscapeElement] = []
         flagged_count = 0
 
+        # Identify which nodes touch flagged edges
+        flagged_node_ids = set()
+        for r in relations:
+            if r.is_flagged:
+                flagged_count += 1
+                flagged_node_ids.add(r.source_entity_id)
+                flagged_node_ids.add(r.target_entity_id)
+
         # Nodes
         for e in entities:
             meta = json.loads(e.metadata_json) if e.metadata_json else {}
+            is_node_flagged = e.id in flagged_node_ids
             elements.append(
                 CytoscapeElement(
                     data={
@@ -214,6 +223,8 @@ class GraphService:
                         "name": e.name,
                         "type": e.entity_type,
                         "entity_id": e.entity_id,
+                        "flagged": is_node_flagged,
+                        "is_flagged": is_node_flagged,
                         "metadata": meta,
                     }
                 )
@@ -221,8 +232,6 @@ class GraphService:
 
         # Edges
         for r in relations:
-            if r.is_flagged:
-                flagged_count += 1
             meta = json.loads(r.metadata_json) if r.metadata_json else {}
             elements.append(
                 CytoscapeElement(
@@ -232,8 +241,11 @@ class GraphService:
                         "source": f"node_{r.source_entity_id}",
                         "target": f"node_{r.target_entity_id}",
                         "label": r.relation_type,
+                        "relationship": r.relation_type,
+                        "flagged": r.is_flagged,
                         "is_flagged": r.is_flagged,
                         "flag_reason": r.flag_reason,
+                        "severity": "critical" if "CRITICAL" in (r.flag_reason or "") else "high",
                         "metadata": meta,
                     }
                 )

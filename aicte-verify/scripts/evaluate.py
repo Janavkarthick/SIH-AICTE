@@ -665,9 +665,9 @@ def generate_markdown_report(results: Dict[str, Any]) -> str:
     md.append("|---|---|---|---|---|---|---|---|---|---|")
     md.append(f"| **Tuning Set** | {tuning['samples_tested']} | 10 Positive Matches | {tuning['true_positives']} | {tuning['true_negatives']} | {tuning['false_positives']} | {tuning['false_negatives']} | {tuning['recall']:.1f}% | {tuning['false_positive_rate']:.1f}% | Baseline Development Set |")
     md.append(f"| **Second name-pair set (also used during matcher refinement; not a true held-out test)** | {second['samples_tested']} | 8 Matches / 7 Non-Matches | {second['true_positives']} | {second['true_negatives']} | {second['false_positives']} | {second['false_negatives']} | {second['recall']:.1f}% | {second['false_positive_rate']:.1f}% | Refinement & Regression Set |")
-    md.append(f"| **Untouched Set** | {untouched['samples_tested']} | 5 Matches / 5 Non-Matches | {untouched['true_positives']} | {untouched['true_negatives']} | {untouched['false_positives']} | {untouched['false_negatives']} | {untouched['recall']:.1f}% | {untouched['false_positive_rate']:.1f}% | Blind Unseen Test (Run Once) |")
+    md.append(f"| **Third name-pair set (used for fixing, no longer untouched)** | {untouched['samples_tested']} | 5 Matches / 5 Non-Matches | {untouched['true_positives']} | {untouched['true_negatives']} | {untouched['false_positives']} | {untouched['false_negatives']} | {untouched['recall']:.1f}% | {untouched['false_positive_rate']:.1f}% | Generalization Set (Used for fixing, no longer untouched) |")
     md.append("")
-    md.append("### Untouched Set Sample Pair Inspection (Blind Test)")
+    md.append("### Third Name-Pair Set Inspection (Used for fixing, no longer untouched)")
     md.append("| Candidate Name A | Candidate Name B | Expected Classification | Result | Verdict |")
     md.append("|---|---|---|---|---|")
     for d in untouched["details"]:
@@ -736,7 +736,7 @@ def main():
     print(f"Markdown report generated: {eval_md_path}")
 
     print("\n" + "=" * 65)
-    print(f"Overall Accuracy: {results['accuracy']}% | Precision: {results['precision']}% | Recall: {results['recall']}% | F1: {results['f1_score']}%")
+    print(f"Synthetic benchmark, not real-world accuracy: Accuracy: {results['accuracy']}% | Precision: {results['precision']}% | Recall: {results['recall']}% | F1: {results['f1_score']}%")
     print(f"Reconciled Samples: {results['total_samples']} (DOC_0001..DOC_XXXX)")
     print("=" * 65)
 

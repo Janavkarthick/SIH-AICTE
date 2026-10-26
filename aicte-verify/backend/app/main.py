@@ -61,7 +61,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="AICTE-Verify Regulatory Validation & Verification Engine",
     description=(
-        "Production-quality automated regulatory compliance, document forensics, "
+        "Working prototype for automated regulatory compliance, document forensics, "
         "and multi-issuer verification platform for AICTE technical education approvals. "
         "All threshold values are illustrative: replace with Approval Process Handbook values. "
         "All simulated external components are clearly labeled SIMULATED."

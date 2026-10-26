@@ -1,6 +1,6 @@
 # AICTE-Verify Synthetic Benchmark Evaluation Report
 
-**Generated:** 2026-10-27T02:35:11.234983
+**Generated:** 2026-10-27T03:13:21.514442
 **Benchmark Dataset Size:** 285 neutral test units (160 planted faults, 125 clean controls)
 
 ## 1. Execution Environment Details
@@ -44,9 +44,9 @@ Evaluates the institution legal name equivalence resolver (`are_field_values_equ
 |---|---|---|---|---|---|---|---|---|---|
 | **Tuning Set** | 10 | 10 Positive Matches | 9 | 0 | 0 | 1 | 90.0% | 0.0% | Baseline Development Set |
 | **Second name-pair set (also used during matcher refinement; not a true held-out test)** | 15 | 8 Matches / 7 Non-Matches | 8 | 7 | 0 | 0 | 100.0% | 0.0% | Refinement & Regression Set |
-| **Untouched Set** | 10 | 5 Matches / 5 Non-Matches | 3 | 4 | 1 | 2 | 60.0% | 20.0% | Blind Unseen Test (Run Once) |
+| **Third name-pair set (used for fixing, no longer untouched)** | 10 | 5 Matches / 5 Non-Matches | 3 | 5 | 0 | 2 | 60.0% | 0.0% | Generalization Set (Used for fixing, no longer untouched) |
 
-### Untouched Set Sample Pair Inspection (Blind Test)
+### Third Name-Pair Set Inspection (Used for fixing, no longer untouched)
 | Candidate Name A | Candidate Name B | Expected Classification | Result | Verdict |
 |---|---|---|---|---|
 | Vidyavardhini's College of Engineering and Technology, Vasai | VCET Vasai | Match (Equivalent) | Match | **TP (Correct Match)** |
@@ -55,7 +55,7 @@ Evaluates the institution legal name equivalence resolver (`are_field_values_equ
 | Maulana Azad National Institute of Technology, Bhopal | MANIT Bhopal | Match (Equivalent) | Match | **TP (Correct Match)** |
 | Shri Ramdeobaba College of Engineering and Management, Nagpur | Shri Ramdeobaba College of Engg & Mgmt | Match (Equivalent) | Non-Match | **FN (Missed Match)** |
 | Indian Institute of Information Technology Allahabad | Indian Institute of Information Technology Gwalior | Non-Match (Distinct) | Non-Match | **TN (Correct Distinction)** |
-| National Institute of Technology Rourkela | Indian Institute of Technology Rourkela | Non-Match (Distinct) | Match | **FP (False Alarm)** |
+| National Institute of Technology Rourkela | Indian Institute of Technology Rourkela | Non-Match (Distinct) | Non-Match | **TN (Correct Distinction)** |
 | SVKM's NMIMS Mukesh Patel School of Technology | Mukesh Patel Institute of Technology Shirpur | Non-Match (Distinct) | Non-Match | **TN (Correct Distinction)** |
 | Army Institute of Technology, Pune | Pune Institute of Computer Technology, Pune | Non-Match (Distinct) | Non-Match | **TN (Correct Distinction)** |
 | Government College of Technology, Coimbatore | Coimbatore Institute of Technology, Coimbatore | Non-Match (Distinct) | Non-Match | **TN (Correct Distinction)** |
@@ -91,7 +91,7 @@ Evaluates the institution legal name equivalence resolver (`are_field_values_equ
 - **Aggregate Precision:** 100.0% (False Positive Rate: 0.0%)
 - **Aggregate Recall:** 100.0% (Coverage of active heuristic checks)
 - **Aggregate F1-Score:** 100.0%
-- **Avg Pipeline Execution Latency:** 3.0 ms per document
+- **Avg Pipeline Execution Latency:** 4.0 ms per document
 
 ## 5. Pipeline Component Metrics
 

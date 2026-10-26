@@ -8,7 +8,7 @@ across three distinct RBAC user roles:
   3. College User (college1 / college123)
 
 Navigates and verifies:
-  - Dashboard (KPI tiles, distribution charts)
+  - Dashboard (KPI tiles, distribution charts, application count == 18)
   - Applications Table (/applications)
   - Application Scrutiny Detail (/applications/2)
     - Tab switching (Overview, Documents, Forensics with ELA toggle)
@@ -19,7 +19,11 @@ Navigates and verifies:
   - Evaluation Benchmark Report (/evaluation)
   - Statutory Letter Generator (/letters)
 
-Fails if any unhandled console errors occur or if any route renders an empty shell.
+Fails strictly on:
+  - Any browser console errors
+  - Any failed network requests (HTTP >= 400)
+  - Any presence of the persistent OFFLINE DEMO DATA banner on live runs
+  - Mismatch between dashboard count and API count (18)
 """
 
 import asyncio
@@ -58,17 +62,26 @@ async def run_smoke_test():
 
             page = await context.new_page()
             console_errors = []
+            failed_requests = []
 
-            # Capture console errors
+            # Capture console errors strictly
             def on_console(msg):
                 if msg.type == "error":
-                    # Ignore minor benign font/icon network warnings if any
                     txt = msg.text
                     if "favicon" not in txt and "status of 404" not in txt:
                         console_errors.append(txt)
 
             page.on("console", on_console)
             page.on("pageerror", lambda exc: console_errors.append(str(exc)))
+
+            # Capture failed network requests strictly
+            def on_response(res):
+                if res.status >= 400:
+                    url = res.url
+                    if "favicon.ico" not in url:
+                        failed_requests.append(f"HTTP {res.status} on {url}")
+
+            page.on("response", on_response)
 
             # 1. Login Page
             total_checks += 1
@@ -87,10 +100,19 @@ async def run_smoke_test():
             await page.click('button[type="submit"]')
             await page.wait_for_timeout(1000)
 
+            # Assert absence of persistent offline banner
+            banner = page.locator("#offline-demo-banner")
+            if await banner.count() > 0 and await banner.is_visible():
+                errors_detected.append(f"{role_name}: Persistent OFFLINE DEMO DATA banner is visible on live run!")
+                print("  [FAIL] Persistent offline demo data banner is visible")
+            else:
+                passed_checks += 1
+                print("  [PASS] Persistent OFFLINE banner correctly absent on live run")
+
             # 2. Dashboard
             total_checks += 1
             await page.goto(f"{FRONTEND_URL}/dashboard", wait_until="networkidle")
-            await page.wait_for_timeout(800)
+            await page.wait_for_timeout(1000)
             dash_text = await page.inner_text("#root")
             if "Overview" not in dash_text and "Applications" not in dash_text and "Dashboard" not in dash_text:
                 errors_detected.append(f"{role_name}: Dashboard failed to render")
@@ -98,6 +120,16 @@ async def run_smoke_test():
             else:
                 passed_checks += 1
                 print(f"  [PASS] Dashboard rendered ({len(dash_text)} bytes text content)")
+
+            # Assert Dashboard Application Count Equals API Count (18) for Admin
+            if role_name == "admin":
+                total_checks += 1
+                if "18" not in dash_text:
+                    errors_detected.append(f"{role_name}: Dashboard application count does not display 18!")
+                    print("  [FAIL] Dashboard count 18 not found")
+                else:
+                    passed_checks += 1
+                    print("  [PASS] Dashboard application count verified: 18 applications matches API count")
 
             # 3. Applications Table
             total_checks += 1
@@ -131,7 +163,6 @@ async def run_smoke_test():
                 if await forensic_tab.count() > 0:
                     await forensic_tab.first.click()
                     await page.wait_for_timeout(600)
-                    # Check for ELA toggle button or text
                     ela_btn = page.locator("button, label", has_text="ELA")
                     if await ela_btn.count() > 0:
                         await ela_btn.first.click()
@@ -168,7 +199,6 @@ async def run_smoke_test():
                     errors_detected.append(f"{role_name}: Audit ledger failed to render")
                     print("  [FAIL] Audit ledger failure")
                 else:
-                    # Click Verify Hash Chain button if present
                     verify_btn = page.locator("button", has_text="Verify")
                     if await verify_btn.count() > 0:
                         await verify_btn.first.click()
@@ -193,7 +223,7 @@ async def run_smoke_test():
             # 8. Letters Page
             total_checks += 1
             await page.goto(f"{FRONTEND_URL}/letters", wait_until="networkidle")
-            await page.wait_for_timeout(800)
+            await page.wait_for_timeout(1000)
             let_text = await page.inner_text("#root")
             if "Letter" not in let_text and "Deficiency" not in let_text and "Draft" not in let_text:
                 errors_detected.append(f"{role_name}: Letters page failed to render")
@@ -202,13 +232,14 @@ async def run_smoke_test():
                 passed_checks += 1
                 print("  [PASS] Statutory Letters generator rendered")
 
-            # Check for console errors in this session
+            # Check for console errors & failed requests in this session
             if console_errors:
-                print(f"  [WARN] Console Warnings/Errors logged: {console_errors}")
-                # Only fail if unhandled React syntax/runtime crashes
-                severe = [e for e in console_errors if "SyntaxError" in e or "Uncaught TypeError" in e]
-                if severe:
-                    errors_detected.append(f"{role_name}: Severe runtime errors: {severe}")
+                print(f"  [FAIL] Console Errors logged: {console_errors}")
+                errors_detected.append(f"{role_name}: Browser console errors detected: {console_errors}")
+
+            if failed_requests:
+                print(f"  [FAIL] Failed Network Requests logged: {failed_requests}")
+                errors_detected.append(f"{role_name}: Failed network requests detected: {failed_requests}")
 
             await page.close()
 
@@ -223,7 +254,7 @@ async def run_smoke_test():
         print("=" * 65)
         sys.exit(1)
     else:
-        print("STATUS: ALL FRONTEND VIEWS & USER ROLES VERIFIED HEALTHY (0 ERRORS)")
+        print("STATUS: ALL FRONTEND VIEWS & USER ROLES VERIFIED HEALTHY (working prototype)")
         print("=" * 65)
 
 

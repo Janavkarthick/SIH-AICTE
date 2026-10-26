@@ -1,4 +1,4 @@
-import apiClient from './client';
+import apiClient, { setOfflineFallback } from './client';
 import {
   Application,
   ApplicationStatus,
@@ -45,6 +45,7 @@ export const applicationsApi = {
         updated_at: item.updated_at || new Date().toISOString(),
       }));
     } catch {
+      setOfflineFallback(true);
       let filtered = [...mockApplications];
       if (filters?.status) {
         filtered = filtered.filter((a) => a.status === filters.status);

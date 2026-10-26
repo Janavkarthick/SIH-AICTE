@@ -1,6 +1,6 @@
 {
-  "id": "eval-1793048711",
-  "timestamp": "2026-10-27T02:35:11.234983",
+  "id": "eval-1793051001",
+  "timestamp": "2026-10-27T03:13:21.514442",
   "environment": {
     "platform": "Windows-11-10.0.26300-SP0",
     "python_version": "3.12.10",
@@ -18,8 +18,8 @@
   "recall": 100.0,
   "f1_score": 100.0,
   "overall_accuracy": 1.0,
-  "execution_time_ms": 1720,
-  "avg_processing_time_per_document": 0.003,
+  "execution_time_ms": 4081,
+  "avg_processing_time_per_document": 0.004,
   "name_matcher_suite": {
     "tuning_set": {
       "samples_tested": 10,
@@ -223,12 +223,12 @@
     "untouched_set": {
       "samples_tested": 10,
       "true_positives": 3,
-      "true_negatives": 4,
-      "false_positives": 1,
+      "true_negatives": 5,
+      "false_positives": 0,
       "false_negatives": 2,
       "recall": 60.0,
-      "false_positive_rate": 20.0,
-      "precision": 75.0,
+      "false_positive_rate": 0.0,
+      "precision": 100.0,
       "details": [
         {
           "name_a": "Vidyavardhini's College of Engineering and Technology, Vasai",
@@ -276,8 +276,8 @@
           "name_a": "National Institute of Technology Rourkela",
           "name_b": "Indian Institute of Technology Rourkela",
           "expected": false,
-          "result": true,
-          "verdict": "FP (False Alarm)"
+          "result": false,
+          "verdict": "TN (Correct Distinction)"
         },
         {
           "name_a": "SVKM's NMIMS Mukesh Patel School of Technology",

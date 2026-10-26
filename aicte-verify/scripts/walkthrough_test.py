@@ -44,7 +44,7 @@ def run_walkthrough():
     # Pick application with highest risk score
     flagged_app = max(apps, key=lambda x: x.get("risk_score", 0)) if apps else None
     for a in apps[:3]:
-        inst_name = a.get("institution", {}).get("name", "Unknown")
+        inst_name = a.get("institution_name") or a.get("institution", {}).get("name", "Unknown")
         print(f"     App {a.get('id')}: {inst_name} | Year: {a.get('academic_year')} | Status: {a.get('status')} | Risk: {a.get('risk_score')}/100")
     results["step2_applications"] = len(apps) > 0
 
@@ -63,7 +63,7 @@ def run_walkthrough():
         # Risk breakdown endpoint
         r_rb = requests.get(f"{BASE}/applications/{app_id}/risk-breakdown", headers=headers, timeout=5)
         rb_data = r_rb.json() if r_rb.status_code == 200 else {}
-        print(f"  -> Risk Breakdown: HTTP {r_rb.status_code} | Total Score: {rb_data.get('total_score')}/100 | Risk Category: {rb_data.get('category')}")
+        print(f"  -> Risk Breakdown: HTTP {r_rb.status_code} | Total Score: {rb_data.get('risk_score', rb_data.get('total_score'))}/100 | Risk Category: {rb_data.get('risk_level', rb_data.get('category'))}")
 
         # Validation report endpoint
         r_vr = requests.get(f"{BASE}/applications/{app_id}/validation-report", headers=headers, timeout=5)
@@ -83,10 +83,24 @@ def run_walkthrough():
     flagged_edges = [e for e in edges if e.get("data", {}).get("flagged")]
     flagged_count = gdata.get("flagged_relations_count", len(flagged_edges))
     print(f"  -> Graph Topology: {len(nodes)} nodes, {len(edges)} total edges, {len(flagged_edges)} flagged collusion edges (API count: {flagged_count})")
-    for fe in flagged_edges[:3]:
+    
+    flagged_faculty_edges = [
+        e for e in flagged_edges 
+        if "faculty" in (e.get("data", {}).get("flag_reason", "").lower()) 
+        or e.get("data", {}).get("relationship") in ["employed_at", "employs_faculty"]
+    ]
+    flagged_land_edges = [
+        e for e in flagged_edges 
+        if "land" in (e.get("data", {}).get("flag_reason", "").lower()) 
+        or e.get("data", {}).get("relationship") in ["owns_land", "claims_land"]
+    ]
+    print(f"  -> Flagged Faculty Edges: {len(flagged_faculty_edges)}, Flagged Land Edges: {len(flagged_land_edges)}")
+    assert len(flagged_faculty_edges) >= 1, f"Expected at least 1 flagged faculty edge, found {len(flagged_faculty_edges)}"
+    assert len(flagged_land_edges) >= 1, f"Expected at least 1 flagged land edge, found {len(flagged_land_edges)}"
+    for fe in flagged_edges[:4]:
         ed = fe.get("data", {})
         print(f"     [COLLUSION] {ed.get('label')} (Severity: {ed.get('severity', 'high').upper()}, Rel: {ed.get('relationship')})")
-    results["step4_graph"] = (len(flagged_edges) > 0 or flagged_count > 0)
+    results["step4_graph"] = (len(flagged_faculty_edges) >= 1 and len(flagged_land_edges) >= 1)
 
     # Step 5: Officer Resolve Flag Action
     if flagged_app and flags:

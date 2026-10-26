@@ -15,15 +15,43 @@ class RiskService:
     # Flag severity weights (illustrative: replace with Approval Process Handbook values)
     WEIGHTS = {
         "critical": 10.0,
-        "high": 7.0,
-        "medium": 4.0,
-        "low": 2.0,
-        "info": 1.0,
+        "high": 6.0,
+        "medium": 3.0,
+        "low": 1.5,
+        "info": 0.5,
     }
 
     # Threshold intervals (illustrative: replace with Approval Process Handbook values)
-    THRESHOLD_LOW_MAX = 30.0
+    THRESHOLD_LOW_MAX = 28.0
     THRESHOLD_MEDIUM_MAX = 60.0
+
+    # Per-category maximum contribution caps to prevent score saturation
+    CATEGORY_CAPS = {
+        "missing_docs": 18.0,
+        "validation": 25.0,
+        "compliance": 25.0,
+        "forensics": 30.0,
+        "anomaly": 30.0,
+        "verification": 25.0,
+        "other": 15.0,
+    }
+
+    def _determine_category(self, code: str, flag_type: str) -> str:
+        c = (code or "").lower()
+        ft = (flag_type or "").lower()
+        if "missing" in c or "missing" in ft:
+            return "missing_docs"
+        if ft == "anomaly" or "ano-" in c or "collusion" in c or "ghost" in c:
+            return "anomaly"
+        if ft == "forensics" or "for-" in c or "ela" in c or "font" in c:
+            return "forensics"
+        if ft == "compliance" or "com-" in c or "quota" in c or "ratio" in c:
+            return "compliance"
+        if ft == "verification" or "ver-" in c:
+            return "verification"
+        if ft == "validation" or "val-" in c:
+            return "validation"
+        return "other"
 
     def compute_risk(self, flags: List[Union[Flag, FlagItem]]) -> RiskBreakdown:
         """Calculate weighted score, categorical risk level, and itemized contributions."""
@@ -34,16 +62,15 @@ class RiskService:
         info_count = 0
         contributions: List[RiskContribution] = []
 
-        total_weighted_points = 0.0
+        category_points: dict[str, float] = {k: 0.0 for k in self.CATEGORY_CAPS}
 
         for f in flags:
             # Check if flag is resolved (if Flag model instance)
             if hasattr(f, "is_resolved") and f.is_resolved:
                 continue
 
-            sev = f.severity.lower()
-            weight = self.WEIGHTS.get(sev, 1.0)
-            total_weighted_points += weight
+            sev = (getattr(f, "severity", "") or "medium").lower()
+            weight = self.WEIGHTS.get(sev, 1.5)
 
             if sev == "critical":
                 critical_count += 1
@@ -56,8 +83,13 @@ class RiskService:
             else:
                 info_count += 1
 
-            code = getattr(f, "code", "FLAG")
-            title = getattr(f, "title", "Discrepancy")
+            code = getattr(f, "code", "FLAG") or "FLAG"
+            title = getattr(f, "title", "Discrepancy") or "Discrepancy"
+            flag_type = getattr(f, "flag_type", "validation") or "validation"
+
+            cat = self._determine_category(code, flag_type)
+            category_points[cat] = category_points.get(cat, 0.0) + weight
+
             contributions.append(
                 RiskContribution(
                     flag_code=code,
@@ -68,11 +100,17 @@ class RiskService:
                 )
             )
 
-        # Scale raw points into a 0 - 100 risk score
-        # e.g., 2 critical flags (20 pts) + 1 high (7 pts) = 27 pts
-        # A normal regulatory scale maps ~35 weighted points to max risk 100
+        # Apply per-category caps
+        capped_total = 0.0
+        for cat, pts in category_points.items():
+            cap = self.CATEGORY_CAPS.get(cat, 20.0)
+            capped_total += min(pts, cap)
+
+        # Scale capped points into a 0 - 100 risk score
+        # Normal regulatory baseline maps 55 balanced weighted points to high risk (100)
         # (illustrative: replace with Approval Process Handbook values)
-        normalized_score = min(100.0, round((total_weighted_points / 35.0) * 100.0, 1))
+        raw_score = (capped_total / 55.0) * 100.0
+        normalized_score = min(100.0, round(raw_score, 1))
 
         # Categorize risk level
         if normalized_score <= self.THRESHOLD_LOW_MAX:
@@ -82,10 +120,11 @@ class RiskService:
         else:
             risk_level = "High"
 
-        # Auto-escalate to High if critical flags exist
-        if critical_count > 0 and risk_level != "High":
+        # Auto-escalate to High if critical flags exist, with progressive scaling above 65
+        if critical_count > 0:
             risk_level = "High"
-            normalized_score = max(normalized_score, 65.0)
+            base_critical = 65.0 + min(25.0, (critical_count - 1) * 10.0 + (high_count * 2.5))
+            normalized_score = min(100.0, round(max(normalized_score, base_critical), 1))
 
         return RiskBreakdown(
             risk_score=normalized_score,

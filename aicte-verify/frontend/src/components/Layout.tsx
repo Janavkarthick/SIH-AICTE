@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { User } from '../types';
 import { authApi } from '../api/auth';
+import { getOfflineFallback, subscribeOfflineFallback } from '../api/client';
 
 export const Layout: React.FC = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [isOffline, setIsOffline] = useState(getOfflineFallback());
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    return subscribeOfflineFallback(setIsOffline);
+  }, []);
 
   const userJson = localStorage.getItem('aicte_user');
   let user: User;
@@ -250,6 +256,14 @@ export const Layout: React.FC = () => {
         <span>⚠️ Decision-support only. Final decisions rest with authorised AICTE officials.</span>
       </div>
 
+      {/* 2. Persistent Offline Demo Data Banner (Displayed whenever backend is unreachable) */}
+      {isOffline && (
+        <div id="offline-demo-banner" className="bg-rose-600 text-white px-4 py-2.5 text-center text-xs md:text-sm font-bold tracking-wide shadow-md flex items-center justify-center gap-2 z-50">
+          <span className="w-2.5 h-2.5 rounded-full bg-white animate-pulse" />
+          <span>OFFLINE DEMO DATA - backend unreachable</span>
+        </div>
+      )}
+
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar */}
         <aside
@@ -374,7 +388,7 @@ export const Layout: React.FC = () => {
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
                 <span className="text-xs font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                  Integrity Verified
+                  Integrity Active
                 </span>
               </div>
 

@@ -1,7 +1,7 @@
 """Application lifecycle management endpoints with role-based access filtering."""
 
 import json
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import desc, select
@@ -724,22 +724,28 @@ async def get_application_verifications(
     results = list((await db.execute(stmt)).scalars().all())
 
     if results:
-        return [
-            {
+        items = []
+        for r in results:
+            resp_data = {}
+            if getattr(r, "source_response_json", None):
+                try:
+                    resp_data = json.loads(r.source_response_json)
+                except Exception:
+                    pass
+            items.append({
                 "id": str(r.id),
-                "application_id": str(r.application_id),
+                "application_id": str(application_id),
                 "document_id": str(r.document_id) if r.document_id else None,
-                "check_type": r.strategy_type or "land_registry",
-                "check_name": f"{r.strategy_type or 'Statutory'} Verification",
-                "target_identifier": r.query_reference or "REF-ID",
+                "check_type": getattr(r, "verification_type", "reference_lookup"),
+                "check_name": f"{getattr(r, 'source_name', 'Statutory Authority')} Verification",
+                "target_identifier": f"DOC-{r.document_id}",
                 "status": r.status or "verified",
-                "response_data": r.response_data or {"verified": True},
-                "source_authority": "National Statutory Gateway",
-                "verified_at": r.verified_at.isoformat() if r.verified_at else datetime.now(timezone.utc).isoformat(),
+                "response_data": resp_data,
+                "source_authority": getattr(r, "source_name", "National Statutory Gateway"),
+                "verified_at": r.verified_at.isoformat() if getattr(r, "verified_at", None) else datetime.now(timezone.utc).isoformat(),
                 "is_simulated": True,
-            }
-            for r in results
-        ]
+            })
+        return items
 
     # Realistic simulated gateway records
     now_iso = datetime.now(timezone.utc).isoformat()
@@ -865,9 +871,9 @@ async def get_application_deficiency_letter(
         "id": f"let-{application_id}",
         "application_id": str(application_id),
         "institution_name": inst.name if inst else "Applicant Institution",
-        "reference_number": letter.reference_number,
-        "date_issued": letter.generated_at.isoformat(),
-        "response_deadline": letter.response_deadline.isoformat(),
+        "reference_number": getattr(letter, "reference_number", f"AICTE/DEF/2025/{application_id:04d}"),
+        "date_issued": getattr(letter, "generated_at", datetime.now(timezone.utc)).isoformat() if hasattr(getattr(letter, "generated_at", None), "isoformat") else datetime.now(timezone.utc).isoformat(),
+        "response_deadline": getattr(letter, "response_deadline", (datetime.now(timezone.utc) + timedelta(days=15))).isoformat() if hasattr(getattr(letter, "response_deadline", None), "isoformat") else (datetime.now(timezone.utc) + timedelta(days=15)).isoformat(),
         "status": "draft" if app.status != "deficient" else "approved",
         "language": "en",
         "subject": letter.subject,
@@ -879,10 +885,10 @@ async def get_application_deficiency_letter(
         "items": [
             {
                 "clause_reference": "[Clause reference - verify against Approval Process Handbook]",
-                "deficiency_title": f.title,
-                "description": f.description,
-                "remedial_action": f.suggested_action or "Submit valid statutory proof or revised undertaking.",
-                "mandatory": f.severity == "critical",
+                "deficiency_title": getattr(f, "title", "Statutory Discrepancy"),
+                "description": getattr(f, "reason", getattr(f, "description", "Statutory discrepancy detected.")),
+                "remedial_action": getattr(f, "suggested_action", "Submit valid statutory proof or revised undertaking."),
+                "mandatory": getattr(f, "severity", "high") == "critical",
             }
             for f in flags
         ] if flags else [
@@ -930,9 +936,9 @@ async def generate_app_deficiency_letter(
         "id": f"let-{application_id}",
         "application_id": str(application_id),
         "institution_name": inst.name if inst else "Applicant Institution",
-        "reference_number": letter.reference_number,
-        "date_issued": letter.generated_at.isoformat(),
-        "response_deadline": letter.response_deadline.isoformat(),
+        "reference_number": getattr(letter, "reference_number", f"AICTE/DEF/2025/{application_id:04d}"),
+        "date_issued": getattr(letter, "generated_at", datetime.now(timezone.utc)).isoformat() if hasattr(getattr(letter, "generated_at", None), "isoformat") else datetime.now(timezone.utc).isoformat(),
+        "response_deadline": getattr(letter, "response_deadline", (datetime.now(timezone.utc) + timedelta(days=15))).isoformat() if hasattr(getattr(letter, "response_deadline", None), "isoformat") else (datetime.now(timezone.utc) + timedelta(days=15)).isoformat(),
         "status": "draft",
         "language": language,
         "subject": letter.subject,
@@ -944,10 +950,28 @@ async def generate_app_deficiency_letter(
         "items": [
             {
                 "clause_reference": "[Clause reference - verify against Approval Process Handbook]",
-                "deficiency_title": f.title,
-                "description": f.description,
-                "remedial_action": f.suggested_action or "Submit valid statutory proof or revised undertaking.",
-                "mandatory": f.severity == "critical",
+                "rule_id": getattr(f, "code", "APH-2025"),
+                "deficiency_title": getattr(f, "title", "Statutory Discrepancy"),
+                "deficiency": getattr(f, "reason", getattr(f, "description", "Statutory discrepancy detected.")),
+                "description": getattr(f, "reason", getattr(f, "description", "Statutory discrepancy detected.")),
+                "action_required": getattr(f, "suggested_action", "Submit valid statutory proof or revised undertaking."),
+                "remedial_action": getattr(f, "suggested_action", "Submit valid statutory proof or revised undertaking."),
+                "deadline_days": 15,
+                "mandatory": getattr(f, "severity", "high") == "critical",
+            }
+            for f in flags
+        ],
+        "deficiency_items": [
+            {
+                "clause_reference": "[Clause reference - verify against Approval Process Handbook]",
+                "rule_id": getattr(f, "code", "APH-2025"),
+                "deficiency_title": getattr(f, "title", "Statutory Discrepancy"),
+                "deficiency": getattr(f, "reason", getattr(f, "description", "Statutory discrepancy detected.")),
+                "description": getattr(f, "reason", getattr(f, "description", "Statutory discrepancy detected.")),
+                "action_required": getattr(f, "suggested_action", "Submit valid statutory proof or revised undertaking."),
+                "remedial_action": getattr(f, "suggested_action", "Submit valid statutory proof or revised undertaking."),
+                "deadline_days": 15,
+                "mandatory": getattr(f, "severity", "high") == "critical",
             }
             for f in flags
         ],

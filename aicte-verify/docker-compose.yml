@@ -9,6 +9,7 @@ services:
       - ./data:/app/data
       - ./config:/app/config
       - ./scripts:/app/scripts
+      - ./docs:/app/docs
     environment:
       - DATABASE_URL=sqlite:///./data/aicte_verify.db
       - JWT_SECRET_KEY=${JWT_SECRET_KEY:-dev-secret-key-change-in-production-abc123}

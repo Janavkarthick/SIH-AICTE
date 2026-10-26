@@ -27,6 +27,7 @@ COPY backend/tests /app/tests
 COPY config /app/config
 COPY scripts /app/scripts
 COPY data /app/data
+COPY docs /app/docs
 
 # Environment variables
 ENV PYTHONUNBUFFERED=1 \

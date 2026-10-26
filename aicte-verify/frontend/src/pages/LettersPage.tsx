@@ -24,7 +24,7 @@ export const LettersPage: React.FC = () => {
   const fetchLetter = async (lang: 'en' | 'ta' | 'hi' = language) => {
     setIsLoading(true);
     try {
-      const data = await lettersApi.generateLetter('app-001', lang);
+      const data = await lettersApi.generateLetter('5', lang);
       setLetter(data);
     } catch (err) {
       console.error('Failed to load letter', err);
@@ -204,10 +204,10 @@ export const LettersPage: React.FC = () => {
         {/* Ref and Date line */}
         <div className="flex justify-between text-xs font-sans mb-6 border-b border-slate-200 pb-3">
           <div>
-            <strong>F.No. AICTE/SRO/APH-2025/DEF-{letter.application_number.split('/').pop()}</strong>
+            <strong>F.No. AICTE/SRO/APH-2025/DEF-{(letter.application_number || letter.reference_number || String(letter.application_id || '001')).split('/').pop()}</strong>
           </div>
           <div>
-            <strong>Date:</strong> {letter.date}
+            <strong>Date:</strong> {letter.date || letter.date_issued || new Date().toISOString().split('T')[0]}
           </div>
         </div>
 
@@ -239,16 +239,16 @@ export const LettersPage: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-300">
-              {letter.deficiency_items.map((item, idx) => (
+              {(letter.deficiency_items || letter.items || []).map((item: any, idx: number) => (
                 <tr key={idx}>
                   <td className="p-2.5 border-r border-slate-300 text-center font-bold">{idx + 1}</td>
-                  <td className="p-2.5 border-r border-slate-300 font-mono text-[11px]">{item.rule_id}</td>
+                  <td className="p-2.5 border-r border-slate-300 font-mono text-[11px]">{item.rule_id || item.clause_reference || 'APH-2025'}</td>
                   <td className="p-2.5 border-r border-slate-300 font-medium text-rose-900 bg-rose-50/30">
-                    {item.deficiency}
+                    {item.deficiency || item.deficiency_title || item.description}
                   </td>
-                  <td className="p-2.5 border-r border-slate-300 text-slate-800">{item.action_required}</td>
+                  <td className="p-2.5 border-r border-slate-300 text-slate-800">{item.action_required || item.remedial_action || 'Provide certified rectification proof'}</td>
                   <td className="p-2.5 text-center font-bold text-slate-900 whitespace-nowrap">
-                    {item.deadline_days} Days
+                    {item.deadline_days || 15} Days
                   </td>
                 </tr>
               ))}

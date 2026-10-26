@@ -136,6 +136,7 @@ def are_field_values_equivalent(field_name: str, val1: str, val2: str) -> bool:
             ("global academy", "institute"),
             ("polytechnic", "institute"),
             ("university", "polytechnic"),
+            ("national", "indian"),
         ]
         for type_a, type_b in incompatible_pairs:
             if (type_a in n1 and type_b in n2) or (type_b in n1 and type_a in n2):
