@@ -64,13 +64,13 @@ export const NewApplicationPage: React.FC = () => {
   const [libraryTitles, setLibraryTitles] = useState(3200);
   const [libraryVolumes, setLibraryVolumes] = useState(15000);
 
-  // Step 4: Statutory Document Uploads (APH Annexure 2 Checklist)
+  // Step 4: Statutory Document Uploads Checklist
   const [documentsList, setDocumentsList] = useState<UploadItem[]>([
     {
       id: 'doc-affidavit',
       label: 'Affidavit 2 (Notarized & Digitally Signed)',
       docType: 'affidavit',
-      annexureRef: 'APH Annexure 2, Clause 2.1(a)',
+      annexureRef: '[Reference - verify against Approval Process Handbook] (illustrative)',
       mandatory: true,
       description: 'Prescribed affidavit on non-judicial stamp paper attested by Executive Magistrate or Notary Public with QR/digital stamp.',
       file: null,
@@ -80,7 +80,7 @@ export const NewApplicationPage: React.FC = () => {
       id: 'doc-fire-noc',
       label: 'Fire Safety Certificate & NOC',
       docType: 'fire_safety_cert',
-      annexureRef: 'APH Annexure 2, Clause 2.1(e)',
+      annexureRef: '[Reference - verify against Approval Process Handbook] (illustrative)',
       mandatory: true,
       description: 'Valid certificate issued by the competent State Fire and Disaster Management Command.',
       file: null,
@@ -90,7 +90,7 @@ export const NewApplicationPage: React.FC = () => {
       id: 'doc-occupancy',
       label: 'Occupancy / Building Completion Certificate (Form D)',
       docType: 'building_plan',
-      annexureRef: 'APH Annexure 2, Clause 2.1(c)',
+      annexureRef: '[Reference - verify against Approval Process Handbook] (illustrative)',
       mandatory: true,
       description: 'Valid building licence, occupancy permit, or Form D from Municipal Corporation / Town Planning authority.',
       file: null,
@@ -100,7 +100,7 @@ export const NewApplicationPage: React.FC = () => {
       id: 'doc-land-deed',
       label: 'Land Title & Ownership Conversion Deed',
       docType: 'land_title',
-      annexureRef: 'APH Annexure 1 & 2 Land Norms',
+      annexureRef: '[Reference - verify against Approval Process Handbook] (illustrative)',
       mandatory: true,
       description: 'Registered sale deed, gift deed, or government lease agreement establishing unencumbered contiguous plot.',
       file: null,
@@ -110,7 +110,7 @@ export const NewApplicationPage: React.FC = () => {
       id: 'doc-faculty-roster',
       label: 'Faculty Cadre Roster & Qualification Proofs',
       docType: 'faculty_list',
-      annexureRef: 'APH Chapter VII Cadre Ratio (1:20)',
+      annexureRef: '[Reference - verify against Approval Process Handbook] (illustrative)',
       mandatory: true,
       description: 'Signed cadre roster with Professor, Associate, and Assistant Professor cadre ratios including PAN/Aadhaar hashes.',
       file: null,
@@ -120,7 +120,7 @@ export const NewApplicationPage: React.FC = () => {
       id: 'doc-satellite-map',
       label: 'Geo-Tagged Satellite Entrance Map',
       docType: 'other',
-      annexureRef: 'APH Annexure 2, Clause 2.1(f)',
+      annexureRef: '[Reference - verify against Approval Process Handbook] (illustrative)',
       mandatory: true,
       description: 'Satellite map showing the campus location, approach road, and latitude/longitude at the main entrance.',
       file: null,
@@ -130,7 +130,7 @@ export const NewApplicationPage: React.FC = () => {
       id: 'doc-audited-financials',
       label: 'Audited Financial Statements (Previous FY)',
       docType: 'fd_receipt',
-      annexureRef: 'APH Annexure 2, Clause 2.1(g)',
+      annexureRef: '[Reference - verify against Approval Process Handbook] (illustrative)',
       mandatory: false,
       description: 'Chartered Accountant certified balance sheet and income/expenditure statement of the applicant trust/society.',
       file: null,
@@ -197,7 +197,7 @@ export const NewApplicationPage: React.FC = () => {
     { num: 1, title: 'Category & Institution' },
     { num: 2, title: 'Programmes & Intake' },
     { num: 3, title: 'Infrastructure & Faculty' },
-    { num: 4, title: 'Document Uploads (Annexure 2)' },
+    { num: 4, title: 'Document Uploads Checklist' },
     { num: 5, title: 'Review & Undertaking' },
   ];
 
@@ -665,7 +665,7 @@ export const NewApplicationPage: React.FC = () => {
                   required
                 />
                 <span className="text-[10px] text-amber-700 mt-0.5 block">
-                  1:20 Norm Ceiling: {facultyCount * 20} students max (Requires {Math.ceil(requestedIntake / 20)} staff for {requestedIntake} intake)
+                  Teacher-Student Norm Ceiling: {facultyCount * 20} students max (Requires {Math.ceil(requestedIntake / 20)} staff for {requestedIntake} intake) [Reference - verify against Approval Process Handbook] (illustrative)
                 </span>
               </div>
 
@@ -703,26 +703,26 @@ export const NewApplicationPage: React.FC = () => {
                 onClick={() => setCurrentStep(4)}
                 className="px-5 py-2.5 bg-aicte-600 hover:bg-aicte-700 text-white rounded-lg text-xs font-bold shadow transition flex items-center gap-1.5"
               >
-                Proceed to Document Uploads (Annexure 2) →
+                Proceed to Document Uploads Checklist →
               </button>
             </div>
           </div>
         )}
 
-        {/* STEP 4: DOCUMENT UPLOADS (APH ANNEXURE 2) */}
+        {/* STEP 4: DOCUMENT UPLOADS */}
         {currentStep === 4 && (
           <div className="bg-white rounded-2xl border border-slate-200 p-6 md:p-8 shadow-sm space-y-6">
             <div className="border-b border-slate-100 pb-3 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h2 className="text-base font-bold text-slate-900">
-                  4. Statutory Document Uploads — APH Annexure 2 Checklist
+                  4. Statutory Document Uploads — Regulatory Checklist
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
                   Official statutory files required for self-disclosure verification, OCR parsing, and forensic tamper analysis.
                 </p>
               </div>
               <span className="text-xs px-2.5 py-1 bg-indigo-50 text-indigo-700 font-bold rounded-lg border border-indigo-200">
-                Annexure 2 Checklist
+                Document Checklist
               </span>
             </div>
 
@@ -846,7 +846,7 @@ export const NewApplicationPage: React.FC = () => {
                   className="mt-1 rounded text-aicte-600 focus:ring-0"
                 />
                 <span>
-                  <strong>Formal Statutory Undertaking (AICTE APH 2024–27):</strong> I hereby solemnly certify and declare that the information furnished in this online regulatory application and the attached documents are true and complete. I confirm that our institution satisfies all norms relating to land ownership, instructional built-up space, faculty-to-student cadre ratios (1:20), fire safety clearances, and laboratory facilities under the AICTE Approval Process Handbook. I acknowledge that any falsification or document alteration identified during multi-lingual OCR or digital forensic scrutiny will attract immediate punitive rejection and withdrawal of approval.
+                  <strong>Formal Statutory Undertaking (AICTE APH 2024–27):</strong> I hereby solemnly certify and declare that the information furnished in this online regulatory application and the attached documents are true and complete. I confirm that our institution satisfies all norms relating to land ownership, instructional built-up space, faculty-to-student cadre ratios [Reference - verify against Approval Process Handbook] (illustrative), fire safety clearances, and laboratory facilities under the AICTE Approval Process Handbook. I acknowledge that any falsification or document alteration identified during multi-lingual OCR or digital forensic scrutiny will attract immediate punitive rejection and withdrawal of approval.
                 </span>
               </label>
             </div>

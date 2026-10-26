@@ -117,7 +117,7 @@ export const mockApplications: Application[] = [
       faculty_risk: 15,
       forensic_risk: 20,
       regulatory_risk: 10,
-      primary_concerns: ['Minor metadata anomaly in Annexure VIII']
+      primary_concerns: ['Minor metadata anomaly in statutory attachment [Reference - verify against Approval Process Handbook] (illustrative)']
     }
   },
   {
@@ -437,7 +437,7 @@ export const mockFlags: Flag[] = [
     code: 'SEC-PII-005',
     rule_id: 'RULE_PRIVACY_PII_EXPOSURE',
     title: 'Unmasked Aadhaar Number in Public Document',
-    reason: 'Raw 12-digit Aadhaar number found unredacted in Land Title Trust Deed annexure. Auto-masking applied on preview.',
+    reason: 'Raw 12-digit Aadhaar number found unredacted in Land Title Trust Deed attachment. Auto-masking applied on preview.',
     severity: 'low',
     confidence: 99.0,
     status: 'resolved',
@@ -663,7 +663,7 @@ export const mockValidationReport: ValidationReport = {
     }
   ],
   recommendations: [
-    'Issuance of Deficiency Letter under Chapter 1 Clause 1.7 regarding Survey No discrepancy',
+    'Issuance of Deficiency Letter under statutory hearing rules regarding Survey No discrepancy [Reference - verify against Approval Process Handbook] (illustrative)',
     'Summon original Land Deed for physical inspection at SRO Chennai',
     'Exclude Prof. Ramesh Babu from faculty calculation until dual employment clearance is obtained',
     'Cap approved intake at 360 seats pending compliance resubmission'
@@ -1171,10 +1171,10 @@ You are hereby requested to submit your compliance / clarification along with or
 };
 
 export const mockAnalyticsSummary: AnalyticsSummary = {
-  total_applications: 1240,
-  pending_review: 184,
-  approved_applications: 940,
-  rejected_applications: 116,
+  total_applications: 18,
+  pending_review: 6,
+  approved_applications: 6,
+  rejected_applications: 2,
   flags_by_severity: {
     info: 412,
     low: 320,

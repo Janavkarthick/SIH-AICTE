@@ -1,5 +1,7 @@
 """Authentication and user session management endpoints."""
 
+import time
+from collections import defaultdict
 from datetime import timedelta
 from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Request, status
@@ -22,6 +24,31 @@ from app.services.audit.service import audit_service
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
+# In-memory sliding window rate limiter: client_ip -> list of epoch timestamps
+LOGIN_ATTEMPTS: dict[str, list[float]] = defaultdict(list)
+MAX_LOGIN_ATTEMPTS_PER_MINUTE = 10
+LOGIN_WINDOW_SECONDS = 60.0
+
+
+def check_login_rate_limit(client_ip: str) -> None:
+    """Enforce maximum login attempts per minute per IP address."""
+    now = time.time()
+    attempts = LOGIN_ATTEMPTS[client_ip]
+    # Retain only timestamps inside window
+    valid_attempts = [ts for ts in attempts if now - ts < LOGIN_WINDOW_SECONDS]
+    LOGIN_ATTEMPTS[client_ip] = valid_attempts
+    if len(valid_attempts) >= MAX_LOGIN_ATTEMPTS_PER_MINUTE:
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many login attempts. Rate limit exceeded (maximum 10 attempts per minute).",
+        )
+    LOGIN_ATTEMPTS[client_ip].append(now)
+
+
+def reset_rate_limiter() -> None:
+    """Clear in-memory login attempts (used in test fixtures)."""
+    LOGIN_ATTEMPTS.clear()
+
 
 @router.post("/login", response_model=Token)
 async def login(
@@ -29,6 +56,9 @@ async def login(
     db: AsyncSession = Depends(get_db),
 ):
     """Authenticate user credentials and issue signed JWT access token."""
+    client_ip = request.client.host if request.client else "127.0.0.1"
+    check_login_rate_limit(client_ip)
+
     username = None
     password = None
 

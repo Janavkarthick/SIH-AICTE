@@ -58,6 +58,33 @@ def normalize_institution_name(name: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+GENERIC_INSTITUTIONAL_AFFIXES = {
+    "campus", "deemed", "univ", "university", "college", "institute",
+    "technology", "engineering", "academy", "polytechnic", "science",
+    "sciences", "center", "centre", "main", "branch", "school", "department",
+    "of", "the", "and", "in", "at", "for"
+}
+
+
+def has_trailing_specifier_conflict(t1: List[str], t2: List[str]) -> bool:
+    """Detect conflicting branch or location suffixes when shared institutional stems exist."""
+    tail1 = None
+    for x in reversed(t1):
+        if x not in GENERIC_INSTITUTIONAL_AFFIXES:
+            tail1 = x
+            break
+    tail2 = None
+    for x in reversed(t2):
+        if x not in GENERIC_INSTITUTIONAL_AFFIXES:
+            tail2 = x
+            break
+    if tail1 and tail2 and tail1 != tail2:
+        common_words = (set(t1) & set(t2)) - GENERIC_INSTITUTIONAL_AFFIXES
+        if len(common_words) >= 1 or len(set(t1) & set(t2)) >= 2:
+            return True
+    return False
+
+
 def match_acronym_subsequence(t1: List[str], t2: List[str]) -> bool:
     """Match acronym tokens against consecutive subphrases (e.g. 'nit' -> 'national institute technology')."""
     def check_sub(acro_tokens: List[str], full_tokens: List[str]) -> bool:
@@ -67,9 +94,11 @@ def match_acronym_subsequence(t1: List[str], t2: List[str]) -> bool:
                     for end in range(start + len(tok), min(start + len(tok) + 1, len(full_tokens) + 1)):
                         sub_initials = "".join(x[0] for x in full_tokens[start:end])
                         if tok == sub_initials:
-                            rem_full = set(full_tokens[:start] + full_tokens[end:])
-                            rem_acro = set(acro_tokens[:i] + acro_tokens[i + 1:])
-                            if rem_acro == rem_full or rem_acro.issubset(rem_full) or rem_full.issubset(rem_acro):
+                            rem_full = [x for x in (full_tokens[:start] + full_tokens[end:]) if x not in GENERIC_INSTITUTIONAL_AFFIXES]
+                            rem_acro = [x for x in (acro_tokens[:i] + acro_tokens[i + 1:]) if x not in GENERIC_INSTITUTIONAL_AFFIXES]
+                            if rem_full and rem_acro and rem_full != rem_acro:
+                                return False
+                            if not rem_acro or not rem_full or rem_acro == rem_full or set(rem_acro).issubset(set(rem_full)) or set(rem_full).issubset(set(rem_acro)):
                                 return True
         return False
     return check_sub(t1, t2) or check_sub(t2, t1)
@@ -120,11 +149,8 @@ def are_field_values_equivalent(field_name: str, val1: str, val2: str) -> bool:
         if s1 == s2:
             return True
 
-        # Campus location / city conflict check (e.g., VIT Vellore vs VIT Bhopal, NIT Surathkal vs NIT Calicut)
-        locations = {"vellore", "bhopal", "chennai", "surathkal", "calicut", "salem", "coimbatore", "delhi", "mesra", "pilani", "jalandhar", "madurai", "kovilpatti"}
-        end_loc1 = [w for w in t1 if w in locations]
-        end_loc2 = [w for w in t2 if w in locations]
-        if end_loc1 and end_loc2 and end_loc1[-1] != end_loc2[-1]:
+        # Structural conflict check for distinctive trailing branch/location specifiers
+        if has_trailing_specifier_conflict(t1, t2):
             return False
 
         # Acronym subphrase matching (e.g. 'nit' <-> 'national institute technology')

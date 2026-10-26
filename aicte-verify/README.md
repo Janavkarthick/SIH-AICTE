@@ -34,7 +34,7 @@ docker compose up --build
 - Node.js 20+
 - Tesseract OCR (Optional for local Windows run; Docker recommended for full multilingual OCR):
   > [!NOTE]
-  > **Multilingual OCR Verification:** Multilingual OCR (Tamil/Hindi) is verified only in the Docker container image (which includes `tesseract-ocr-tam` and `tesseract-ocr-hin` packages). Tesseract is not installed on the Windows host.
+  > **Multilingual OCR Status:** Tamil/Hindi OCR is configured in the Docker image but has not been verified end to end.
   ```bash
   # Ubuntu/Debian
   sudo apt install tesseract-ocr tesseract-ocr-eng tesseract-ocr-tam tesseract-ocr-hin

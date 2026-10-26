@@ -35,6 +35,16 @@ from app.seed.seed_db import seed_database
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Lifespan context manager for database initialization and synthetic data seeding."""
+    # Security check: JWT secret must not be default in production
+    if not settings.DEBUG and settings.JWT_SECRET_KEY in [
+        "aicte-verify-development-super-secret-jwt-key-2024",
+        "dev-secret-key-change-in-production-abc123",
+    ]:
+        raise RuntimeError(
+            "FATAL SECURITY MISCONFIGURATION: In production mode (DEBUG=False), "
+            "JWT_SECRET_KEY must be provided via environment variable and cannot use the development default."
+        )
+
     # Ensure upload directory exists
     Path(settings.UPLOAD_DIR).mkdir(parents=True, exist_ok=True)
 

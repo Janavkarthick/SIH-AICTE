@@ -33,7 +33,7 @@ class ComplianceSummaryResponse(BaseModel):
 
 
 class CapacityCalculationResponse(BaseModel):
-    """Calculated maximum intake capacity based on physical infrastructure (Annexure A1).
+    """Calculated maximum intake capacity based on physical infrastructure [Reference - verify against Approval Process Handbook] (illustrative).
     
     All formulas and thresholds marked: illustrative: replace with Approval Process Handbook values.
     """

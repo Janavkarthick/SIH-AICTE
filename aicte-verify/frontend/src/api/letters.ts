@@ -77,7 +77,7 @@ export const lettersApi = {
         gemini_improved: true,
         body_content: `${letter.body_content}
 
-[AI ASSISTED REFINEMENT (APH 2025 COMPLIANCE CLAUSE 1.7.3)]:
+[AI ASSISTED REFINEMENT - [Reference - verify against Approval Process Handbook] (illustrative)]:
 "Please take urgent note that pursuant to Section 10(k) of the AICTE Act 1987 read with Chapter I of the Approval Process Handbook 2025-26, non-rectification of contiguous title clearance and faculty duplicity within the statutory 15-day window shall automatically bar the processing of additional course sanction and invoke the provisions of punitive reduction in existing intake."`,
       };
     }

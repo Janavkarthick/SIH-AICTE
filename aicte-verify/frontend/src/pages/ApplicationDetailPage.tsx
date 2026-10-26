@@ -348,11 +348,11 @@ export const ApplicationDetailPage: React.FC = () => {
 
               <div className="bg-white/5 border border-white/10 rounded-xl p-3.5 space-y-1">
                 <span className="text-[10px] uppercase font-bold tracking-wider text-indigo-300 block">
-                  3. APH 1:20 Norms Engine
+                  3. Teacher-Student Ratio Norms Engine (Illustrative)
                 </span>
                 <p className="text-slate-300 leading-relaxed text-[11px]">
                   {application.risk_level === 'high'
-                    ? `Faculty bottleneck: Institution only has enough faculty to support 360 seats under 1:20 norm.`
+                    ? `Faculty bottleneck: Institution only has enough faculty to support 360 seats under the teacher-student norm [Reference - verify against Approval Process Handbook] (illustrative).`
                     : 'Cadre ratio and instructional area conform fully to AICTE Approval Process Handbook (APH).'}
                 </p>
               </div>
@@ -389,7 +389,7 @@ export const ApplicationDetailPage: React.FC = () => {
                 {application.risk_level === 'high' ? (
                   <ul className="text-[11px] text-rose-200/90 space-y-1.5 list-disc pl-4">
                     <li><strong>Altered Land Document:</strong> Error Level Analysis flagged altered notary seal and survey parcel duplication.</li>
-                    <li><strong>Faculty Shortage Deficit:</strong> 14 faculty shortage for requested intake under AICTE 1:20 ratio norm.</li>
+                    <li><strong>Faculty Shortage Deficit:</strong> 14 faculty shortage for requested intake under teacher-student ratio norm [Reference - verify against Approval Process Handbook] (illustrative).</li>
                     <li><strong>CAD Lab Capacity:</strong> Workstation count deficit of 60 terminals for applied intake.</li>
                   </ul>
                 ) : (
@@ -617,7 +617,7 @@ export const ApplicationDetailPage: React.FC = () => {
                 APH Automated Rule Validation Matrix
               </h3>
               <p className="text-xs text-slate-500">
-                Rule engine evaluation across {validationReport.total_rules_evaluated} statutory clauses
+                Rule engine evaluation across {validationReport.total_rules_evaluated} regulatory checks [Reference - verify against Approval Process Handbook] (illustrative)
               </p>
             </div>
             <div className="flex items-center gap-3">

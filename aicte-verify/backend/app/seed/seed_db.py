@@ -1,7 +1,8 @@
 """Database Seeding Script for AICTE-Verify.
 
-Generates initial synthetic users, 6 institutions across regions, sample applications,
-sample PDF regulatory artifacts, graph nodes for collusion detection, and mock issuer certificates.
+Generates initial synthetic users, 6 institutions across regions, 18 sample applications
+(6 institutions x 3 academic years: 2024-2025, 2025-2026, 2026-2027), sample PDF regulatory
+artifacts, graph nodes for collusion detection, and mock issuer certificates.
 ALL DATA IS STRICTLY SYNTHETIC AND ANONYMIZED. Marked SIMULATED.
 """
 
@@ -12,7 +13,7 @@ from datetime import date, datetime, timezone
 from pathlib import Path
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.audit import AuditLogger
@@ -44,12 +45,21 @@ def create_sample_pdf(file_path: str, title: str, lines: list):
     c.save()
 
 
-async def seed_database(db: AsyncSession) -> None:
-    """Populate database with synthetic development records if empty."""
-    # Check if already seeded
-    user_check = await db.execute(select(User))
-    if user_check.scalars().first():
-        return
+async def seed_database(db: AsyncSession, wipe: bool = True) -> None:
+    """Populate database with synthetic development records idempotently (wipe and reseed)."""
+    if wipe:
+        # Wipe in foreign key safe order
+        for model in [
+            Flag, ExtractedData, DocumentClassification, Document,
+            ComplianceResult, VerificationResult, ApplicationHistory,
+            Application, GraphRelation, GraphEntity, Institution,
+            User
+        ]:
+            try:
+                await db.execute(delete(model))
+            except Exception:
+                pass
+        await db.commit()
 
     # 1. Create Default Users
     # Passwords: admin123, officer123, college123
@@ -61,7 +71,6 @@ async def seed_database(db: AsyncSession) -> None:
         {"username": "college2", "email": "dean@zenitheng.edu.simulated", "password": "college123", "full_name": "Dean Admin, Zenith Eng", "role": "college_user", "region": "Western", "institution_id": 2},
     ]
 
-    user_objects = []
     for u in users_data:
         usr = User(
             username=u["username"],
@@ -74,7 +83,6 @@ async def seed_database(db: AsyncSession) -> None:
             is_active=True,
         )
         db.add(usr)
-        user_objects.append(usr)
     await db.commit()
 
     # 2. Create 6 Synthetic Institutions
@@ -100,7 +108,7 @@ async def seed_database(db: AsyncSession) -> None:
             "city": "Pune",
             "state": "Maharashtra",
             "region": "Western",
-            "address": "12 Hinjawadi Phase 2, IT Hub",
+            "address": "88 Industrial Valley Road, Hinjawadi",
             "trust_name": "Sahyadri Higher Education Foundation",
             "trust_registration_number": "TR-MH-2009-412",
             "campus_latitude": 18.5912,
@@ -114,17 +122,17 @@ async def seed_database(db: AsyncSession) -> None:
             "city": "Lucknow",
             "state": "Uttar Pradesh",
             "region": "Northern",
-            "address": "88 Gomti Nagar Industrial Area",
-            "trust_name": "Sri Krishna Educational & Charitable Trust",  # Shared trust to test graph
-            "trust_registration_number": "TR-TN-2004-981",
+            "address": "12 Gomti Nagar Extension",
+            "trust_name": "Awadh Welfare Educational Trust",
+            "trust_registration_number": "TR-UP-2012-701",
             "campus_latitude": 26.8467,
             "campus_longitude": 80.9462,
             "established_year": 2012,
         },
         {
             "id": 4,
-            "name": "Eastern Academy of Science & Technology",
-            "code": "1-100345",
+            "name": "Bengal Institute of Technology & Science",
+            "code": "1-100456",
             "city": "Kolkata",
             "state": "West Bengal",
             "region": "Eastern",
@@ -169,43 +177,61 @@ async def seed_database(db: AsyncSession) -> None:
         db.add(Institution(**inst))
     await db.commit()
 
-    # 3. Create Applications
-    app1 = Application(
-        id=1,
-        institution_id=1,
-        category="extension_of_approval",
-        academic_year="2025-2026",
-        status="under_review",
-        submission_date=date(2025, 4, 10),
-        submitted_by=4,  # college1
-        assigned_officer=2,  # officer1
-        risk_score=28.5,
-        risk_level="Low",
-        intake_applied=480,
-        current_intake=480,
-    )
-    app2 = Application(
-        id=2,
-        institution_id=2,
-        category="increase_of_intake",
-        academic_year="2025-2026",
-        status="deficient",
-        submission_date=date(2025, 4, 10),
-        submitted_by=5,  # college2
-        assigned_officer=2,
-        risk_score=68.0,
-        risk_level="High",
-        intake_applied=600,
-        current_intake=420,
-    )
-    db.add(app1)
-    db.add(app2)
+    # 3. Create Exactly 18 Applications (6 institutions x 3 academic years: 2024-2025, 2025-2026, 2026-2027)
+    app_configs = [
+        # Inst 1: Apex Tech (Chennai)
+        {"id": 1, "inst_id": 1, "year": "2024-2025", "cat": "extension_of_approval", "status": "approved", "sub_date": date(2024, 4, 15), "risk": 14.0, "risk_lvl": "Low", "intake": 480, "curr": 480},
+        {"id": 2, "inst_id": 1, "year": "2025-2026", "cat": "extension_of_approval", "status": "under_review", "sub_date": date(2025, 4, 10), "risk": 32.0, "risk_lvl": "Medium", "intake": 480, "curr": 480},
+        {"id": 3, "inst_id": 1, "year": "2026-2027", "cat": "extension_of_approval", "status": "submitted", "sub_date": date(2026, 3, 1), "risk": 18.0, "risk_lvl": "Low", "intake": 480, "curr": 480},
+        
+        # Inst 2: Zenith Engg (Pune)
+        {"id": 4, "inst_id": 2, "year": "2024-2025", "cat": "extension_of_approval", "status": "approved", "sub_date": date(2024, 4, 12), "risk": 22.0, "risk_lvl": "Low", "intake": 420, "curr": 420},
+        {"id": 5, "inst_id": 2, "year": "2025-2026", "cat": "increase_of_intake", "status": "deficient", "sub_date": date(2025, 4, 10), "risk": 88.0, "risk_lvl": "High", "intake": 600, "curr": 420},
+        {"id": 6, "inst_id": 2, "year": "2026-2027", "cat": "increase_of_intake", "status": "draft", "sub_date": date(2026, 2, 28), "risk": 35.0, "risk_lvl": "Medium", "intake": 540, "curr": 420},
+
+        # Inst 3: Northern Poly (Lucknow)
+        {"id": 7, "inst_id": 3, "year": "2024-2025", "cat": "extension_of_approval", "status": "approved", "sub_date": date(2024, 4, 20), "risk": 15.0, "risk_lvl": "Low", "intake": 360, "curr": 360},
+        {"id": 8, "inst_id": 3, "year": "2025-2026", "cat": "extension_of_approval", "status": "under_review", "sub_date": date(2025, 4, 10), "risk": 72.0, "risk_lvl": "High", "intake": 360, "curr": 360},
+        {"id": 9, "inst_id": 3, "year": "2026-2027", "cat": "extension_of_approval", "status": "submitted", "sub_date": date(2026, 3, 5), "risk": 20.0, "risk_lvl": "Low", "intake": 360, "curr": 360},
+
+        # Inst 4: Bengal BITS (Kolkata)
+        {"id": 10, "inst_id": 4, "year": "2024-2025", "cat": "introduction_of_new_course", "status": "approved", "sub_date": date(2024, 5, 2), "risk": 12.0, "risk_lvl": "Low", "intake": 300, "curr": 300},
+        {"id": 11, "inst_id": 4, "year": "2025-2026", "cat": "introduction_of_new_course", "status": "under_review", "sub_date": date(2025, 4, 10), "risk": 28.0, "risk_lvl": "Low", "intake": 360, "curr": 300},
+        {"id": 12, "inst_id": 4, "year": "2026-2027", "cat": "extension_of_approval", "status": "submitted", "sub_date": date(2026, 2, 25), "risk": 16.0, "risk_lvl": "Low", "intake": 360, "curr": 360},
+
+        # Inst 5: Deccan Engg (Hyderabad)
+        {"id": 13, "inst_id": 5, "year": "2024-2025", "cat": "extension_of_approval", "status": "approved", "sub_date": date(2024, 4, 18), "risk": 16.0, "risk_lvl": "Low", "intake": 480, "curr": 480},
+        {"id": 14, "inst_id": 5, "year": "2025-2026", "cat": "extension_of_approval", "status": "under_review", "sub_date": date(2025, 4, 10), "risk": 38.0, "risk_lvl": "Medium", "intake": 480, "curr": 480},
+        {"id": 15, "inst_id": 5, "year": "2026-2027", "cat": "extension_of_approval", "status": "submitted", "sub_date": date(2026, 3, 10), "risk": 22.0, "risk_lvl": "Low", "intake": 480, "curr": 480},
+
+        # Inst 6: Central Valley (Bhopal)
+        {"id": 16, "inst_id": 6, "year": "2024-2025", "cat": "extension_of_approval", "status": "approved", "sub_date": date(2024, 4, 25), "risk": 18.0, "risk_lvl": "Low", "intake": 300, "curr": 300},
+        {"id": 17, "inst_id": 6, "year": "2025-2026", "cat": "extension_of_approval", "status": "deficient", "sub_date": date(2025, 4, 10), "risk": 84.0, "risk_lvl": "High", "intake": 420, "curr": 300},
+        {"id": 18, "inst_id": 6, "year": "2026-2027", "cat": "extension_of_approval", "status": "submitted", "sub_date": date(2026, 2, 20), "risk": 25.0, "risk_lvl": "Low", "intake": 300, "curr": 300},
+    ]
+
+    for cfg in app_configs:
+        app_obj = Application(
+            id=cfg["id"],
+            institution_id=cfg["inst_id"],
+            category=cfg["cat"],
+            academic_year=cfg["year"],
+            status=cfg["status"],
+            submission_date=cfg["sub_date"],
+            submitted_by=4 if cfg["inst_id"] == 1 else 5,
+            assigned_officer=2 if cfg["inst_id"] in [1, 5] else 3,
+            risk_score=cfg["risk"],
+            risk_level=cfg["risk_lvl"],
+            intake_applied=cfg["intake"],
+            current_intake=cfg["curr"],
+        )
+        db.add(app_obj)
     await db.commit()
 
-    # 4. Generate Synthetic Document Files on Disk
+    # 4. Generate Core Regulatory Documents for Key Operational Applications
     sample_docs_info = [
         {
-            "application_id": 1,
+            "application_id": 2,
             "institution_id": 1,
             "document_type": "fire_safety_certificate",
             "filename": "fire_safety_apex.pdf",
@@ -225,7 +251,7 @@ async def seed_database(db: AsyncSession) -> None:
             ],
         },
         {
-            "application_id": 1,
+            "application_id": 2,
             "institution_id": 1,
             "document_type": "affidavit",
             "filename": "affidavit_apex.pdf",
@@ -243,7 +269,7 @@ async def seed_database(db: AsyncSession) -> None:
             ],
         },
         {
-            "application_id": 2,
+            "application_id": 5,
             "institution_id": 2,
             "document_type": "fire_safety_certificate",
             "filename": "fire_safety_zenith_expired.pdf",
@@ -257,6 +283,20 @@ async def seed_database(db: AsyncSession) -> None:
                 "Permanent ID: 1-100567",
                 "Intake Approved: 420",
                 "Status: EXPIRED - Renewal Pending Inspection",
+            ],
+        },
+        {
+            "application_id": 5,
+            "institution_id": 2,
+            "document_type": "affidavit",
+            "filename": "affidavit_zenith_mismatch.pdf",
+            "title": "AFFIDAVIT ON STAMP PAPER",
+            "lines": [
+                "AFFIDAVIT ON STAMP PAPER",
+                "I, Secretary of Zenith College of Engineering, solemnly affirm:",
+                "Declared Student Intake for 2025-2026: 420 seats.",
+                "Application form requested: 600 seats.",
+                "Discrepancy noted between affidavit claim and intake expansion request.",
             ],
         },
     ]
@@ -285,7 +325,7 @@ async def seed_database(db: AsyncSession) -> None:
         created_docs.append((doc_entry, s_doc))
     await db.commit()
 
-    # 5. Populate Extracted Data for Application 1 & 2 Documents
+    # 5. Populate Extracted Data
     for doc_entry, meta in created_docs:
         await db.refresh(doc_entry)
         if "apex" in meta["filename"]:
@@ -296,19 +336,20 @@ async def seed_database(db: AsyncSession) -> None:
             db.add(ExtractedData(document_id=doc_entry.id, field_name="expiry_date", field_value="2025-06-14", confidence=0.94))
             db.add(ExtractedData(document_id=doc_entry.id, field_name="area_sqft", field_value="65000", confidence=0.92))
             db.add(ExtractedData(document_id=doc_entry.id, field_name="intake", field_value="480", confidence=0.93))
-            db.add(ExtractedData(document_id=doc_entry.id, field_name="faculty_ids", field_value="ABCDE1234F, BCDEF2345G, CDEFG3456H, DEFGH4567I", confidence=0.96))
         else:
             db.add(ExtractedData(document_id=doc_entry.id, field_name="institution_name", field_value="Zenith College of Engineering", confidence=0.98))
             db.add(ExtractedData(document_id=doc_entry.id, field_name="certificate_number", field_value="CFD/2023/FS-1042-EXPIRED", confidence=0.95))
             db.add(ExtractedData(document_id=doc_entry.id, field_name="issue_date", field_value="2023-01-10", confidence=0.94))
             db.add(ExtractedData(document_id=doc_entry.id, field_name="expiry_date", field_value="2024-01-09", confidence=0.94))
+            db.add(ExtractedData(document_id=doc_entry.id, field_name="intake", field_value="420", confidence=0.91))
     await db.commit()
 
-    # 6. Seed Flags for Application 2 (to demonstrate high risk)
-    db.add(
+    # 6. Seed Fresh Active Discrepancy Flags (Zero Resolved Flags)
+    flags_to_seed = [
+        # Zenith College (App 5) - High Risk
         Flag(
-            application_id=2,
-            document_id=created_docs[-1][0].id,
+            application_id=5,
+            document_id=created_docs[2][0].id,
             flag_type="validation",
             severity="high",
             code="VAL-DOC-EXPIRED",
@@ -317,11 +358,23 @@ async def seed_database(db: AsyncSession) -> None:
             confidence=0.98,
             rule_id="DOC-EXPIRY-FIRE",
             check_name="Validity Window Check",
-        )
-    )
-    db.add(
+            is_resolved=False,
+        ),
         Flag(
-            application_id=2,
+            application_id=5,
+            document_id=created_docs[3][0].id,
+            flag_type="validation",
+            severity="high",
+            code="VAL-INTAKE-MISMATCH",
+            title="Intake Numerical Discrepancy",
+            reason="Affidavit declares intake capacity of 420 seats, conflicting with expansion application request of 600 seats.",
+            confidence=0.95,
+            rule_id="INTAKE-AFFIDAVIT-CHECK",
+            check_name="Intake Consistency Reconciliation",
+            is_resolved=False,
+        ),
+        Flag(
+            application_id=5,
             document_id=None,
             flag_type="compliance",
             severity="critical",
@@ -331,18 +384,47 @@ async def seed_database(db: AsyncSession) -> None:
             confidence=1.0,
             rule_id="INTAKE-GROWTH-CAP",
             check_name="Intake Expansion Bounds Check",
-        )
-    )
+            is_resolved=False,
+        ),
+        # Northern Poly (App 8) - Land and Faculty Collusion
+        Flag(
+            application_id=8,
+            document_id=None,
+            flag_type="anomaly",
+            severity="critical",
+            code="ANO-GHOST-FACULTY",
+            title="Cross-Campus Ghost Faculty Collusion",
+            reason="Professor Dr. Vikram Singh claimed as full-time regular faculty concurrently in Pune and Chennai.",
+            confidence=0.97,
+            rule_id="FACULTY-COLLUSION-GRAPH",
+            check_name="Multi-Campus Ghost Faculty Graph Analyzer",
+            is_resolved=False,
+        ),
+        Flag(
+            application_id=8,
+            document_id=None,
+            flag_type="anomaly",
+            severity="high",
+            code="ANO-SHARED-LAND",
+            title="Cross-Trust Land Survey Duplication",
+            reason="Survey parcel #441/2 simultaneously registered to unrelated educational trusts in land title deeds.",
+            confidence=0.94,
+            rule_id="LAND-COLLUSION-GRAPH",
+            check_name="Cross-Trust Land Survey Collusion Resolver",
+            is_resolved=False,
+        ),
+    ]
+
+    for fl in flags_to_seed:
+        db.add(fl)
     await db.commit()
 
     # 7. Seed Knowledge Graph Entities & Collusion Relations
-    # Example 1: Dr. R. Ramanathan working at both Inst 1 (Apex) and Inst 2 (Zenith)
-    # Example 2: Same land parcel Survey #441/2 claimed by both Inst 1 and Inst 3
     nodes = [
         GraphEntity(id=1, entity_type="institution", entity_id="1-100234", name="Apex Institute of Technology", metadata_json=json.dumps({"city": "Chennai"})),
         GraphEntity(id=2, entity_type="institution", entity_id="1-100567", name="Zenith College of Engineering", metadata_json=json.dumps({"city": "Pune"})),
         GraphEntity(id=3, entity_type="institution", entity_id="1-100891", name="Northern Polytechnic Institute", metadata_json=json.dumps({"city": "Lucknow"})),
-        GraphEntity(id=4, entity_type="faculty", entity_id="PAN-RMN-7741", name="Dr. R. Ramanathan (Professor, CSE)", metadata_json=json.dumps({"pan": "ABCDE7741R", "specialization": "VLSI"})),
+        GraphEntity(id=4, entity_type="faculty", entity_id="FAC011", name="Dr. Vikram Singh (Professor, CSE)", metadata_json=json.dumps({"pan": "ABCDE7741R", "specialization": "VLSI"})),
         GraphEntity(id=5, entity_type="land", entity_id="SURV-441-2", name="Survey Parcel #441/2 (12 Acres)", metadata_json=json.dumps({"survey_no": "441/2", "district": "Kanchipuram"})),
         GraphEntity(id=6, entity_type="trust", entity_id="TR-TN-2004-981", name="Sri Krishna Educational & Charitable Trust", metadata_json=json.dumps({"reg": "TR-TN-2004-981"})),
     ]
@@ -351,13 +433,13 @@ async def seed_database(db: AsyncSession) -> None:
     await db.commit()
 
     edges = [
-        # Faculty duplication
-        GraphRelation(source_entity_id=4, target_entity_id=1, relation_type="employed_at", is_flagged=True, flag_reason="COLLUSION ANOMALY: Dual full-time faculty listing across multiple institutions simultaneously."),
-        GraphRelation(source_entity_id=4, target_entity_id=2, relation_type="employed_at", is_flagged=True, flag_reason="COLLUSION ANOMALY: Dual full-time faculty listing across multiple institutions simultaneously."),
-        # Land parcel duplication
-        GraphRelation(source_entity_id=1, target_entity_id=5, relation_type="owns_land", is_flagged=True, flag_reason="COLLUSION ANOMALY: Same land parcel Survey #441/2 concurrently claimed by 2 separate institutions."),
-        GraphRelation(source_entity_id=3, target_entity_id=5, relation_type="owns_land", is_flagged=True, flag_reason="COLLUSION ANOMALY: Same land parcel Survey #441/2 concurrently claimed by 2 separate institutions."),
-        # Trust links
+        # Faculty duplication (flagged collusion across cities)
+        GraphRelation(source_entity_id=4, target_entity_id=1, relation_type="employed_at", is_flagged=True, flag_reason="COLLUSION ANOMALY: Dual full-time faculty listing across institutions in Pune and Chennai simultaneously."),
+        GraphRelation(source_entity_id=4, target_entity_id=2, relation_type="employed_at", is_flagged=True, flag_reason="COLLUSION ANOMALY: Dual full-time faculty listing across institutions in Pune and Chennai simultaneously."),
+        # Land parcel duplication (flagged collusion across unrelated trusts)
+        GraphRelation(source_entity_id=1, target_entity_id=5, relation_type="owns_land", is_flagged=True, flag_reason="COLLUSION ANOMALY: Land parcel Survey #441/2 concurrently claimed by unrelated educational trusts."),
+        GraphRelation(source_entity_id=3, target_entity_id=5, relation_type="owns_land", is_flagged=True, flag_reason="COLLUSION ANOMALY: Land parcel Survey #441/2 concurrently claimed by unrelated educational trusts."),
+        # Sponsoring trust governance links
         GraphRelation(source_entity_id=1, target_entity_id=6, relation_type="governed_by", is_flagged=False),
         GraphRelation(source_entity_id=3, target_entity_id=6, relation_type="governed_by", is_flagged=False),
     ]
@@ -371,6 +453,6 @@ async def seed_database(db: AsyncSession) -> None:
         action="GENESIS_SYSTEM_INITIALIZATION",
         actor_id=1,
         actor_username="system_init",
-        details={"status": "INITIALIZED", "system": "AICTE-Verify Backend Engine", "mode": "SIMULATED_PROTOTYPE"},
+        details={"status": "INITIALIZED", "system": "AICTE-Verify Backend Engine", "mode": "SIMULATED_PROTOTYPE", "seeded_applications": 18, "seeded_institutions": 6},
         rule_check="INTEGRITY_GENESIS_CHAIN_START",
     )

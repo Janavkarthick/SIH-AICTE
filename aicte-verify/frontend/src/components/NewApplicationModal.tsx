@@ -140,7 +140,7 @@ export const NewApplicationModal: React.FC<NewApplicationModalProps> = ({
                 className="w-full text-xs border border-slate-300 rounded-lg p-2.5 font-mono font-bold text-slate-800 outline-none focus:border-aicte-500"
                 required
               />
-              <span className="text-[10px] text-slate-400">Under 1:20 teacher-student norm</span>
+              <span className="text-[10px] text-slate-400">Under teacher-student norm [Reference - verify against Approval Process Handbook] (illustrative)</span>
             </div>
 
             <div>

@@ -130,7 +130,7 @@ export const DashboardPage: React.FC = () => {
                 ? `${myApp?.applied_intake || 420} seats`
                 : isOfficer
                 ? appList.length
-                : (stats?.total_applications?.toLocaleString() || '1,240')}
+                : (stats?.total_applications?.toLocaleString() || '18')}
             </h3>
             <span className="text-[11px] text-emerald-600 font-medium">
               {isCollege
@@ -158,7 +158,7 @@ export const DashboardPage: React.FC = () => {
                 <StatusBadge status={myApp?.status || 'under_review'} type="application" />
               ) : (
                 <h3 className="text-2xl font-black text-amber-600">
-                  {isOfficer ? regionalPending : (stats?.pending_review ?? 184)}
+                  {isOfficer ? regionalPending : (stats?.pending_review ?? 6)}
                 </h3>
               )}
             </div>
@@ -184,7 +184,7 @@ export const DashboardPage: React.FC = () => {
               {isCollege ? 'Deficiency Flags' : isOfficer ? 'Regional Critical Flags' : 'Critical Flags'}
             </p>
             <h3 className="text-2xl font-black text-rose-600 mt-1">
-              {isCollege ? (myApp?.total_flags_count || 0) : isOfficer ? regionalCriticalFlags : (stats?.flags_by_severity?.critical ?? 76)}
+              {isCollege ? (myApp?.total_flags_count || 0) : isOfficer ? regionalCriticalFlags : (stats?.flags_by_severity?.critical ?? 2)}
             </h3>
             <span className="text-[11px] text-rose-600 font-medium">
               {isCollege

@@ -1,12 +1,13 @@
 {
-  "id": "eval-1793045928",
-  "timestamp": "2026-10-27T01:48:48.052547",
+  "id": "eval-1793048711",
+  "timestamp": "2026-10-27T02:35:11.234983",
   "environment": {
     "platform": "Windows-11-10.0.26300-SP0",
     "python_version": "3.12.10",
     "pymupdf_available": true,
     "pymupdf_version": "1.24.10",
-    "docker_run_mode": "Automated via GitHub Actions CI (.github/workflows/ci.yml); not run locally on Windows host"
+    "docker_run_mode": "Docker build not run on this host",
+    "ocr_status": "Tamil/Hindi OCR is configured in the Docker image but has not been verified end to end."
   },
   "benchmark_dataset_size": 285,
   "total_samples": 285,
@@ -17,16 +18,16 @@
   "recall": 100.0,
   "f1_score": 100.0,
   "overall_accuracy": 1.0,
-  "execution_time_ms": 5895,
+  "execution_time_ms": 1720,
   "avg_processing_time_per_document": 0.003,
   "name_matcher_suite": {
     "tuning_set": {
       "samples_tested": 10,
-      "true_positives": 10,
+      "true_positives": 9,
       "true_negatives": 0,
       "false_positives": 0,
-      "false_negatives": 0,
-      "recall": 100.0,
+      "false_negatives": 1,
+      "recall": 90.0,
       "false_positive_rate": 0.0,
       "precision": 100.0,
       "details": [
@@ -48,8 +49,8 @@
           "name_a": "PSG College of Technology",
           "name_b": "P.S.G. College of Technology",
           "expected": true,
-          "result": true,
-          "verdict": "TP (Correct Match)"
+          "result": false,
+          "verdict": "FN (Missed Match)"
         },
         {
           "name_a": "Coimbatore Institute of Engineering and Technology",
@@ -102,7 +103,7 @@
         }
       ]
     },
-    "held_out_set": {
+    "second_set": {
       "samples_tested": 15,
       "true_positives": 8,
       "true_negatives": 7,
@@ -213,6 +214,88 @@
         {
           "name_a": "Birla Institute of Technology, Mesra",
           "name_b": "Birla Institute of Technology and Science, Pilani",
+          "expected": false,
+          "result": false,
+          "verdict": "TN (Correct Distinction)"
+        }
+      ]
+    },
+    "untouched_set": {
+      "samples_tested": 10,
+      "true_positives": 3,
+      "true_negatives": 4,
+      "false_positives": 1,
+      "false_negatives": 2,
+      "recall": 60.0,
+      "false_positive_rate": 20.0,
+      "precision": 75.0,
+      "details": [
+        {
+          "name_a": "Vidyavardhini's College of Engineering and Technology, Vasai",
+          "name_b": "VCET Vasai",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Sardar Patel College of Engineering, Andheri Mumbai",
+          "name_b": "Sardar Patel College of Engg Andheri",
+          "expected": true,
+          "result": false,
+          "verdict": "FN (Missed Match)"
+        },
+        {
+          "name_a": "Jawaharlal Nehru National College of Engineering, Shimoga",
+          "name_b": "JNNCE Shimoga",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Maulana Azad National Institute of Technology, Bhopal",
+          "name_b": "MANIT Bhopal",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Shri Ramdeobaba College of Engineering and Management, Nagpur",
+          "name_b": "Shri Ramdeobaba College of Engg & Mgmt",
+          "expected": true,
+          "result": false,
+          "verdict": "FN (Missed Match)"
+        },
+        {
+          "name_a": "Indian Institute of Information Technology Allahabad",
+          "name_b": "Indian Institute of Information Technology Gwalior",
+          "expected": false,
+          "result": false,
+          "verdict": "TN (Correct Distinction)"
+        },
+        {
+          "name_a": "National Institute of Technology Rourkela",
+          "name_b": "Indian Institute of Technology Rourkela",
+          "expected": false,
+          "result": true,
+          "verdict": "FP (False Alarm)"
+        },
+        {
+          "name_a": "SVKM's NMIMS Mukesh Patel School of Technology",
+          "name_b": "Mukesh Patel Institute of Technology Shirpur",
+          "expected": false,
+          "result": false,
+          "verdict": "TN (Correct Distinction)"
+        },
+        {
+          "name_a": "Army Institute of Technology, Pune",
+          "name_b": "Pune Institute of Computer Technology, Pune",
+          "expected": false,
+          "result": false,
+          "verdict": "TN (Correct Distinction)"
+        },
+        {
+          "name_a": "Government College of Technology, Coimbatore",
+          "name_b": "Coimbatore Institute of Technology, Coimbatore",
           "expected": false,
           "result": false,
           "verdict": "TN (Correct Distinction)"

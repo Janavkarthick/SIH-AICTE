@@ -117,7 +117,7 @@ export const CapacityCalculator: React.FC<CapacityCalculatorProps> = ({
         <div>
           <div className="flex justify-between text-xs mb-1">
             <span className="font-semibold text-slate-700">
-              Faculty Ceiling (Based on {capacity.faculty_count} verified faculty @ 1:20 norm)
+              Faculty Ceiling (Based on {capacity.faculty_count} verified faculty @ teacher-student norm [Reference - verify against Approval Process Handbook] (illustrative))
             </span>
             <span className="font-mono font-bold text-slate-900">
               {capacity.max_capacity_faculty} seats

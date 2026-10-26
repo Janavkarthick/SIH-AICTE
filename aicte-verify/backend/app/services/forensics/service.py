@@ -247,8 +247,20 @@ class ForensicsService:
 
         try:
             suspicious_lines = 0
-            symbol_fonts = {"zapfdingbats", "symbol", "wingdings"}
             doc = fitz.open(file_path)
+
+            def detect_script(text: str, font_name: str) -> str:
+                f_lower = font_name.lower()
+                if any(s in f_lower for s in ("zapfdingbats", "symbol", "wingdings", "dingbats")):
+                    return "symbol"
+                if any("\u0900" <= c <= "\u097f" for c in text):
+                    return "devanagari"
+                if any("\u0b80" <= c <= "\u0bff" for c in text):
+                    return "tamil"
+                if any(("a" <= c <= "z") or ("A" <= c <= "Z") for c in text):
+                    return "latin"
+                return "neutral"
+
             for page_idx, page in enumerate(doc):
                 page_dict = page.get_text("dict")
                 for block in page_dict.get("blocks", []):
@@ -257,23 +269,33 @@ class ForensicsService:
                             spans = line.get("spans", [])
                             text_spans = [s for s in spans if s.get("text", "").strip()]
                             if len(text_spans) > 1:
-                                # Skip benign bilingual / fallback or dingbat rendering
-                                if any(any(sym in str(s.get("font", "")).lower() for sym in symbol_fonts) for s in text_spans):
-                                    continue
-                                if any(any(ord(c) > 127 for c in s.get("text", "")) for s in text_spans):
-                                    continue
-
-                                # Intra-line splice: font family change within the same line at the same size
-                                size_groups: Dict[float, set] = {}
+                                # Group spans by script system to compare fonts only within the same script
+                                script_groups: Dict[str, List[Dict[str, Any]]] = {}
                                 for s in text_spans:
-                                    sz = round(float(s.get("size", 0.0)), 1)
-                                    font_name = str(s.get("font", "")).split("+")[-1].split("-")[0].lower()
-                                    if font_name:
-                                        size_groups.setdefault(sz, set()).add(font_name)
-                                for sz, fonts in size_groups.items():
-                                    if len(fonts) > 1:
-                                        suspicious_lines += 1
+                                    txt = s.get("text", "").strip()
+                                    fnt = str(s.get("font", ""))
+                                    scr = detect_script(txt, fnt)
+                                    if scr not in ("neutral", "symbol"):
+                                        script_groups.setdefault(scr, []).append(s)
+
+                                # Compare fonts ONLY between spans of the SAME script at identical size
+                                line_has_anomaly = False
+                                for scr, spans_in_scr in script_groups.items():
+                                    if len(spans_in_scr) > 1:
+                                        size_groups: Dict[float, set] = {}
+                                        for s in spans_in_scr:
+                                            sz = round(float(s.get("size", 0.0)), 1)
+                                            font_name = str(s.get("font", "")).split("+")[-1].split("-")[0].lower()
+                                            if font_name:
+                                                size_groups.setdefault(sz, set()).add(font_name)
+                                        for sz, fonts in size_groups.items():
+                                            if len(fonts) > 1:
+                                                line_has_anomaly = True
+                                                break
+                                    if line_has_anomaly:
                                         break
+                                if line_has_anomaly:
+                                    suspicious_lines += 1
             doc.close()
 
             if suspicious_lines >= 3:

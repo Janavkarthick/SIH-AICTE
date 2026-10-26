@@ -347,7 +347,7 @@ def build_pdf(output_path: str):
         ("Phase 1: Institutional Application & Self-Disclosure (/apply)",
          "The college administrator selects the statutory category (Extension of Approval, Intake Increase, New Course, or New Institution) "
          "and inputs institutional coordinates, land dimensions, instructional built-up area, classrooms, CAD labs, faculty counts, and "
-         "attaches required proofs under APH Annexure 2 (Affidavit 2, Fire NOC, Occupancy Form D, Satellite Map, Audited Balance Sheet)."),
+         "attaches required proofs under statutory submission checklist [Reference - verify against Approval Process Handbook] (illustrative) (Affidavit 2, Fire NOC, Occupancy Form D, Satellite Map, Audited Balance Sheet)."),
         
         ("Phase 2: Document Ingestion & SHA-256 Immutability Check",
          "Upon upload, the backend computes the document's SHA-256 cryptographic checksum. A record is committed to the immutable audit "
@@ -452,7 +452,7 @@ def build_pdf(output_path: str):
             "name": "Model 6: Generative Large Language Model (Gemini AI) for Statutory Notices",
             "tech": "Google Gemini 1.5 Pro / Flash Multi-Lingual Generative Architecture",
             "task": "Synthesize observed technical infractions into legally sound, formal administrative Deficiency Hearing Notices in English, Hindi, and Tamil.",
-            "how": "The LLM receives structured JSON payload summaries of observed forensic and regulatory flags. Using strict system prompts encoding AICTE administrative law principles, it synthesizes formal deficiency notices quoting exact APH clauses, granting a 7-day statutory hearing window, and detailing remedial requirements.",
+            "how": "The LLM receives structured JSON payload summaries of observed forensic and regulatory flags. Using strict system prompts encoding AICTE administrative law principles, it synthesizes formal deficiency notices quoting standard regulatory placeholders [Reference - verify against Approval Process Handbook] (illustrative), granting a statutory hearing window, and detailing remedial requirements.",
             "why": "Administrative natural justice requires that institutions receive clear, articulate deficiency notices rather than raw database error codes. Gemini provides high-fidelity, legally formatted multi-lingual drafting, ensuring colleges in Tamil Nadu or Uttar Pradesh receive notices in their regional language."
         }
     ]
@@ -489,7 +489,7 @@ def build_pdf(output_path: str):
         [
             Paragraph("<b>College User</b><br/>(college1, college2, etc.)", table_cell_bold),
             Paragraph("Isolated to single assigned institution", table_cell),
-            Paragraph("<font color='#059669'><b>YES (Exclusive)</b></font><br/>Uploads Annexure 1 & 2 files", table_cell),
+            Paragraph("<font color='#059669'><b>YES (Exclusive)</b></font><br/>Uploads statutory submission files", table_cell),
             Paragraph("Submit new EoA applications (/apply), declare metrics, upload statutory PDFs, view scrutiny findings, read deficiency notices, download official orders.", table_cell),
         ],
         [
@@ -530,11 +530,11 @@ def build_pdf(output_path: str):
     story.append(Spacer(1, 4))
 
     aph_norms = [
-        "<b>Land Contiguity & Area (Appendix 4.1):</b> Engineering institutions in Rural areas require minimum 7.5 contiguous acres; Urban areas require minimum 5.0 contiguous acres; Mega cities require 2.5 contiguous acres.",
-        "<b>Instructional Built-Up Area (Appendix 4.2):</b> Classrooms, laboratories, drawing halls, and workshops must satisfy minimum 8.5 m² per student of total sanctioned intake.",
-        "<b>Faculty-to-Student Cadre Ratio (Clause 7.2):</b> Undergraduate Engineering programmes mandate a strict 1:20 teacher-student ratio, with a cadre distribution of 1 Professor : 2 Associate Professors : 6 Assistant Professors.",
-        "<b>Computing & CAD Workstation Facilities (Clause 5.4):</b> Minimum 1 computer workstation per 4 students in Engineering & Technology, connected via high-speed LAN with licensed design and simulation software.",
-        "<b>Mandatory Fire Safety Certification (Clause 3.1):</b> Annual Fire Safety NOC issued by the state Fire Disaster Management Command is a non-derogable condition precedent for grant of Extension of Approval (EoA)."
+        "<b>Land Contiguity & Area:</b> Engineering institutions require contiguous acreage verified against registered title deeds [Reference - verify against Approval Process Handbook] (illustrative).",
+        "<b>Instructional Built-Up Area:</b> Classrooms, laboratories, drawing halls, and workshops must satisfy minimum area per student of total sanctioned intake [Reference - verify against Approval Process Handbook] (illustrative).",
+        "<b>Faculty-to-Student Cadre Ratio:</b> Undergraduate Engineering programmes mandate teacher-student ratios and cadre distributions [Reference - verify against Approval Process Handbook] (illustrative).",
+        "<b>Computing & CAD Workstation Facilities:</b> Workstation norms per student in Engineering & Technology [Reference - verify against Approval Process Handbook] (illustrative).",
+        "<b>Mandatory Fire Safety Certification:</b> Annual Fire Safety NOC issued by the state Fire Disaster Management Command is a mandatory condition for grant of Extension of Approval (EoA) [Reference - verify against Approval Process Handbook] (illustrative)."
     ]
     for norm in aph_norms:
         story.append(Paragraph(f"• {norm}", bullet_style))

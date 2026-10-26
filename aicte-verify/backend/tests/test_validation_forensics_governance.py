@@ -384,3 +384,93 @@ def test_font_check_returns_not_run_when_pymupdf_missing(tmp_path, monkeypatch):
     assert finding.passed is False, "Must NEVER report passed=True when check was not run"
     assert "PyMuPDF library unavailable" in finding.reason
 
+
+def test_login_rate_limiter():
+    """Test Item 8(b): Login rate limiter enforces maximum 10 attempts per minute per IP."""
+    from fastapi import HTTPException
+    from app.api.auth import check_login_rate_limit, reset_rate_limiter
+
+    reset_rate_limiter()
+    test_ip = "192.168.1.42"
+
+    # 10 attempts must pass
+    for _ in range(10):
+        check_login_rate_limit(test_ip)
+
+    # 11th attempt must raise HTTP 429
+    with pytest.raises(HTTPException) as exc_info:
+        check_login_rate_limit(test_ip)
+    assert exc_info.value.status_code == 429
+    assert "Rate limit exceeded" in exc_info.value.detail
+
+    # Different IP should not be blocked
+    other_ip = "192.168.1.43"
+    check_login_rate_limit(other_ip)
+
+    reset_rate_limiter()
+
+
+@pytest.mark.asyncio
+async def test_upload_security_validation(in_memory_db):
+    """Test Item 8(c): Document upload rejects path traversal, disallowed extensions, and oversized files."""
+    from fastapi import HTTPException, UploadFile
+    from app.api.documents import upload_document
+    from app.models.application import Application
+    from app.models.institution import Institution
+    from app.models.user import User
+    import io
+
+    # Seed an institution, application, and user
+    inst = Institution(id=10, name="Sec Test Inst", code="1-999", city="City", state="State", region="South", address="Addr", trust_name="T", trust_registration_number="TR-1")
+    app = Application(id=10, institution_id=10, academic_year="2025-2026", category="extension_of_approval", status="draft", intake_applied=300)
+    user = User(id=10, username="test_admin", email="test_admin@aicte.gov.in", full_name="Admin", role="admin", hashed_password="x", is_active=True)
+    in_memory_db.add_all([inst, app, user])
+    await in_memory_db.commit()
+
+    # 1. Path traversal filename rejection (HTTP 400)
+    traversal_file = UploadFile(filename="../../secret.pdf", file=io.BytesIO(b"%PDF-1.4 test"))
+    with pytest.raises(HTTPException) as exc_info:
+        await upload_document(
+            application_id=10,
+            document_type="affidavit",
+            file=traversal_file,
+            current_user=user,
+            db=in_memory_db,
+        )
+    assert exc_info.value.status_code == 400
+    assert "path traversal" in exc_info.value.detail
+
+    # 2. Disallowed extension rejection (HTTP 400)
+    exe_file = UploadFile(filename="malicious.exe", file=io.BytesIO(b"MZ executable content"))
+    with pytest.raises(HTTPException) as exc_info:
+        await upload_document(
+            application_id=10,
+            document_type="affidavit",
+            file=exe_file,
+            current_user=user,
+            db=in_memory_db,
+        )
+    assert exc_info.value.status_code == 400
+    assert "Unsupported file format" in exc_info.value.detail
+
+    # 3. Oversized file rejection (HTTP 413)
+    from app.core.config import settings
+    oversized_bytes = (settings.MAX_UPLOAD_SIZE_MB * 1024 * 1024) + 1024
+    # Mock stream with large read
+    class LargeUploadFile:
+        filename = "huge_scan.pdf"
+        async def read(self):
+            return b"0" * oversized_bytes
+
+    with pytest.raises(HTTPException) as exc_info:
+        await upload_document(
+            application_id=10,
+            document_type="affidavit",
+            file=LargeUploadFile(),
+            current_user=user,
+            db=in_memory_db,
+        )
+    assert exc_info.value.status_code == 413
+    assert "exceeds" in exc_info.value.detail
+
+

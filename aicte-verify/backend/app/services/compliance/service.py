@@ -1,7 +1,7 @@
-"""Statutory Compliance Engine and Intake Capacity Calculator (Annexure A1).
+"""Statutory Compliance Engine and Intake Capacity Calculator.
 
-Evaluates institutional infrastructure, faculty quotas, land norms, and photo EXIF metadata
-against norms.json.
+All norms and checklist references: [Reference - verify against Approval Process Handbook] (illustrative).
+Evaluates institutional infrastructure, faculty quotas, land norms, and photo EXIF metadata against norms.json.
 All formulas, tolerances, and thresholds marked: illustrative: replace with Approval Process Handbook values.
 """
 
@@ -212,7 +212,7 @@ class ComplianceService:
                 rule_id="COMP-INFRA-CLASSROOMS",
                 rule_description="Dedicated Instructional Classrooms",
                 category="infrastructure",
-                declared_value="Declared in Annexure",
+                declared_value="Declared in Statutory Submission [Reference - verify against Approval Process Handbook] (illustrative)",
                 required_value=f"{min_classrooms} Classrooms",
                 status="pass",
                 details="Adequate classroom count verified against curriculum norms.",

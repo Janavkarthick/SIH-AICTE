@@ -111,5 +111,5 @@ This script walks through the key features of AICTE-Verify using the seeded synt
 - ✅ **No auto-reject / No auto-dispatch**: Officers must confirm every adverse action; phrased as "Recommend rejection", final decision rests with the competent authority
 - ✅ **Sister Campus Recognition**: Sister colleges under the same sponsoring trust sharing land are recognized as legitimate sister campuses (INFO). Duplication of full-time faculty across campuses is strictly flagged as ghost faculty (HIGH within same city, CRITICAL across different cities)
 - ✅ **Simulated**: All verification services are clearly labelled SIMULATED
-- ✅ **Multilingual OCR Note**: Tamil & Hindi OCR verified inside the Docker image (`tesseract-ocr-tam`, `tesseract-ocr-hin`); not installed on Windows host
+- ✅ **Multilingual OCR Status**: Tamil/Hindi OCR is configured in the Docker image but has not been verified end to end.
 - ✅ **Configurable**: All normative thresholds stored in JSON config files, easily updated to official Approval Process Handbook updates

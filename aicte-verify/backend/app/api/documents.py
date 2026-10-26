@@ -121,6 +121,23 @@ async def upload_document(
     if current_user.role == "college_user" and app.institution_id != current_user.institution_id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Access denied")
 
+    raw_filename = file.filename or ""
+    # Reject directory traversal attempts
+    if ".." in raw_filename or "/" in raw_filename or "\\" in raw_filename:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid filename: path traversal sequences are strictly forbidden.",
+        )
+
+    # Allowed extensions validation
+    ALLOWED_EXTENSIONS = {".pdf", ".png", ".jpg", ".jpeg", ".webp"}
+    file_ext = Path(raw_filename).suffix.lower()
+    if file_ext not in ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Unsupported file format '{file_ext}'. Only PDF and image documents are accepted.",
+        )
+
     # Read and validate size
     max_bytes = settings.MAX_UPLOAD_SIZE_MB * 1024 * 1024
     content = await file.read()

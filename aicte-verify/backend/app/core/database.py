@@ -67,7 +67,9 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
             await session.close()
 
 
-async def init_db() -> None:
-    """Create all database tables using Base metadata."""
+async def init_db(drop: bool = False) -> None:
+    """Create all database tables using Base metadata, optionally dropping first."""
     async with engine.begin() as conn:
+        if drop:
+            await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)

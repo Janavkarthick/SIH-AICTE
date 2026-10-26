@@ -38,7 +38,7 @@ from app.services.validate.service import ValidationService, are_field_values_eq
 from app.services.graph.service import GraphService
 
 
-# ─── Name Matcher Benchmark Pairs (Tuning vs Held-Out) ─────────────────────────
+# ─── Name Matcher Benchmark Pairs (Tuning vs Second Set vs Untouched Set) ─────
 
 TUNING_NAME_PAIRS = [
     ("K.S. Rangasamy College of Technology", "KS Rangasamy College of Tech", True),
@@ -53,8 +53,8 @@ TUNING_NAME_PAIRS = [
     ("Mepco Schlenk Engineering College", "Mepco Schlenk Engg Coll", True),
 ]
 
-HELDOUT_NAME_PAIRS = [
-    # 8 True Matches (Realistic Indian statutory variants)
+SECOND_NAME_PAIRS = [
+    # 8 Matches (Realistic Indian statutory variants)
     ("St. Xavier's Catholic College of Engineering", "Saint Xavier Catholic College of Engg", True),
     ("Dr. B.R. Ambedkar National Institute of Technology, Jalandhar", "Dr BR Ambedkar NIT Jalandhar", True),
     ("PSG College of Technology, Coimbatore", "P.S.G. College of Tech, Coimbatore", True),
@@ -63,7 +63,7 @@ HELDOUT_NAME_PAIRS = [
     ("Thapar Institute of Engg. & Technology (Deemed Univ)", "Thapar Institute of Engineering and Technology", True),
     ("Govt. College of Technology, Coimbatore", "Government College of Technology Coimbatore", True),
     ("Sardar Vallabhbhai National Institute of Technology, Surat", "SVNIT Surat", True),
-    # 7 True Non-Matches (Distinct colleges / conflicting branch campuses)
+    # 7 Non-Matches (Distinct colleges / conflicting branch campuses)
     ("Delhi Technological University", "Indian Institute of Technology Delhi", False),
     ("Madras Institute of Technology", "Anna University College of Engineering Guindy", False),
     ("National Institute of Technology Karnataka, Surathkal", "National Institute of Technology Calicut", False),
@@ -71,6 +71,21 @@ HELDOUT_NAME_PAIRS = [
     ("Vellore Institute of Technology, Vellore", "Vellore Institute of Technology, Bhopal", False),
     ("Government College of Technology, Coimbatore", "Government College of Engineering, Salem", False),
     ("Birla Institute of Technology, Mesra", "Birla Institute of Technology and Science, Pilani", False),
+]
+
+UNTOUCHED_NAME_PAIRS = [
+    # 5 True Matches (Written blindly without looking at matcher logic)
+    ("Vidyavardhini's College of Engineering and Technology, Vasai", "VCET Vasai", True),
+    ("Sardar Patel College of Engineering, Andheri Mumbai", "Sardar Patel College of Engg Andheri", True),
+    ("Jawaharlal Nehru National College of Engineering, Shimoga", "JNNCE Shimoga", True),
+    ("Maulana Azad National Institute of Technology, Bhopal", "MANIT Bhopal", True),
+    ("Shri Ramdeobaba College of Engineering and Management, Nagpur", "Shri Ramdeobaba College of Engg & Mgmt", True),
+    # 5 True Non-Matches (Written blindly without looking at matcher logic)
+    ("Indian Institute of Information Technology Allahabad", "Indian Institute of Information Technology Gwalior", False),
+    ("National Institute of Technology Rourkela", "Indian Institute of Technology Rourkela", False),
+    ("SVKM's NMIMS Mukesh Patel School of Technology", "Mukesh Patel Institute of Technology Shirpur", False),
+    ("Army Institute of Technology, Pune", "Pune Institute of Computer Technology, Pune", False),
+    ("Government College of Technology, Coimbatore", "Coimbatore Institute of Technology, Coimbatore", False),
 ]
 
 
@@ -481,10 +496,11 @@ def run_evaluation() -> Dict[str, Any]:
         per_check["intake_exceeds_capacity"]["tn"] += 10
         per_check["missing_document"]["tn"] += 10
 
-    # 4. EVALUATE NAME MATCHER SUITE (Tuning vs Held-Out)
-    print("Evaluating Name Matcher Suite on Tuning and Held-Out Sets...")
+    # 4. EVALUATE NAME MATCHER SUITE (Tuning vs Second Set vs Untouched Set)
+    print("Evaluating Name Matcher Suite across Tuning, Second, and Untouched Sets...")
     tuning_eval = evaluate_name_pairs(TUNING_NAME_PAIRS)
-    heldout_eval = evaluate_name_pairs(HELDOUT_NAME_PAIRS)
+    second_eval = evaluate_name_pairs(SECOND_NAME_PAIRS)
+    untouched_eval = evaluate_name_pairs(UNTOUCHED_NAME_PAIRS)
 
     # 5. COMPUTE RECONCILED METRICS
     print("4/4 Reconciling Precision, Recall, and F1 Metrics...")
@@ -553,7 +569,8 @@ def run_evaluation() -> Dict[str, Any]:
             "python_version": sys.version.split()[0],
             "pymupdf_available": HAS_FITZ,
             "pymupdf_version": FITZ_VERSION,
-            "docker_run_mode": "Automated via GitHub Actions CI (.github/workflows/ci.yml); not run locally on Windows host",
+            "docker_run_mode": "Docker build not run on this host",
+            "ocr_status": "Tamil/Hindi OCR is configured in the Docker image but has not been verified end to end.",
         },
         "benchmark_dataset_size": total_samples_evaluated,
         "total_samples": total_samples_evaluated,
@@ -568,7 +585,8 @@ def run_evaluation() -> Dict[str, Any]:
         "avg_processing_time_per_document": round(avg_proc_time, 3),
         "name_matcher_suite": {
             "tuning_set": tuning_eval,
-            "held_out_set": heldout_eval,
+            "second_set": second_eval,
+            "untouched_set": untouched_eval,
         },
         "document_classification": {
             "precision": round(class_acc, 3),
@@ -611,51 +629,61 @@ def generate_markdown_report(results: Dict[str, Any]) -> str:
     md.append(f"**Benchmark Dataset Size:** {results['total_samples']} neutral test units "
               f"({results['ground_truth_faults']} planted faults, {results['ground_truth_clean']} clean controls)")
     md.append("")
-    md.append("> [!IMPORTANT]")
-    md.append("> **SYNTHETIC BENCHMARK — NOT REAL-WORLD ACCURACY.**")
-    md.append("> Clean and faulty documents were produced by the same synthetic generator, so these results are not real-world accuracy.")
-    md.append("> All evaluation files use neutral IDs (`DOC_0001.pdf`..`DOC_0295.jpg`) with zero filename hints.")
-    md.append("> Detectors never inspect ground truth or file names. These metrics measure heuristic accuracy")
-    md.append("> on controlled synthetic data and do not represent guaranteed field performance on unconstrained real-world scans.")
-    md.append("")
-    md.append("## Execution Environment Details")
+    md.append("## 1. Execution Environment Details")
     env = results.get("environment", {})
     md.append(f"- **Host OS / Platform:** {env.get('platform', 'Windows 11')}")
     md.append(f"- **Host Python Version:** Python {env.get('python_version', sys.version.split()[0])} (in `.venv` virtual environment)")
     pymupdf_str = f"Yes (v{env.get('pymupdf_version')} installed in `.venv`; intra-line font checks executed live on host)" if env.get('pymupdf_available') else "No"
     md.append(f"- **PyMuPDF (fitz) Available:** {pymupdf_str}")
     md.append(f"- **Docker Execution Status:** {env.get('docker_run_mode')}")
+    md.append(f"- **Multilingual OCR Status:** {env.get('ocr_status', 'Tamil/Hindi OCR is configured in the Docker image but has not been verified end to end.')}")
     md.append("")
-    md.append("## Name Matcher Generalization (Tuning vs. Held-Out Evaluation)")
-    md.append("Evaluates the institution legal name equivalence resolver (`are_field_values_equivalent`) across statutory abbreviations, initialisms, constituent colleges, and branch campus designations.")
+    md.append("## 2. Per-Check Performance Breakdown (16 Heuristic Categories)")
     md.append("")
-    tuning = results["name_matcher_suite"]["tuning_set"]
-    heldout = results["name_matcher_suite"]["held_out_set"]
-    md.append("| Evaluation Set | Samples Tested | Match Composition | TP | TN | FP | FN | Recall | False Positive Rate (FPR) | Generalization Verdict |")
-    md.append("|---|---|---|---|---|---|---|---|---|---|")
-    md.append(f"| **Tuning Set** | {tuning['samples_tested']} | 10 Positive Matches | {tuning['true_positives']} | {tuning['true_negatives']} | {tuning['false_positives']} | {tuning['false_negatives']} | {tuning['recall']:.1f}% | {tuning['false_positive_rate']:.1f}% | Baseline Development Set |")
-    md.append(f"| **Held-Out Set** | {heldout['samples_tested']} | 8 Matches / 7 Non-Matches | {heldout['true_positives']} | {heldout['true_negatives']} | {heldout['false_positives']} | {heldout['false_negatives']} | {heldout['recall']:.1f}% | {heldout['false_positive_rate']:.1f}% | **Zero Overfitting Confirmed** |")
-    md.append("")
-    md.append("### Held-Out Evaluation Sample Pair Inspection")
-    md.append("| Candidate Name A | Candidate Name B | Expected Classification | Result | Verdict |")
-    md.append("|---|---|---|---|---|")
-    for d in heldout["details"]:
-        exp_str = "Match (Equivalent)" if d["expected"] else "Non-Match (Distinct)"
-        res_str = "Match" if d["result"] else "Non-Match"
-        md.append(f"| {d['name_a']} | {d['name_b']} | {exp_str} | {res_str} | **{d['verdict']}** |")
-    md.append("")
-    md.append("## Per-Check Performance Breakdown (16 Heuristic Categories)")
-    md.append("")
-    md.append("| Check Name | Category | Planted | TP | FP | FN | Not Run | Precision | Recall | F1 Score | Validation Status |")
-    md.append("|---|---|---|---|---|---|---|---|---|---|---|")
+    md.append("| Check Name | Category | Planted | TP | FP | FN | TN | Not Run | Precision | Recall | F1 Score | Validation Status |")
+    md.append("|---|---|---|---|---|---|---|---|---|---|---|---|")
     for chk in results["detailed_checks"]:
         not_run_str = str(chk.get("not_run", 0))
         prec_str = f"{chk['precision']:.1f}%" if chk.get("status") != "NOT RUN" else "N/A"
         rec_str = f"{chk['recall']:.1f}%" if chk.get("status") != "NOT RUN" else "N/A"
         f1_str = f"{chk['f1']:.1f}%" if chk.get("status") != "NOT RUN" else "N/A"
-        md.append(f"| {chk['check_name']} | `{chk['category']}` | {chk['planted']} | {chk['tp']} | {chk['fp']} | {chk['fn']} | {not_run_str} | {prec_str} | {rec_str} | {f1_str} | **{chk['status']}** |")
+        md.append(f"| {chk['check_name']} | `{chk['category']}` | {chk['planted']} | {chk['tp']} | {chk['fp']} | {chk['fn']} | {chk['tn']} | {not_run_str} | {prec_str} | {rec_str} | {f1_str} | **{chk['status']}** |")
     md.append("")
-    md.append("## Reconciled Summary & Counting Methodology")
+    md.append("> [!IMPORTANT]")
+    md.append("> **Clean and faulty documents come from the same synthetic generator; these results are not real-world accuracy.**")
+    md.append("> Faults and clean files were produced by the internal synthetic generator (`scripts/generate_synthetic.py`), and the detection checks (including intra-line font consistency, ELA, and metadata checks) were tuned on them.")
+    md.append("> All evaluation files use neutral IDs (`DOC_0001.pdf`..`DOC_0295.jpg`) with zero filename hints. Detectors never inspect ground truth or file names.")
+    md.append("> Real-world documents exhibit scan skew, lossy recompression, mobile camera artifacts, and diverse genuine fonts not captured in synthetic generators.")
+    md.append("")
+    md.append("## 3. Name Matcher Generalization (Three-Set Evaluation)")
+    md.append("Evaluates the institution legal name equivalence resolver (`are_field_values_equivalent`) across statutory abbreviations, initialisms, constituent colleges, and branch campus designations.")
+    md.append("")
+    tuning = results["name_matcher_suite"]["tuning_set"]
+    second = results["name_matcher_suite"]["second_set"]
+    untouched = results["name_matcher_suite"]["untouched_set"]
+    md.append("| Evaluation Set | Samples Tested | Match Composition | TP | TN | FP | FN | Recall | False Positive Rate (FPR) | Classification Performance |")
+    md.append("|---|---|---|---|---|---|---|---|---|---|")
+    md.append(f"| **Tuning Set** | {tuning['samples_tested']} | 10 Positive Matches | {tuning['true_positives']} | {tuning['true_negatives']} | {tuning['false_positives']} | {tuning['false_negatives']} | {tuning['recall']:.1f}% | {tuning['false_positive_rate']:.1f}% | Baseline Development Set |")
+    md.append(f"| **Second name-pair set (also used during matcher refinement; not a true held-out test)** | {second['samples_tested']} | 8 Matches / 7 Non-Matches | {second['true_positives']} | {second['true_negatives']} | {second['false_positives']} | {second['false_negatives']} | {second['recall']:.1f}% | {second['false_positive_rate']:.1f}% | Refinement & Regression Set |")
+    md.append(f"| **Untouched Set** | {untouched['samples_tested']} | 5 Matches / 5 Non-Matches | {untouched['true_positives']} | {untouched['true_negatives']} | {untouched['false_positives']} | {untouched['false_negatives']} | {untouched['recall']:.1f}% | {untouched['false_positive_rate']:.1f}% | Blind Unseen Test (Run Once) |")
+    md.append("")
+    md.append("### Untouched Set Sample Pair Inspection (Blind Test)")
+    md.append("| Candidate Name A | Candidate Name B | Expected Classification | Result | Verdict |")
+    md.append("|---|---|---|---|---|")
+    for d in untouched["details"]:
+        exp_str = "Match (Equivalent)" if d["expected"] else "Non-Match (Distinct)"
+        res_str = "Match" if d["result"] else "Non-Match"
+        md.append(f"| {d['name_a']} | {d['name_b']} | {exp_str} | {res_str} | **{d['verdict']}** |")
+    md.append("")
+    md.append("### Second Name-Pair Set Inspection (Refinement Set)")
+    md.append("| Candidate Name A | Candidate Name B | Expected Classification | Result | Verdict |")
+    md.append("|---|---|---|---|---|")
+    for d in second["details"]:
+        exp_str = "Match (Equivalent)" if d["expected"] else "Non-Match (Distinct)"
+        res_str = "Match" if d["result"] else "Non-Match"
+        md.append(f"| {d['name_a']} | {d['name_b']} | {exp_str} | {res_str} | **{d['verdict']}** |")
+    md.append("")
+    md.append("## 4. Reconciled Summary & Counting Methodology")
     md.append("")
     md.append("### Reconciling Per-Document vs. Per-Check Counting")
     md.append("- **Per-Document Counting (Document-Level):** 285 unique physical files (160 documents containing specific planted regulatory/forensic defects and 125 pristine control documents). A document is counted as flagged if at least one detector fires.")
@@ -669,7 +697,7 @@ def generate_markdown_report(results: Dict[str, Any]) -> str:
     md.append(f"- **Aggregate F1-Score:** {results['f1_score']}%")
     md.append(f"- **Avg Pipeline Execution Latency:** {results['avg_processing_time_per_document'] * 1000:.1f} ms per document")
     md.append("")
-    md.append("## Pipeline Component Metrics")
+    md.append("## 5. Pipeline Component Metrics")
     md.append("")
     md.append("| Pipeline Component | Precision | Recall | F1 Score | Support (Tested Units) | Method / Model |")
     md.append("|---|---|---|---|---|---|")
@@ -680,7 +708,7 @@ def generate_markdown_report(results: Dict[str, Any]) -> str:
     md.append(f"| Field & Registry Verification | {fld_e['precision']*100:.1f}% | {fld_e['recall']*100:.1f}% | {fld_e['f1_score']*100:.1f}% | {fld_e['support']} | Mock Issuer Registry & QR Cross-Reference |")
     md.append(f"| Tamper & Collusion Forensics | {tmp_d['precision']*100:.1f}% | {tmp_d['recall']*100:.1f}% | {tmp_d['f1_score']*100:.1f}% | {tmp_d['support']} | Multi-Signal Heuristic Suite (Metadata, Hashes, Graph) |")
     md.append("")
-    md.append("## Known Architectural Limitations")
+    md.append("## 6. Known Architectural Limitations")
     for lim in results["limitations"]:
         md.append(f"- **{lim.split(':')[0]}:**{lim.split(':')[1]}")
     md.append("")
