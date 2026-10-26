@@ -33,6 +33,10 @@
 Thumbs.db
 desktop.ini
 
-# Environment variables (keep .env.example)
-.env.local
-.env.*.local
+# Environment variables & secrets (NEVER commit, keep only .env.example)
+.env
+*.env
+**/.env
+**/.env.*
+!.env.example
+!**/.env.example
