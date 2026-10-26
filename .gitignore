@@ -1,0 +1,38 @@
+# Dependencies
+**/node_modules/
+**/.pnp
+**/.pnp.js
+
+# Testing and Build
+**/dist/
+**/build/
+**/.pytest_cache/
+**/coverage/
+**/htmlcov/
+
+# Python
+**/__pycache__/
+**/*.py[cod]
+*$py.class
+**/.venv/
+**/venv/
+**/ENV/
+
+# Databases & local sqlite
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs & temp files
+*.log
+**/temp/
+**/tmp/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment variables (keep .env.example)
+.env.local
+.env.*.local

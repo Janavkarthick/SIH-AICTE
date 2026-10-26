@@ -1,0 +1,78 @@
+{
+  "_meta": {
+    "description": "Document checklists per application category for AICTE-Verify",
+    "illustrative": "replace with Approval Process Handbook values",
+    "simulated": true
+  },
+  "extension_of_approval": {
+    "label": "Extension of Approval",
+    "required_documents": [
+      {"type": "application_form", "label": "Application Form", "mandatory": true},
+      {"type": "affidavit", "label": "Affidavit on Stamp Paper", "mandatory": true},
+      {"type": "fire_safety_certificate", "label": "Fire Safety Certificate", "mandatory": true},
+      {"type": "noc", "label": "No Objection Certificate from State Govt", "mandatory": true},
+      {"type": "accreditation_certificate", "label": "Accreditation Certificate (NBA/NAAC)", "mandatory": false},
+      {"type": "land_document", "label": "Land Document / Ownership Proof", "mandatory": true},
+      {"type": "university_affiliation_letter", "label": "University Affiliation Letter", "mandatory": true},
+      {"type": "faculty_list", "label": "Faculty List with Qualifications", "mandatory": true},
+      {"type": "infrastructure_photos", "label": "Infrastructure Photographs", "mandatory": true},
+      {"type": "electricity_bill", "label": "Electricity / Water Bill", "mandatory": false},
+      {"type": "financial_statement", "label": "Audited Financial Statement", "mandatory": true}
+    ],
+    "cross_checks": [
+      {"field": "institution_name", "across": ["application_form", "affidavit", "university_affiliation_letter"], "rule": "must_match"},
+      {"field": "institution_id", "across": ["application_form", "affidavit", "noc"], "rule": "must_match"},
+      {"field": "intake", "across": ["application_form", "affidavit"], "rule": "must_match"},
+      {"field": "issue_date", "check": "before_expiry_date", "on": ["fire_safety_certificate", "noc", "accreditation_certificate"]}
+    ]
+  },
+  "increase_of_intake": {
+    "label": "Increase of Intake",
+    "required_documents": [
+      {"type": "application_form", "label": "Application Form", "mandatory": true},
+      {"type": "affidavit", "label": "Affidavit on Stamp Paper", "mandatory": true},
+      {"type": "fire_safety_certificate", "label": "Fire Safety Certificate", "mandatory": true},
+      {"type": "noc", "label": "No Objection Certificate", "mandatory": true},
+      {"type": "land_document", "label": "Land Document", "mandatory": true},
+      {"type": "university_affiliation_letter", "label": "University Affiliation Letter", "mandatory": true},
+      {"type": "faculty_list", "label": "Faculty List", "mandatory": true},
+      {"type": "infrastructure_photos", "label": "Infrastructure Photographs", "mandatory": true}
+    ],
+    "cross_checks": [
+      {"field": "institution_name", "across": ["application_form", "affidavit", "university_affiliation_letter"], "rule": "must_match"},
+      {"field": "intake", "across": ["application_form", "affidavit"], "rule": "must_match"}
+    ]
+  },
+  "new_course": {
+    "label": "New Course Introduction",
+    "required_documents": [
+      {"type": "application_form", "label": "Application Form", "mandatory": true},
+      {"type": "affidavit", "label": "Affidavit", "mandatory": true},
+      {"type": "fire_safety_certificate", "label": "Fire Safety Certificate", "mandatory": true},
+      {"type": "noc", "label": "NOC from State Govt", "mandatory": true},
+      {"type": "accreditation_certificate", "label": "Accreditation Certificate", "mandatory": false},
+      {"type": "land_document", "label": "Land Document", "mandatory": true},
+      {"type": "university_affiliation_letter", "label": "University Affiliation Letter", "mandatory": true},
+      {"type": "faculty_list", "label": "Faculty List", "mandatory": true},
+      {"type": "infrastructure_photos", "label": "Infrastructure Photographs", "mandatory": true},
+      {"type": "financial_statement", "label": "Financial Statement", "mandatory": true}
+    ],
+    "cross_checks": [
+      {"field": "institution_name", "across": ["application_form", "affidavit"], "rule": "must_match"},
+      {"field": "institution_id", "across": ["application_form", "noc"], "rule": "must_match"}
+    ]
+  },
+  "closure": {
+    "label": "Closure of Institution/Course",
+    "required_documents": [
+      {"type": "application_form", "label": "Application Form", "mandatory": true},
+      {"type": "affidavit", "label": "Affidavit", "mandatory": true},
+      {"type": "noc", "label": "NOC from State Govt", "mandatory": true},
+      {"type": "university_affiliation_letter", "label": "University Affiliation Letter", "mandatory": true},
+      {"type": "faculty_list", "label": "Faculty List (current)", "mandatory": true}
+    ],
+    "cross_checks": [
+      {"field": "institution_name", "across": ["application_form", "affidavit"], "rule": "must_match"}
+    ]
+  }
+}

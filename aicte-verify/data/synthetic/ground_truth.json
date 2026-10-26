@@ -1,0 +1,2851 @@
+{
+  "_meta": {
+    "description": "Ground truth manifest for AICTE-Verify synthetic data evaluation",
+    "generated_at": "2026-10-26T00:38:53.003449",
+    "simulated": true
+  },
+  "planted_faults": [
+    {
+      "fault_type": "number_mismatch",
+      "document": "INST001_APP003_application_form.pdf",
+      "description": "Application form shows intake 600 but affidavit shows 300",
+      "details": {
+        "form_intake": 600,
+        "affidavit_intake": 300
+      }
+    },
+    {
+      "fault_type": "photo_wrong_gps",
+      "document": "INST001_APP003_photo_1.jpg",
+      "description": "Photo GPS coordinates are ~500km from claimed campus location",
+      "details": {
+        "expected_lat": 18.5204,
+        "expected_lng": 73.8567
+      }
+    },
+    {
+      "fault_type": "name_mismatch",
+      "document": "INST002_APP006_affidavit.pdf",
+      "description": "Institution name in affidavit differs from application form",
+      "details": {
+        "affidavit_name": "Sri Lakshmi Engineering College (Misspelled)"
+      }
+    },
+    {
+      "fault_type": "photo_not_recent",
+      "document": "INST002_APP006_photo_1.jpg",
+      "description": "Photo taken more than 180 days ago",
+      "details": {
+        "photo_date": "2023-01-15"
+      }
+    },
+    {
+      "fault_type": "expired_document",
+      "document": "INST003_APP008_fire_safety.pdf",
+      "description": "Fire safety certificate expired on 31-12-2024",
+      "details": {
+        "expiry_date": "31-12-2024"
+      }
+    },
+    {
+      "fault_type": "duplicate_document_across_institutions",
+      "document": "INST003_APP009_duplicate_cert.pdf",
+      "description": "This document is identical to one submitted by a different institution",
+      "details": {
+        "source_institution": "INST001",
+        "source_document": "INST001_APP001_fire_safety.pdf"
+      }
+    },
+    {
+      "fault_type": "qr_payload_mismatch",
+      "document": "INST004_APP012_accreditation.pdf",
+      "description": "QR code reference number doesn't match printed certificate number",
+      "details": {
+        "printed_ref": "ACC/2026/67529",
+        "qr_ref": "ACC/2026/78940"
+      }
+    },
+    {
+      "fault_type": "duplicate_photo_across_institutions",
+      "document": "INST004_APP012_photo_dup.jpg",
+      "description": "This infrastructure photo is identical to one submitted by a different institution",
+      "details": {
+        "source_institution": "INST001"
+      }
+    },
+    {
+      "fault_type": "yoy_intake_jump",
+      "document": "APP012",
+      "description": "Intake increased by 200%+ YoY with no corresponding infrastructure increase",
+      "details": {
+        "previous_intake": 60,
+        "current_intake": 180,
+        "jump_pct": 200
+      }
+    },
+    {
+      "fault_type": "metadata_edited",
+      "document": "INST005_APP014_edited_metadata.pdf",
+      "description": "PDF producer/creator indicates editing tool, multiple EOF markers found",
+      "details": {
+        "producer": "Adobe Acrobat Pro DC (edited)"
+      }
+    },
+    {
+      "fault_type": "font_inconsistency",
+      "document": "INST005_APP015_fire_safety.pdf",
+      "description": "Date field uses different font (Courier) from rest of document (Helvetica)",
+      "details": {
+        "tampered_field": "date",
+        "expected_font": "Helvetica",
+        "found_font": "Courier"
+      }
+    },
+    {
+      "fault_type": "photo_quality_issue",
+      "document": "INST006_APP018_photo_1.jpg",
+      "description": "Photo is blurry (below quality threshold)",
+      "details": {
+        "issue": "blur"
+      }
+    },
+    {
+      "fault_type": "ghost_faculty",
+      "document": "FAC011",
+      "description": "Faculty FAC011 (Dr. Vikram Singh) listed as full-time at INST001 (Pune) and INST002 (Chennai) simultaneously",
+      "details": {
+        "faculty_id": "FAC011",
+        "institutions": [
+          "INST001",
+          "INST002"
+        ],
+        "cities": [
+          "Pune",
+          "Chennai"
+        ]
+      }
+    },
+    {
+      "fault_type": "ghost_faculty",
+      "document": "FAC012",
+      "description": "Faculty FAC012 (Dr. Meena Kumari) listed as full-time at INST003 (Bangalore) and INST004 (Lucknow) simultaneously",
+      "details": {
+        "faculty_id": "FAC012",
+        "institutions": [
+          "INST003",
+          "INST004"
+        ],
+        "cities": [
+          "Bangalore",
+          "Lucknow"
+        ]
+      }
+    },
+    {
+      "fault_type": "shared_land_survey",
+      "document": "MH/PUNE/SUR/2005/001",
+      "description": "Same land survey number used by INST001 (Pune) and INST006 (Nagpur)",
+      "details": {
+        "survey_number": "MH/PUNE/SUR/2005/001",
+        "institutions": [
+          "INST001",
+          "INST006"
+        ]
+      }
+    },
+    {
+      "fault_type": "shared_trust",
+      "document": "MH/TRUST/2005/1234",
+      "description": "Same trust (Rajiv Education Trust) behind INST001 and INST006",
+      "details": {
+        "trust_reg_no": "MH/TRUST/2005/1234",
+        "institutions": [
+          "INST001",
+          "INST006"
+        ]
+      }
+    },
+    {
+      "fault_type": "intake_exceeds_capacity",
+      "document": "INST004",
+      "description": "Applied intake (720) exceeds computed maximum capacity (360) based on infrastructure",
+      "details": {
+        "applied_intake": 720,
+        "max_capacity": 360
+      }
+    }
+  ],
+  "clean_documents": [
+    {
+      "document": "INST001_APP001_fire_safety.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST001"
+    },
+    {
+      "document": "INST001_APP001_noc.pdf",
+      "document_type": "noc",
+      "institution_id": "INST001"
+    },
+    {
+      "document": "INST001_APP001_affiliation.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST001"
+    },
+    {
+      "document": "INST001_APP002_fire_safety.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST001"
+    },
+    {
+      "document": "INST001_APP002_noc.pdf",
+      "document_type": "noc",
+      "institution_id": "INST001"
+    },
+    {
+      "document": "INST001_APP002_affiliation.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST001"
+    },
+    {
+      "document": "INST002_APP004_fire_safety.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST002"
+    },
+    {
+      "document": "INST002_APP004_noc.pdf",
+      "document_type": "noc",
+      "institution_id": "INST002"
+    },
+    {
+      "document": "INST002_APP004_affiliation.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST002"
+    },
+    {
+      "document": "INST002_APP005_fire_safety.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST002"
+    },
+    {
+      "document": "INST002_APP005_noc.pdf",
+      "document_type": "noc",
+      "institution_id": "INST002"
+    },
+    {
+      "document": "INST002_APP005_affiliation.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST002"
+    },
+    {
+      "document": "INST002_APP006_tamil_cert.pdf",
+      "document_type": "noc_tamil",
+      "institution_id": "INST002"
+    },
+    {
+      "document": "INST003_APP007_fire_safety.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST003"
+    },
+    {
+      "document": "INST003_APP007_noc.pdf",
+      "document_type": "noc",
+      "institution_id": "INST003"
+    },
+    {
+      "document": "INST003_APP007_affiliation.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST003"
+    },
+    {
+      "document": "INST003_APP009_fire_safety.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST003"
+    },
+    {
+      "document": "INST003_APP009_noc.pdf",
+      "document_type": "noc",
+      "institution_id": "INST003"
+    },
+    {
+      "document": "INST003_APP009_affiliation.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST003"
+    },
+    {
+      "document": "INST004_APP010_fire_safety.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST004"
+    },
+    {
+      "document": "INST004_APP010_noc.pdf",
+      "document_type": "noc",
+      "institution_id": "INST004"
+    },
+    {
+      "document": "INST004_APP010_affiliation.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST004"
+    },
+    {
+      "document": "INST004_APP011_fire_safety.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST004"
+    },
+    {
+      "document": "INST004_APP011_noc.pdf",
+      "document_type": "noc",
+      "institution_id": "INST004"
+    },
+    {
+      "document": "INST004_APP011_affiliation.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST004"
+    },
+    {
+      "document": "INST004_APP012_fire_safety.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST004"
+    },
+    {
+      "document": "INST004_APP012_noc.pdf",
+      "document_type": "noc",
+      "institution_id": "INST004"
+    },
+    {
+      "document": "INST004_APP012_hindi_cert.pdf",
+      "document_type": "noc_hindi",
+      "institution_id": "INST004"
+    },
+    {
+      "document": "INST005_APP013_fire_safety.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST005"
+    },
+    {
+      "document": "INST005_APP013_noc.pdf",
+      "document_type": "noc",
+      "institution_id": "INST005"
+    },
+    {
+      "document": "INST005_APP013_affiliation.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST005"
+    },
+    {
+      "document": "INST005_APP014_fire_safety.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST005"
+    },
+    {
+      "document": "INST005_APP014_noc.pdf",
+      "document_type": "noc",
+      "institution_id": "INST005"
+    },
+    {
+      "document": "INST005_APP014_affiliation.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST005"
+    },
+    {
+      "document": "INST005_APP015_tamil_cert.pdf",
+      "document_type": "noc_tamil",
+      "institution_id": "INST005"
+    },
+    {
+      "document": "INST006_APP016_fire_safety.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST006"
+    },
+    {
+      "document": "INST006_APP016_noc.pdf",
+      "document_type": "noc",
+      "institution_id": "INST006"
+    },
+    {
+      "document": "INST006_APP016_affiliation.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST006"
+    },
+    {
+      "document": "INST006_APP017_fire_safety.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST006"
+    },
+    {
+      "document": "INST006_APP017_noc.pdf",
+      "document_type": "noc",
+      "institution_id": "INST006"
+    },
+    {
+      "document": "INST006_APP017_affiliation.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST006"
+    },
+    {
+      "document": "INST006_APP018_fire_safety.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST006"
+    },
+    {
+      "document": "INST006_APP018_affiliation.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST006"
+    }
+  ],
+  "institutions": [
+    {
+      "id": "INST001",
+      "name": "Rajiv Gandhi Institute of Technology",
+      "code": "RGIT-MH-001",
+      "city": "Pune",
+      "state": "Maharashtra",
+      "region": "West",
+      "address": "123 Engineering Road, Pune 411001",
+      "trust_name": "Rajiv Education Trust",
+      "trust_reg_no": "MH/TRUST/2005/1234",
+      "latitude": 18.5204,
+      "longitude": 73.8567,
+      "established_year": 2005
+    },
+    {
+      "id": "INST002",
+      "name": "Sri Lakshmi Engineering College",
+      "code": "SLEC-TN-002",
+      "city": "Chennai",
+      "state": "Tamil Nadu",
+      "region": "South",
+      "address": "456 College Avenue, Chennai 600028",
+      "trust_name": "Lakshmi Educational Foundation",
+      "trust_reg_no": "TN/TRUST/2008/5678",
+      "latitude": 13.0827,
+      "longitude": 80.2707,
+      "established_year": 2008
+    },
+    {
+      "id": "INST003",
+      "name": "Bharati Vidyapeeth College of Engineering",
+      "code": "BVCE-KA-003",
+      "city": "Bangalore",
+      "state": "Karnataka",
+      "region": "South",
+      "address": "789 Tech Park, Bangalore 560001",
+      "trust_name": "Bharati Education Society",
+      "trust_reg_no": "KA/SOC/2003/9012",
+      "latitude": 12.9716,
+      "longitude": 77.5946,
+      "established_year": 2003
+    },
+    {
+      "id": "INST004",
+      "name": "Netaji Subhas Institute of Technology",
+      "code": "NSIT-UP-004",
+      "city": "Lucknow",
+      "state": "Uttar Pradesh",
+      "region": "North",
+      "address": "101 University Road, Lucknow 226001",
+      "trust_name": "Subhas Memorial Trust",
+      "trust_reg_no": "UP/TRUST/2010/3456",
+      "latitude": 26.8467,
+      "longitude": 80.9462,
+      "established_year": 2010
+    },
+    {
+      "id": "INST005",
+      "name": "Kalam Technical University",
+      "code": "KTU-TN-005",
+      "city": "Coimbatore",
+      "state": "Tamil Nadu",
+      "region": "South",
+      "address": "202 Innovation Drive, Coimbatore 641001",
+      "trust_name": "Kalam Foundation for Education",
+      "trust_reg_no": "TN/TRUST/2012/7890",
+      "latitude": 11.0168,
+      "longitude": 76.9558,
+      "established_year": 2012
+    },
+    {
+      "id": "INST006",
+      "name": "Savitribai Phule Polytechnic",
+      "code": "SPP-MH-006",
+      "city": "Nagpur",
+      "state": "Maharashtra",
+      "region": "West",
+      "address": "303 Education Lane, Nagpur 440001",
+      "trust_name": "Rajiv Education Trust",
+      "trust_reg_no": "MH/TRUST/2005/1234",
+      "latitude": 21.1458,
+      "longitude": 79.0882,
+      "established_year": 2007
+    }
+  ],
+  "faculty_assignments": {
+    "INST001": [
+      "FAC001",
+      "FAC002",
+      "FAC003",
+      "FAC005",
+      "FAC011"
+    ],
+    "INST002": [
+      "FAC004",
+      "FAC006",
+      "FAC007",
+      "FAC009",
+      "FAC011"
+    ],
+    "INST003": [
+      "FAC002",
+      "FAC008",
+      "FAC010",
+      "FAC012"
+    ],
+    "INST004": [
+      "FAC003",
+      "FAC005",
+      "FAC006",
+      "FAC012"
+    ],
+    "INST005": [
+      "FAC001",
+      "FAC007",
+      "FAC009",
+      "FAC010"
+    ],
+    "INST006": [
+      "FAC004",
+      "FAC008"
+    ]
+  },
+  "applications": [
+    {
+      "id": "APP001",
+      "institution_id": "INST001",
+      "institution_name": "Rajiv Gandhi Institute of Technology",
+      "category": "extension_of_approval",
+      "academic_year": "2024",
+      "intake": 120,
+      "documents": [
+        {
+          "filename": "INST001_APP001_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP001",
+            "category": "extension_of_approval",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "institution_id": "RGIT-MH-001",
+            "intake": 120,
+            "actual_intake": 120
+          }
+        },
+        {
+          "filename": "INST001_APP001_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ma/2024/9919",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "institution_id": "RGIT-MH-001",
+            "intake": 120,
+            "issue_date": "01-04-2024",
+            "trust_name": "Rajiv Education Trust"
+          }
+        },
+        {
+          "filename": "INST001_APP001_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ma/2024/1900",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "issue_date": "01-01-2024",
+            "expiry_date": "31-12-2024",
+            "issuing_authority": "City Fire Department, Pune"
+          }
+        },
+        {
+          "filename": "INST001_APP001_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ma/2024/8435",
+            "issue_date": "15-03-2024",
+            "expiry_date": "14-03-2025",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "institution_id": "RGIT-MH-001"
+          }
+        },
+        {
+          "filename": "INST001_APP001_accreditation.pdf",
+          "type": "accreditation_certificate",
+          "meta": {
+            "ref_number": "ACC/2024/36072",
+            "qr_ref_number": "ACC/2024/36072",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "issue_date": "01-07-2022",
+            "expiry_date": "30-06-2027"
+          }
+        },
+        {
+          "filename": "INST001_APP001_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "MH/PUNE/SUR/2005/001",
+            "area_acres": 12.61,
+            "trust_name": "Rajiv Education Trust",
+            "institution_name": "Rajiv Gandhi Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST001_APP001_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ma/2024/6841",
+            "university_name": "State Technical University, Maharashtra (SIMULATED)",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "issue_date": "15-05-2024"
+          }
+        },
+        {
+          "filename": "INST001_APP001_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "faculty_count": 5,
+            "faculty_ids": [
+              "FAC001",
+              "FAC002",
+              "FAC003",
+              "FAC005",
+              "FAC011"
+            ],
+            "displayed_count": 5
+          }
+        },
+        {
+          "filename": "INST001_APP001_electricity_bill.pdf",
+          "type": "electricity_bill",
+          "meta": {
+            "bill_number": "EB/PUN/2024/639242",
+            "institution_name": "Rajiv Education Trust",
+            "bill_date": "01-02-2024"
+          }
+        },
+        {
+          "filename": "INST001_APP001_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Rajiv Gandhi Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST001_APP001_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Rajiv Gandhi Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST001_APP001_photo_3.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Rajiv Gandhi Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST001_APP001_photo_4.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Rajiv Gandhi Institute of Technology"
+          }
+        }
+      ],
+      "planted_faults": [],
+      "region": "West",
+      "status": "submitted"
+    },
+    {
+      "id": "APP002",
+      "institution_id": "INST001",
+      "institution_name": "Rajiv Gandhi Institute of Technology",
+      "category": "extension_of_approval",
+      "academic_year": "2025",
+      "intake": 270,
+      "documents": [
+        {
+          "filename": "INST001_APP002_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP002",
+            "category": "extension_of_approval",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "institution_id": "RGIT-MH-001",
+            "intake": 270,
+            "actual_intake": 270
+          }
+        },
+        {
+          "filename": "INST001_APP002_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ma/2025/6987",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "institution_id": "RGIT-MH-001",
+            "intake": 270,
+            "issue_date": "01-04-2025",
+            "trust_name": "Rajiv Education Trust"
+          }
+        },
+        {
+          "filename": "INST001_APP002_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ma/2025/5213",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "issue_date": "01-01-2025",
+            "expiry_date": "31-12-2025",
+            "issuing_authority": "City Fire Department, Pune"
+          }
+        },
+        {
+          "filename": "INST001_APP002_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ma/2025/6684",
+            "issue_date": "15-03-2025",
+            "expiry_date": "14-03-2026",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "institution_id": "RGIT-MH-001"
+          }
+        },
+        {
+          "filename": "INST001_APP002_accreditation.pdf",
+          "type": "accreditation_certificate",
+          "meta": {
+            "ref_number": "ACC/2025/75169",
+            "qr_ref_number": "ACC/2025/75169",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "issue_date": "01-07-2023",
+            "expiry_date": "30-06-2028"
+          }
+        },
+        {
+          "filename": "INST001_APP002_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "MH/PUNE/SUR/2005/001",
+            "area_acres": 12.6,
+            "trust_name": "Rajiv Education Trust",
+            "institution_name": "Rajiv Gandhi Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST001_APP002_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ma/2025/3422",
+            "university_name": "State Technical University, Maharashtra (SIMULATED)",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "issue_date": "15-05-2025"
+          }
+        },
+        {
+          "filename": "INST001_APP002_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "faculty_count": 5,
+            "faculty_ids": [
+              "FAC001",
+              "FAC002",
+              "FAC003",
+              "FAC005",
+              "FAC011"
+            ],
+            "displayed_count": 5
+          }
+        },
+        {
+          "filename": "INST001_APP002_electricity_bill.pdf",
+          "type": "electricity_bill",
+          "meta": {
+            "bill_number": "EB/PUN/2025/436843",
+            "institution_name": "Rajiv Education Trust",
+            "bill_date": "01-02-2025"
+          }
+        },
+        {
+          "filename": "INST001_APP002_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Rajiv Gandhi Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST001_APP002_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Rajiv Gandhi Institute of Technology"
+          }
+        }
+      ],
+      "planted_faults": [],
+      "region": "West",
+      "status": "submitted"
+    },
+    {
+      "id": "APP003",
+      "institution_id": "INST001",
+      "institution_name": "Rajiv Gandhi Institute of Technology",
+      "category": "increase_of_intake",
+      "academic_year": "2026",
+      "intake": 300,
+      "documents": [
+        {
+          "filename": "INST001_APP003_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP003",
+            "category": "increase_of_intake",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "institution_id": "RGIT-MH-001",
+            "intake": 600,
+            "actual_intake": 300
+          }
+        },
+        {
+          "filename": "INST001_APP003_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ma/2026/4562",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "institution_id": "RGIT-MH-001",
+            "intake": 300,
+            "issue_date": "01-04-2026",
+            "trust_name": "Rajiv Education Trust"
+          }
+        },
+        {
+          "filename": "INST001_APP003_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ma/2026/9907",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "issue_date": "01-01-2026",
+            "expiry_date": "31-12-2026",
+            "issuing_authority": "City Fire Department, Pune"
+          }
+        },
+        {
+          "filename": "INST001_APP003_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ma/2026/5041",
+            "issue_date": "15-03-2026",
+            "expiry_date": "14-03-2027",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "institution_id": "RGIT-MH-001"
+          }
+        },
+        {
+          "filename": "INST001_APP003_accreditation.pdf",
+          "type": "accreditation_certificate",
+          "meta": {
+            "ref_number": "ACC/2026/60703",
+            "qr_ref_number": "ACC/2026/60703",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "issue_date": "01-07-2024",
+            "expiry_date": "30-06-2029"
+          }
+        },
+        {
+          "filename": "INST001_APP003_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "MH/PUNE/SUR/2005/001",
+            "area_acres": 5.91,
+            "trust_name": "Rajiv Education Trust",
+            "institution_name": "Rajiv Gandhi Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST001_APP003_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ma/2026/8034",
+            "university_name": "State Technical University, Maharashtra (SIMULATED)",
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "issue_date": "15-05-2026"
+          }
+        },
+        {
+          "filename": "INST001_APP003_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Rajiv Gandhi Institute of Technology",
+            "faculty_count": 5,
+            "faculty_ids": [
+              "FAC001",
+              "FAC002",
+              "FAC003",
+              "FAC005",
+              "FAC011"
+            ],
+            "displayed_count": 5
+          }
+        },
+        {
+          "filename": "INST001_APP003_electricity_bill.pdf",
+          "type": "electricity_bill",
+          "meta": {
+            "bill_number": "EB/PUN/2026/247485",
+            "institution_name": "Rajiv Education Trust",
+            "bill_date": "01-02-2026"
+          }
+        },
+        {
+          "filename": "INST001_APP003_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Rajiv Gandhi Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST001_APP003_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Rajiv Gandhi Institute of Technology"
+          }
+        }
+      ],
+      "planted_faults": [
+        "intake_mismatch_form_vs_affidavit",
+        "wrong_gps"
+      ],
+      "region": "West",
+      "status": "submitted"
+    },
+    {
+      "id": "APP004",
+      "institution_id": "INST002",
+      "institution_name": "Sri Lakshmi Engineering College",
+      "category": "extension_of_approval",
+      "academic_year": "2024",
+      "intake": 120,
+      "documents": [
+        {
+          "filename": "INST002_APP004_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP004",
+            "category": "extension_of_approval",
+            "institution_name": "Sri Lakshmi Engineering College",
+            "institution_id": "SLEC-TN-002",
+            "intake": 120,
+            "actual_intake": 120
+          }
+        },
+        {
+          "filename": "INST002_APP004_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ta/2024/9719",
+            "institution_name": "Sri Lakshmi Engineering College",
+            "institution_id": "SLEC-TN-002",
+            "intake": 120,
+            "issue_date": "01-04-2024",
+            "trust_name": "Lakshmi Educational Foundation"
+          }
+        },
+        {
+          "filename": "INST002_APP004_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ta/2024/8486",
+            "institution_name": "Sri Lakshmi Engineering College",
+            "issue_date": "01-01-2024",
+            "expiry_date": "31-12-2024",
+            "issuing_authority": "City Fire Department, Chennai"
+          }
+        },
+        {
+          "filename": "INST002_APP004_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ta/2024/8226",
+            "issue_date": "15-03-2024",
+            "expiry_date": "14-03-2025",
+            "institution_name": "Sri Lakshmi Engineering College",
+            "institution_id": "SLEC-TN-002"
+          }
+        },
+        {
+          "filename": "INST002_APP004_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "TN/CHN/SUR/2008/002",
+            "area_acres": 17.81,
+            "trust_name": "Lakshmi Educational Foundation",
+            "institution_name": "Sri Lakshmi Engineering College"
+          }
+        },
+        {
+          "filename": "INST002_APP004_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ta/2024/6861",
+            "university_name": "State Technical University, Tamil Nadu (SIMULATED)",
+            "institution_name": "Sri Lakshmi Engineering College",
+            "issue_date": "15-05-2024"
+          }
+        },
+        {
+          "filename": "INST002_APP004_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Sri Lakshmi Engineering College",
+            "faculty_count": 5,
+            "faculty_ids": [
+              "FAC004",
+              "FAC006",
+              "FAC007",
+              "FAC009",
+              "FAC011"
+            ],
+            "displayed_count": 5
+          }
+        },
+        {
+          "filename": "INST002_APP004_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Sri Lakshmi Engineering College"
+          }
+        },
+        {
+          "filename": "INST002_APP004_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Sri Lakshmi Engineering College"
+          }
+        }
+      ],
+      "planted_faults": [],
+      "region": "South",
+      "status": "submitted"
+    },
+    {
+      "id": "APP005",
+      "institution_id": "INST002",
+      "institution_name": "Sri Lakshmi Engineering College",
+      "category": "extension_of_approval",
+      "academic_year": "2025",
+      "intake": 150,
+      "documents": [
+        {
+          "filename": "INST002_APP005_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP005",
+            "category": "extension_of_approval",
+            "institution_name": "Sri Lakshmi Engineering College",
+            "institution_id": "SLEC-TN-002",
+            "intake": 150,
+            "actual_intake": 150
+          }
+        },
+        {
+          "filename": "INST002_APP005_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ta/2025/1851",
+            "institution_name": "Sri Lakshmi Engineering College",
+            "institution_id": "SLEC-TN-002",
+            "intake": 150,
+            "issue_date": "01-04-2025",
+            "trust_name": "Lakshmi Educational Foundation"
+          }
+        },
+        {
+          "filename": "INST002_APP005_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ta/2025/1496",
+            "institution_name": "Sri Lakshmi Engineering College",
+            "issue_date": "01-01-2025",
+            "expiry_date": "31-12-2025",
+            "issuing_authority": "City Fire Department, Chennai"
+          }
+        },
+        {
+          "filename": "INST002_APP005_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ta/2025/2971",
+            "issue_date": "15-03-2025",
+            "expiry_date": "14-03-2026",
+            "institution_name": "Sri Lakshmi Engineering College",
+            "institution_id": "SLEC-TN-002"
+          }
+        },
+        {
+          "filename": "INST002_APP005_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "TN/CHN/SUR/2008/002",
+            "area_acres": 17.66,
+            "trust_name": "Lakshmi Educational Foundation",
+            "institution_name": "Sri Lakshmi Engineering College"
+          }
+        },
+        {
+          "filename": "INST002_APP005_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ta/2025/9323",
+            "university_name": "State Technical University, Tamil Nadu (SIMULATED)",
+            "institution_name": "Sri Lakshmi Engineering College",
+            "issue_date": "15-05-2025"
+          }
+        },
+        {
+          "filename": "INST002_APP005_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Sri Lakshmi Engineering College",
+            "faculty_count": 5,
+            "faculty_ids": [
+              "FAC004",
+              "FAC006",
+              "FAC007",
+              "FAC009",
+              "FAC011"
+            ],
+            "displayed_count": 5
+          }
+        },
+        {
+          "filename": "INST002_APP005_electricity_bill.pdf",
+          "type": "electricity_bill",
+          "meta": {
+            "bill_number": "EB/CHE/2025/534197",
+            "institution_name": "Lakshmi Educational Foundation",
+            "bill_date": "01-02-2025"
+          }
+        },
+        {
+          "filename": "INST002_APP005_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Sri Lakshmi Engineering College"
+          }
+        },
+        {
+          "filename": "INST002_APP005_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Sri Lakshmi Engineering College"
+          }
+        },
+        {
+          "filename": "INST002_APP005_photo_3.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Sri Lakshmi Engineering College"
+          }
+        },
+        {
+          "filename": "INST002_APP005_photo_4.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Sri Lakshmi Engineering College"
+          }
+        }
+      ],
+      "planted_faults": [],
+      "region": "South",
+      "status": "submitted"
+    },
+    {
+      "id": "APP006",
+      "institution_id": "INST002",
+      "institution_name": "Sri Lakshmi Engineering College",
+      "category": "extension_of_approval",
+      "academic_year": "2026",
+      "intake": 120,
+      "documents": [
+        {
+          "filename": "INST002_APP006_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP006",
+            "category": "extension_of_approval",
+            "institution_name": "Sri Lakshmi Engineering College",
+            "institution_id": "SLEC-TN-002",
+            "intake": 120,
+            "actual_intake": 120
+          }
+        },
+        {
+          "filename": "INST002_APP006_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ta/2026/2650",
+            "institution_name": "Sri Lakshmi Engineering College (Misspelled)",
+            "institution_id": "SLEC-TN-002",
+            "intake": 120,
+            "issue_date": "01-04-2026",
+            "trust_name": "Lakshmi Educational Foundation"
+          }
+        },
+        {
+          "filename": "INST002_APP006_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ta/2026/4986",
+            "institution_name": "Sri Lakshmi Engineering College",
+            "issue_date": "01-01-2026",
+            "expiry_date": "31-12-2026",
+            "issuing_authority": "City Fire Department, Chennai"
+          }
+        },
+        {
+          "filename": "INST002_APP006_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ta/2026/3321",
+            "issue_date": "15-03-2026",
+            "expiry_date": "14-03-2027",
+            "institution_name": "Sri Lakshmi Engineering College",
+            "institution_id": "SLEC-TN-002"
+          }
+        },
+        {
+          "filename": "INST002_APP006_accreditation.pdf",
+          "type": "accreditation_certificate",
+          "meta": {
+            "ref_number": "ACC/2026/28165",
+            "qr_ref_number": "ACC/2026/28165",
+            "institution_name": "Sri Lakshmi Engineering College",
+            "issue_date": "01-07-2024",
+            "expiry_date": "30-06-2029"
+          }
+        },
+        {
+          "filename": "INST002_APP006_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "TN/CHN/SUR/2008/002",
+            "area_acres": 10.8,
+            "trust_name": "Lakshmi Educational Foundation",
+            "institution_name": "Sri Lakshmi Engineering College"
+          }
+        },
+        {
+          "filename": "INST002_APP006_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ta/2026/7136",
+            "university_name": "State Technical University, Tamil Nadu (SIMULATED)",
+            "institution_name": "Sri Lakshmi Engineering College",
+            "issue_date": "15-05-2026"
+          }
+        },
+        {
+          "filename": "INST002_APP006_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Sri Lakshmi Engineering College",
+            "faculty_count": 5,
+            "faculty_ids": [
+              "FAC004",
+              "FAC006",
+              "FAC007",
+              "FAC009",
+              "FAC011"
+            ],
+            "displayed_count": 5
+          }
+        },
+        {
+          "filename": "INST002_APP006_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Sri Lakshmi Engineering College"
+          }
+        },
+        {
+          "filename": "INST002_APP006_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Sri Lakshmi Engineering College"
+          }
+        },
+        {
+          "filename": "INST002_APP006_photo_3.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Sri Lakshmi Engineering College"
+          }
+        },
+        {
+          "filename": "INST002_APP006_tamil_cert.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "TN/CERT/2026/5811",
+            "language": "tamil",
+            "institution_name": "Sri Lakshmi Engineering College"
+          }
+        }
+      ],
+      "planted_faults": [
+        "name_mismatch",
+        "old_photo"
+      ],
+      "region": "South",
+      "status": "submitted"
+    },
+    {
+      "id": "APP007",
+      "institution_id": "INST003",
+      "institution_name": "Bharati Vidyapeeth College of Engineering",
+      "category": "extension_of_approval",
+      "academic_year": "2024",
+      "intake": 60,
+      "documents": [
+        {
+          "filename": "INST003_APP007_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP007",
+            "category": "extension_of_approval",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "institution_id": "BVCE-KA-003",
+            "intake": 60,
+            "actual_intake": 60
+          }
+        },
+        {
+          "filename": "INST003_APP007_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ka/2024/1251",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "institution_id": "BVCE-KA-003",
+            "intake": 60,
+            "issue_date": "01-04-2024",
+            "trust_name": "Bharati Education Society"
+          }
+        },
+        {
+          "filename": "INST003_APP007_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ka/2024/9412",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "issue_date": "01-01-2024",
+            "expiry_date": "31-12-2024",
+            "issuing_authority": "City Fire Department, Bangalore"
+          }
+        },
+        {
+          "filename": "INST003_APP007_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ka/2024/9655",
+            "issue_date": "15-03-2024",
+            "expiry_date": "14-03-2025",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "institution_id": "BVCE-KA-003"
+          }
+        },
+        {
+          "filename": "INST003_APP007_accreditation.pdf",
+          "type": "accreditation_certificate",
+          "meta": {
+            "ref_number": "ACC/2024/24961",
+            "qr_ref_number": "ACC/2024/24961",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "issue_date": "01-07-2022",
+            "expiry_date": "30-06-2027"
+          }
+        },
+        {
+          "filename": "INST003_APP007_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "KA/BLR/SUR/2003/003",
+            "area_acres": 5.36,
+            "trust_name": "Bharati Education Society",
+            "institution_name": "Bharati Vidyapeeth College of Engineering"
+          }
+        },
+        {
+          "filename": "INST003_APP007_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ka/2024/5126",
+            "university_name": "State Technical University, Karnataka (SIMULATED)",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "issue_date": "15-05-2024"
+          }
+        },
+        {
+          "filename": "INST003_APP007_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "faculty_count": 4,
+            "faculty_ids": [
+              "FAC002",
+              "FAC008",
+              "FAC010",
+              "FAC012"
+            ],
+            "displayed_count": 4
+          }
+        },
+        {
+          "filename": "INST003_APP007_electricity_bill.pdf",
+          "type": "electricity_bill",
+          "meta": {
+            "bill_number": "EB/BAN/2024/986818",
+            "institution_name": "Bharati Education Society",
+            "bill_date": "01-02-2024"
+          }
+        },
+        {
+          "filename": "INST003_APP007_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Bharati Vidyapeeth College of Engineering"
+          }
+        },
+        {
+          "filename": "INST003_APP007_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Bharati Vidyapeeth College of Engineering"
+          }
+        },
+        {
+          "filename": "INST003_APP007_photo_3.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Bharati Vidyapeeth College of Engineering"
+          }
+        }
+      ],
+      "planted_faults": [],
+      "region": "South",
+      "status": "submitted"
+    },
+    {
+      "id": "APP008",
+      "institution_id": "INST003",
+      "institution_name": "Bharati Vidyapeeth College of Engineering",
+      "category": "extension_of_approval",
+      "academic_year": "2025",
+      "intake": 90,
+      "documents": [
+        {
+          "filename": "INST003_APP008_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP008",
+            "category": "extension_of_approval",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "institution_id": "BVCE-KA-003",
+            "intake": 90,
+            "actual_intake": 90
+          }
+        },
+        {
+          "filename": "INST003_APP008_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ka/2025/4336",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "institution_id": "BVCE-KA-003",
+            "intake": 90,
+            "issue_date": "01-04-2025",
+            "trust_name": "Bharati Education Society"
+          }
+        },
+        {
+          "filename": "INST003_APP008_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ka/2025/5271",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "issue_date": "01-01-2023",
+            "expiry_date": "31-12-2024",
+            "issuing_authority": "City Fire Department, Bangalore"
+          }
+        },
+        {
+          "filename": "INST003_APP008_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ka/2025/6550",
+            "issue_date": "15-03-2025",
+            "expiry_date": "14-03-2026",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "institution_id": "BVCE-KA-003"
+          }
+        },
+        {
+          "filename": "INST003_APP008_accreditation.pdf",
+          "type": "accreditation_certificate",
+          "meta": {
+            "ref_number": "ACC/2025/29176",
+            "qr_ref_number": "ACC/2025/29176",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "issue_date": "01-07-2023",
+            "expiry_date": "30-06-2028"
+          }
+        },
+        {
+          "filename": "INST003_APP008_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "KA/BLR/SUR/2003/003",
+            "area_acres": 23.97,
+            "trust_name": "Bharati Education Society",
+            "institution_name": "Bharati Vidyapeeth College of Engineering"
+          }
+        },
+        {
+          "filename": "INST003_APP008_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ka/2025/3908",
+            "university_name": "State Technical University, Karnataka (SIMULATED)",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "issue_date": "15-05-2025"
+          }
+        },
+        {
+          "filename": "INST003_APP008_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "faculty_count": 4,
+            "faculty_ids": [
+              "FAC002",
+              "FAC008",
+              "FAC010",
+              "FAC012"
+            ],
+            "displayed_count": 4
+          }
+        },
+        {
+          "filename": "INST003_APP008_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Bharati Vidyapeeth College of Engineering"
+          }
+        },
+        {
+          "filename": "INST003_APP008_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Bharati Vidyapeeth College of Engineering"
+          }
+        }
+      ],
+      "planted_faults": [
+        "expired_certificate"
+      ],
+      "region": "South",
+      "status": "submitted"
+    },
+    {
+      "id": "APP009",
+      "institution_id": "INST003",
+      "institution_name": "Bharati Vidyapeeth College of Engineering",
+      "category": "new_course",
+      "academic_year": "2026",
+      "intake": 120,
+      "documents": [
+        {
+          "filename": "INST003_APP009_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP009",
+            "category": "new_course",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "institution_id": "BVCE-KA-003",
+            "intake": 120,
+            "actual_intake": 120
+          }
+        },
+        {
+          "filename": "INST003_APP009_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ka/2026/7449",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "institution_id": "BVCE-KA-003",
+            "intake": 120,
+            "issue_date": "01-04-2026",
+            "trust_name": "Bharati Education Society"
+          }
+        },
+        {
+          "filename": "INST003_APP009_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ka/2026/3850",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "issue_date": "01-01-2026",
+            "expiry_date": "31-12-2026",
+            "issuing_authority": "City Fire Department, Bangalore"
+          }
+        },
+        {
+          "filename": "INST003_APP009_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ka/2026/3304",
+            "issue_date": "15-03-2026",
+            "expiry_date": "14-03-2027",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "institution_id": "BVCE-KA-003"
+          }
+        },
+        {
+          "filename": "INST003_APP009_accreditation.pdf",
+          "type": "accreditation_certificate",
+          "meta": {
+            "ref_number": "ACC/2026/95902",
+            "qr_ref_number": "ACC/2026/95902",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "issue_date": "01-07-2024",
+            "expiry_date": "30-06-2029"
+          }
+        },
+        {
+          "filename": "INST003_APP009_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "KA/BLR/SUR/2003/003",
+            "area_acres": 12.87,
+            "trust_name": "Bharati Education Society",
+            "institution_name": "Bharati Vidyapeeth College of Engineering"
+          }
+        },
+        {
+          "filename": "INST003_APP009_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ka/2026/7632",
+            "university_name": "State Technical University, Karnataka (SIMULATED)",
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "issue_date": "15-05-2026"
+          }
+        },
+        {
+          "filename": "INST003_APP009_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Bharati Vidyapeeth College of Engineering",
+            "faculty_count": 4,
+            "faculty_ids": [
+              "FAC002",
+              "FAC008",
+              "FAC010",
+              "FAC012"
+            ],
+            "displayed_count": 4
+          }
+        },
+        {
+          "filename": "INST003_APP009_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Bharati Vidyapeeth College of Engineering"
+          }
+        },
+        {
+          "filename": "INST003_APP009_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Bharati Vidyapeeth College of Engineering"
+          }
+        },
+        {
+          "filename": "INST003_APP009_duplicate_cert.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {}
+        }
+      ],
+      "planted_faults": [
+        "duplicate_document"
+      ],
+      "region": "South",
+      "status": "submitted"
+    },
+    {
+      "id": "APP010",
+      "institution_id": "INST004",
+      "institution_name": "Netaji Subhas Institute of Technology",
+      "category": "extension_of_approval",
+      "academic_year": "2024",
+      "intake": 120,
+      "documents": [
+        {
+          "filename": "INST004_APP010_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP010",
+            "category": "extension_of_approval",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "institution_id": "NSIT-UP-004",
+            "intake": 120,
+            "actual_intake": 120
+          }
+        },
+        {
+          "filename": "INST004_APP010_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ut/2024/7652",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "institution_id": "NSIT-UP-004",
+            "intake": 120,
+            "issue_date": "01-04-2024",
+            "trust_name": "Subhas Memorial Trust"
+          }
+        },
+        {
+          "filename": "INST004_APP010_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ut/2024/6294",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "issue_date": "01-01-2024",
+            "expiry_date": "31-12-2024",
+            "issuing_authority": "City Fire Department, Lucknow"
+          }
+        },
+        {
+          "filename": "INST004_APP010_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ut/2024/3778",
+            "issue_date": "15-03-2024",
+            "expiry_date": "14-03-2025",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "institution_id": "NSIT-UP-004"
+          }
+        },
+        {
+          "filename": "INST004_APP010_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "UP/LKO/SUR/2010/004",
+            "area_acres": 21.27,
+            "trust_name": "Subhas Memorial Trust",
+            "institution_name": "Netaji Subhas Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST004_APP010_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ut/2024/7033",
+            "university_name": "State Technical University, Uttar Pradesh (SIMULATED)",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "issue_date": "15-05-2024"
+          }
+        },
+        {
+          "filename": "INST004_APP010_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "faculty_count": 4,
+            "faculty_ids": [
+              "FAC003",
+              "FAC005",
+              "FAC006",
+              "FAC012"
+            ],
+            "displayed_count": 4
+          }
+        },
+        {
+          "filename": "INST004_APP010_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Netaji Subhas Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST004_APP010_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Netaji Subhas Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST004_APP010_photo_3.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Netaji Subhas Institute of Technology"
+          }
+        }
+      ],
+      "planted_faults": [],
+      "region": "North",
+      "status": "submitted"
+    },
+    {
+      "id": "APP011",
+      "institution_id": "INST004",
+      "institution_name": "Netaji Subhas Institute of Technology",
+      "category": "increase_of_intake",
+      "academic_year": "2025",
+      "intake": 270,
+      "documents": [
+        {
+          "filename": "INST004_APP011_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP011",
+            "category": "increase_of_intake",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "institution_id": "NSIT-UP-004",
+            "intake": 270,
+            "actual_intake": 270
+          }
+        },
+        {
+          "filename": "INST004_APP011_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ut/2025/8811",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "institution_id": "NSIT-UP-004",
+            "intake": 270,
+            "issue_date": "01-04-2025",
+            "trust_name": "Subhas Memorial Trust"
+          }
+        },
+        {
+          "filename": "INST004_APP011_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ut/2025/3559",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "issue_date": "01-01-2025",
+            "expiry_date": "31-12-2025",
+            "issuing_authority": "City Fire Department, Lucknow"
+          }
+        },
+        {
+          "filename": "INST004_APP011_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ut/2025/2499",
+            "issue_date": "15-03-2025",
+            "expiry_date": "14-03-2026",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "institution_id": "NSIT-UP-004"
+          }
+        },
+        {
+          "filename": "INST004_APP011_accreditation.pdf",
+          "type": "accreditation_certificate",
+          "meta": {
+            "ref_number": "ACC/2025/23382",
+            "qr_ref_number": "ACC/2025/23382",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "issue_date": "01-07-2023",
+            "expiry_date": "30-06-2028"
+          }
+        },
+        {
+          "filename": "INST004_APP011_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "UP/LKO/SUR/2010/004",
+            "area_acres": 9.17,
+            "trust_name": "Subhas Memorial Trust",
+            "institution_name": "Netaji Subhas Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST004_APP011_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ut/2025/5353",
+            "university_name": "State Technical University, Uttar Pradesh (SIMULATED)",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "issue_date": "15-05-2025"
+          }
+        },
+        {
+          "filename": "INST004_APP011_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "faculty_count": 4,
+            "faculty_ids": [
+              "FAC003",
+              "FAC005",
+              "FAC006",
+              "FAC012"
+            ],
+            "displayed_count": 4
+          }
+        },
+        {
+          "filename": "INST004_APP011_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Netaji Subhas Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST004_APP011_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Netaji Subhas Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST004_APP011_photo_3.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Netaji Subhas Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST004_APP011_photo_4.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Netaji Subhas Institute of Technology"
+          }
+        }
+      ],
+      "planted_faults": [],
+      "region": "North",
+      "status": "submitted"
+    },
+    {
+      "id": "APP012",
+      "institution_id": "INST004",
+      "institution_name": "Netaji Subhas Institute of Technology",
+      "category": "extension_of_approval",
+      "academic_year": "2026",
+      "intake": 180,
+      "documents": [
+        {
+          "filename": "INST004_APP012_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP012",
+            "category": "extension_of_approval",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "institution_id": "NSIT-UP-004",
+            "intake": 180,
+            "actual_intake": 180
+          }
+        },
+        {
+          "filename": "INST004_APP012_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ut/2026/4677",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "institution_id": "NSIT-UP-004",
+            "intake": 180,
+            "issue_date": "01-04-2026",
+            "trust_name": "Subhas Memorial Trust"
+          }
+        },
+        {
+          "filename": "INST004_APP012_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ut/2026/1654",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "issue_date": "01-01-2026",
+            "expiry_date": "31-12-2026",
+            "issuing_authority": "City Fire Department, Lucknow"
+          }
+        },
+        {
+          "filename": "INST004_APP012_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ut/2026/4782",
+            "issue_date": "15-03-2026",
+            "expiry_date": "14-03-2027",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "institution_id": "NSIT-UP-004"
+          }
+        },
+        {
+          "filename": "INST004_APP012_accreditation.pdf",
+          "type": "accreditation_certificate",
+          "meta": {
+            "ref_number": "ACC/2026/67529",
+            "qr_ref_number": "ACC/2026/78940",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "issue_date": "01-07-2024",
+            "expiry_date": "30-06-2029"
+          }
+        },
+        {
+          "filename": "INST004_APP012_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "UP/LKO/SUR/2010/004",
+            "area_acres": 16.71,
+            "trust_name": "Subhas Memorial Trust",
+            "institution_name": "Netaji Subhas Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST004_APP012_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ut/2026/8563",
+            "university_name": "State Technical University, Uttar Pradesh (SIMULATED)",
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "issue_date": "15-05-2026"
+          }
+        },
+        {
+          "filename": "INST004_APP012_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Netaji Subhas Institute of Technology",
+            "faculty_count": 4,
+            "faculty_ids": [
+              "FAC003",
+              "FAC005",
+              "FAC006",
+              "FAC012"
+            ],
+            "displayed_count": 4
+          }
+        },
+        {
+          "filename": "INST004_APP012_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Netaji Subhas Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST004_APP012_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Netaji Subhas Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST004_APP012_photo_3.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Netaji Subhas Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST004_APP012_hindi_cert.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "UP/CERT/2026/6168",
+            "language": "hindi",
+            "institution_name": "Netaji Subhas Institute of Technology"
+          }
+        },
+        {
+          "filename": "INST004_APP012_photo_dup.jpg",
+          "type": "infrastructure_photo",
+          "meta": {}
+        }
+      ],
+      "planted_faults": [
+        "qr_mismatch",
+        "duplicate_photo"
+      ],
+      "region": "North",
+      "status": "submitted"
+    },
+    {
+      "id": "APP013",
+      "institution_id": "INST005",
+      "institution_name": "Kalam Technical University",
+      "category": "extension_of_approval",
+      "academic_year": "2024",
+      "intake": 60,
+      "documents": [
+        {
+          "filename": "INST005_APP013_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP013",
+            "category": "extension_of_approval",
+            "institution_name": "Kalam Technical University",
+            "institution_id": "KTU-TN-005",
+            "intake": 60,
+            "actual_intake": 60
+          }
+        },
+        {
+          "filename": "INST005_APP013_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ta/2024/1727",
+            "institution_name": "Kalam Technical University",
+            "institution_id": "KTU-TN-005",
+            "intake": 60,
+            "issue_date": "01-04-2024",
+            "trust_name": "Kalam Foundation for Education"
+          }
+        },
+        {
+          "filename": "INST005_APP013_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ta/2024/4183",
+            "institution_name": "Kalam Technical University",
+            "issue_date": "01-01-2024",
+            "expiry_date": "31-12-2024",
+            "issuing_authority": "City Fire Department, Coimbatore"
+          }
+        },
+        {
+          "filename": "INST005_APP013_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ta/2024/7031",
+            "issue_date": "15-03-2024",
+            "expiry_date": "14-03-2025",
+            "institution_name": "Kalam Technical University",
+            "institution_id": "KTU-TN-005"
+          }
+        },
+        {
+          "filename": "INST005_APP013_accreditation.pdf",
+          "type": "accreditation_certificate",
+          "meta": {
+            "ref_number": "ACC/2024/42981",
+            "qr_ref_number": "ACC/2024/42981",
+            "institution_name": "Kalam Technical University",
+            "issue_date": "01-07-2022",
+            "expiry_date": "30-06-2027"
+          }
+        },
+        {
+          "filename": "INST005_APP013_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "TN/CBE/SUR/2012/005",
+            "area_acres": 6.9,
+            "trust_name": "Kalam Foundation for Education",
+            "institution_name": "Kalam Technical University"
+          }
+        },
+        {
+          "filename": "INST005_APP013_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ta/2024/8995",
+            "university_name": "State Technical University, Tamil Nadu (SIMULATED)",
+            "institution_name": "Kalam Technical University",
+            "issue_date": "15-05-2024"
+          }
+        },
+        {
+          "filename": "INST005_APP013_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Kalam Technical University",
+            "faculty_count": 4,
+            "faculty_ids": [
+              "FAC001",
+              "FAC007",
+              "FAC009",
+              "FAC010"
+            ],
+            "displayed_count": 4
+          }
+        },
+        {
+          "filename": "INST005_APP013_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Kalam Technical University"
+          }
+        },
+        {
+          "filename": "INST005_APP013_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Kalam Technical University"
+          }
+        },
+        {
+          "filename": "INST005_APP013_photo_3.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Kalam Technical University"
+          }
+        },
+        {
+          "filename": "INST005_APP013_photo_4.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Kalam Technical University"
+          }
+        }
+      ],
+      "planted_faults": [],
+      "region": "South",
+      "status": "submitted"
+    },
+    {
+      "id": "APP014",
+      "institution_id": "INST005",
+      "institution_name": "Kalam Technical University",
+      "category": "increase_of_intake",
+      "academic_year": "2025",
+      "intake": 270,
+      "documents": [
+        {
+          "filename": "INST005_APP014_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP014",
+            "category": "increase_of_intake",
+            "institution_name": "Kalam Technical University",
+            "institution_id": "KTU-TN-005",
+            "intake": 270,
+            "actual_intake": 270
+          }
+        },
+        {
+          "filename": "INST005_APP014_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ta/2025/9370",
+            "institution_name": "Kalam Technical University",
+            "institution_id": "KTU-TN-005",
+            "intake": 270,
+            "issue_date": "01-04-2025",
+            "trust_name": "Kalam Foundation for Education"
+          }
+        },
+        {
+          "filename": "INST005_APP014_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ta/2025/4105",
+            "institution_name": "Kalam Technical University",
+            "issue_date": "01-01-2025",
+            "expiry_date": "31-12-2025",
+            "issuing_authority": "City Fire Department, Coimbatore"
+          }
+        },
+        {
+          "filename": "INST005_APP014_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ta/2025/9978",
+            "issue_date": "15-03-2025",
+            "expiry_date": "14-03-2026",
+            "institution_name": "Kalam Technical University",
+            "institution_id": "KTU-TN-005"
+          }
+        },
+        {
+          "filename": "INST005_APP014_accreditation.pdf",
+          "type": "accreditation_certificate",
+          "meta": {
+            "ref_number": "ACC/2025/75759",
+            "qr_ref_number": "ACC/2025/75759",
+            "institution_name": "Kalam Technical University",
+            "issue_date": "01-07-2023",
+            "expiry_date": "30-06-2028"
+          }
+        },
+        {
+          "filename": "INST005_APP014_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "TN/CBE/SUR/2012/005",
+            "area_acres": 7.06,
+            "trust_name": "Kalam Foundation for Education",
+            "institution_name": "Kalam Technical University"
+          }
+        },
+        {
+          "filename": "INST005_APP014_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ta/2025/1842",
+            "university_name": "State Technical University, Tamil Nadu (SIMULATED)",
+            "institution_name": "Kalam Technical University",
+            "issue_date": "15-05-2025"
+          }
+        },
+        {
+          "filename": "INST005_APP014_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Kalam Technical University",
+            "faculty_count": 4,
+            "faculty_ids": [
+              "FAC001",
+              "FAC007",
+              "FAC009",
+              "FAC010"
+            ],
+            "displayed_count": 4
+          }
+        },
+        {
+          "filename": "INST005_APP014_electricity_bill.pdf",
+          "type": "electricity_bill",
+          "meta": {
+            "bill_number": "EB/COI/2025/253159",
+            "institution_name": "Kalam Foundation for Education",
+            "bill_date": "01-02-2025"
+          }
+        },
+        {
+          "filename": "INST005_APP014_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Kalam Technical University"
+          }
+        },
+        {
+          "filename": "INST005_APP014_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Kalam Technical University"
+          }
+        },
+        {
+          "filename": "INST005_APP014_photo_3.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Kalam Technical University"
+          }
+        },
+        {
+          "filename": "INST005_APP014_photo_4.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Kalam Technical University"
+          }
+        },
+        {
+          "filename": "INST005_APP014_edited_metadata.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "MET/2025/8399",
+            "producer": "Adobe Acrobat Pro DC (edited)",
+            "extra_eof": true
+          }
+        }
+      ],
+      "planted_faults": [
+        "edited_metadata"
+      ],
+      "region": "South",
+      "status": "submitted"
+    },
+    {
+      "id": "APP015",
+      "institution_id": "INST005",
+      "institution_name": "Kalam Technical University",
+      "category": "increase_of_intake",
+      "academic_year": "2026",
+      "intake": 300,
+      "documents": [
+        {
+          "filename": "INST005_APP015_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP015",
+            "category": "increase_of_intake",
+            "institution_name": "Kalam Technical University",
+            "institution_id": "KTU-TN-005",
+            "intake": 300,
+            "actual_intake": 300
+          }
+        },
+        {
+          "filename": "INST005_APP015_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ta/2026/1008",
+            "institution_name": "Kalam Technical University",
+            "institution_id": "KTU-TN-005",
+            "intake": 300,
+            "issue_date": "01-04-2026",
+            "trust_name": "Kalam Foundation for Education"
+          }
+        },
+        {
+          "filename": "INST005_APP015_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ta/2026/7283",
+            "institution_name": "Kalam Technical University",
+            "issue_date": "01-01-2026",
+            "expiry_date": "31-12-2026",
+            "issuing_authority": "City Fire Department, Coimbatore"
+          }
+        },
+        {
+          "filename": "INST005_APP015_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ta/2026/2120",
+            "issue_date": "15-03-2026",
+            "expiry_date": "14-03-2027",
+            "institution_name": "Kalam Technical University",
+            "institution_id": "KTU-TN-005"
+          }
+        },
+        {
+          "filename": "INST005_APP015_accreditation.pdf",
+          "type": "accreditation_certificate",
+          "meta": {
+            "ref_number": "ACC/2026/54182",
+            "qr_ref_number": "ACC/2026/54182",
+            "institution_name": "Kalam Technical University",
+            "issue_date": "01-07-2024",
+            "expiry_date": "30-06-2029"
+          }
+        },
+        {
+          "filename": "INST005_APP015_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "TN/CBE/SUR/2012/005",
+            "area_acres": 6.71,
+            "trust_name": "Kalam Foundation for Education",
+            "institution_name": "Kalam Technical University"
+          }
+        },
+        {
+          "filename": "INST005_APP015_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ta/2026/4601",
+            "university_name": "State Technical University, Tamil Nadu (SIMULATED)",
+            "institution_name": "Kalam Technical University",
+            "issue_date": "15-05-2026"
+          }
+        },
+        {
+          "filename": "INST005_APP015_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Kalam Technical University",
+            "faculty_count": 4,
+            "faculty_ids": [
+              "FAC001",
+              "FAC007",
+              "FAC009",
+              "FAC010"
+            ],
+            "displayed_count": 4
+          }
+        },
+        {
+          "filename": "INST005_APP015_electricity_bill.pdf",
+          "type": "electricity_bill",
+          "meta": {
+            "bill_number": "EB/COI/2026/404880",
+            "institution_name": "Kalam Foundation for Education",
+            "bill_date": "01-02-2026"
+          }
+        },
+        {
+          "filename": "INST005_APP015_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Kalam Technical University"
+          }
+        },
+        {
+          "filename": "INST005_APP015_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Kalam Technical University"
+          }
+        },
+        {
+          "filename": "INST005_APP015_photo_3.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Kalam Technical University"
+          }
+        },
+        {
+          "filename": "INST005_APP015_tamil_cert.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "TN/CERT/2026/8699",
+            "language": "tamil",
+            "institution_name": "Kalam Technical University"
+          }
+        }
+      ],
+      "planted_faults": [
+        "font_inconsistency"
+      ],
+      "region": "South",
+      "status": "submitted"
+    },
+    {
+      "id": "APP016",
+      "institution_id": "INST006",
+      "institution_name": "Savitribai Phule Polytechnic",
+      "category": "extension_of_approval",
+      "academic_year": "2024",
+      "intake": 120,
+      "documents": [
+        {
+          "filename": "INST006_APP016_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP016",
+            "category": "extension_of_approval",
+            "institution_name": "Savitribai Phule Polytechnic",
+            "institution_id": "SPP-MH-006",
+            "intake": 120,
+            "actual_intake": 120
+          }
+        },
+        {
+          "filename": "INST006_APP016_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ma/2024/1398",
+            "institution_name": "Savitribai Phule Polytechnic",
+            "institution_id": "SPP-MH-006",
+            "intake": 120,
+            "issue_date": "01-04-2024",
+            "trust_name": "Rajiv Education Trust"
+          }
+        },
+        {
+          "filename": "INST006_APP016_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ma/2024/4471",
+            "institution_name": "Savitribai Phule Polytechnic",
+            "issue_date": "01-01-2024",
+            "expiry_date": "31-12-2024",
+            "issuing_authority": "City Fire Department, Nagpur"
+          }
+        },
+        {
+          "filename": "INST006_APP016_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ma/2024/2134",
+            "issue_date": "15-03-2024",
+            "expiry_date": "14-03-2025",
+            "institution_name": "Savitribai Phule Polytechnic",
+            "institution_id": "SPP-MH-006"
+          }
+        },
+        {
+          "filename": "INST006_APP016_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "MH/PUNE/SUR/2005/001",
+            "area_acres": 10.81,
+            "trust_name": "Rajiv Education Trust",
+            "institution_name": "Savitribai Phule Polytechnic"
+          }
+        },
+        {
+          "filename": "INST006_APP016_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ma/2024/3973",
+            "university_name": "State Technical University, Maharashtra (SIMULATED)",
+            "institution_name": "Savitribai Phule Polytechnic",
+            "issue_date": "15-05-2024"
+          }
+        },
+        {
+          "filename": "INST006_APP016_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Savitribai Phule Polytechnic",
+            "faculty_count": 2,
+            "faculty_ids": [
+              "FAC004",
+              "FAC008"
+            ],
+            "displayed_count": 2
+          }
+        },
+        {
+          "filename": "INST006_APP016_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Savitribai Phule Polytechnic"
+          }
+        },
+        {
+          "filename": "INST006_APP016_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Savitribai Phule Polytechnic"
+          }
+        }
+      ],
+      "planted_faults": [],
+      "region": "West",
+      "status": "submitted"
+    },
+    {
+      "id": "APP017",
+      "institution_id": "INST006",
+      "institution_name": "Savitribai Phule Polytechnic",
+      "category": "increase_of_intake",
+      "academic_year": "2025",
+      "intake": 90,
+      "documents": [
+        {
+          "filename": "INST006_APP017_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP017",
+            "category": "increase_of_intake",
+            "institution_name": "Savitribai Phule Polytechnic",
+            "institution_id": "SPP-MH-006",
+            "intake": 90,
+            "actual_intake": 90
+          }
+        },
+        {
+          "filename": "INST006_APP017_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ma/2025/2737",
+            "institution_name": "Savitribai Phule Polytechnic",
+            "institution_id": "SPP-MH-006",
+            "intake": 90,
+            "issue_date": "01-04-2025",
+            "trust_name": "Rajiv Education Trust"
+          }
+        },
+        {
+          "filename": "INST006_APP017_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ma/2025/9796",
+            "institution_name": "Savitribai Phule Polytechnic",
+            "issue_date": "01-01-2025",
+            "expiry_date": "31-12-2025",
+            "issuing_authority": "City Fire Department, Nagpur"
+          }
+        },
+        {
+          "filename": "INST006_APP017_noc.pdf",
+          "type": "noc",
+          "meta": {
+            "ref_number": "NOC/Ma/2025/7392",
+            "issue_date": "15-03-2025",
+            "expiry_date": "14-03-2026",
+            "institution_name": "Savitribai Phule Polytechnic",
+            "institution_id": "SPP-MH-006"
+          }
+        },
+        {
+          "filename": "INST006_APP017_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "MH/PUNE/SUR/2005/001",
+            "area_acres": 12.98,
+            "trust_name": "Rajiv Education Trust",
+            "institution_name": "Savitribai Phule Polytechnic"
+          }
+        },
+        {
+          "filename": "INST006_APP017_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ma/2025/4437",
+            "university_name": "State Technical University, Maharashtra (SIMULATED)",
+            "institution_name": "Savitribai Phule Polytechnic",
+            "issue_date": "15-05-2025"
+          }
+        },
+        {
+          "filename": "INST006_APP017_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Savitribai Phule Polytechnic",
+            "faculty_count": 2,
+            "faculty_ids": [
+              "FAC004",
+              "FAC008"
+            ],
+            "displayed_count": 2
+          }
+        },
+        {
+          "filename": "INST006_APP017_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Savitribai Phule Polytechnic"
+          }
+        },
+        {
+          "filename": "INST006_APP017_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Savitribai Phule Polytechnic"
+          }
+        }
+      ],
+      "planted_faults": [],
+      "region": "West",
+      "status": "submitted"
+    },
+    {
+      "id": "APP018",
+      "institution_id": "INST006",
+      "institution_name": "Savitribai Phule Polytechnic",
+      "category": "closure",
+      "academic_year": "2026",
+      "intake": 240,
+      "documents": [
+        {
+          "filename": "INST006_APP018_application_form.pdf",
+          "type": "application_form",
+          "meta": {
+            "application_id": "APP018",
+            "category": "closure",
+            "institution_name": "Savitribai Phule Polytechnic",
+            "institution_id": "SPP-MH-006",
+            "intake": 240,
+            "actual_intake": 240
+          }
+        },
+        {
+          "filename": "INST006_APP018_affidavit.pdf",
+          "type": "affidavit",
+          "meta": {
+            "ref_number": "AFF/Ma/2026/3754",
+            "institution_name": "Savitribai Phule Polytechnic",
+            "institution_id": "SPP-MH-006",
+            "intake": 240,
+            "issue_date": "01-04-2026",
+            "trust_name": "Rajiv Education Trust"
+          }
+        },
+        {
+          "filename": "INST006_APP018_fire_safety.pdf",
+          "type": "fire_safety_certificate",
+          "meta": {
+            "ref_number": "FSC/Ma/2026/9716",
+            "institution_name": "Savitribai Phule Polytechnic",
+            "issue_date": "01-01-2026",
+            "expiry_date": "31-12-2026",
+            "issuing_authority": "City Fire Department, Nagpur"
+          }
+        },
+        {
+          "filename": "INST006_APP018_land_document.pdf",
+          "type": "land_document",
+          "meta": {
+            "survey_number": "MH/PUNE/SUR/2005/001",
+            "area_acres": 16.78,
+            "trust_name": "Rajiv Education Trust",
+            "institution_name": "Savitribai Phule Polytechnic"
+          }
+        },
+        {
+          "filename": "INST006_APP018_affiliation.pdf",
+          "type": "university_affiliation_letter",
+          "meta": {
+            "ref_number": "AFFL/Ma/2026/2319",
+            "university_name": "State Technical University, Maharashtra (SIMULATED)",
+            "institution_name": "Savitribai Phule Polytechnic",
+            "issue_date": "15-05-2026"
+          }
+        },
+        {
+          "filename": "INST006_APP018_faculty_list.pdf",
+          "type": "faculty_list",
+          "meta": {
+            "institution_name": "Savitribai Phule Polytechnic",
+            "faculty_count": 2,
+            "faculty_ids": [
+              "FAC004",
+              "FAC008"
+            ],
+            "displayed_count": 2
+          }
+        },
+        {
+          "filename": "INST006_APP018_photo_1.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Savitribai Phule Polytechnic"
+          }
+        },
+        {
+          "filename": "INST006_APP018_photo_2.jpg",
+          "type": "infrastructure_photo",
+          "meta": {
+            "institution_name": "Savitribai Phule Polytechnic"
+          }
+        }
+      ],
+      "planted_faults": [
+        "blurry_photo"
+      ],
+      "region": "West",
+      "status": "submitted"
+    }
+  ],
+  "verification_statuses": [
+    {
+      "status": "verified",
+      "institution": "INST001",
+      "doc": "fire_safety"
+    },
+    {
+      "status": "mismatch_detected",
+      "institution": "INST004",
+      "doc": "accreditation"
+    },
+    {
+      "status": "expired",
+      "institution": "INST003",
+      "doc": "fire_safety"
+    },
+    {
+      "status": "verification_pending",
+      "institution": "INST005",
+      "doc": "noc"
+    },
+    {
+      "status": "source_unavailable",
+      "institution": "INST006",
+      "doc": "noc"
+    },
+    {
+      "status": "manual_review_required",
+      "institution": "INST002",
+      "doc": "affidavit"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+कमी सूचना / DEFICIENCY NOTICE
+================================
+
+दिनांक / Date: {{ date }}
+संदर्भ संख्या / Reference: {{ reference_number }}
+
+प्रति / To,
+प्राचार्य / निदेशक,
+{{ institution_name }}
+{{ institution_address }}
+
+विषय / Subject: आवेदन {{ application_id }} ({{ category }}) - कमी सूचना
+शैक्षणिक वर्ष / Academic Year: {{ academic_year }}
+
+महोदय / महोदया,
+
+आपके आवेदन ({{ application_id }}) {{ category }} के संबंध में, निम्नलिखित कमियां पाई गई हैं।
+
+{% if missing_documents %}
+क. लापता दस्तावेज़ / MISSING DOCUMENTS
+{% for doc in missing_documents %}
+   {{ loop.index }}. {{ doc.label }}
+      - यह दस्तावेज़ अनिवार्य है।
+{% endfor %}
+{% endif %}
+
+{% if validation_flags %}
+ख. सत्यापन मुद्दे / VALIDATION ISSUES
+{% for flag in validation_flags %}
+   {{ loop.index }}. [{{ flag.code }}] {{ flag.title }}
+      - गंभीरता / Severity: {{ flag.severity }}
+      - विवरण / Details: {{ flag.reason }}
+{% endfor %}
+{% endif %}
+
+{% if compliance_gaps %}
+ग. अनुपालन अंतराल / COMPLIANCE GAPS
+{% for gap in compliance_gaps %}
+   {{ loop.index }}. {{ gap.rule_description }}
+      - आवश्यक / Required: {{ gap.required_value }}
+      - घोषित / Declared: {{ gap.declared_value }}
+{% endfor %}
+{% endif %}
+
+कृपया {{ deadline_days }} दिनों के भीतर सुधारे गए दस्तावेज़ पुनः प्रस्तुत करें।
+
+नोट: यह केवल एक सलाहकार सूचना है। अंतिम निर्णय AICTE अधिकारियों के पास है।
+
+सादर,
+{{ officer_name }}
+AICTE क्षेत्रीय कार्यालय
+
+---
+[केवल सलाह - AICTE-Verify (नकली / SIMULATED)]

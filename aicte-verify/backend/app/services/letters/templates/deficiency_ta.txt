@@ -1,0 +1,54 @@
+குறைபாடு அறிவிப்பு / DEFICIENCY NOTICE
+=======================================
+
+தேதி / Date: {{ date }}
+குறிப்பு எண் / Reference: {{ reference_number }}
+
+பெறுநர் / To,
+முதல்வர் / இயக்குநர்,
+{{ institution_name }}
+{{ institution_address }}
+
+பொருள் / Subject: விண்ணப்பம் {{ application_id }} ({{ category }}) - குறைபாடு அறிவிப்பு
+கல்வியாண்டு / Academic Year: {{ academic_year }}
+
+ஐயா / அம்மா,
+
+உங்கள் விண்ணப்பம் ({{ application_id }}) {{ category }} தொடர்பாக, கீழ்க்காணும் குறைபாடுகள் கண்டறியப்பட்டுள்ளன.
+
+{% if missing_documents %}
+அ. காணாத ஆவணங்கள் / MISSING DOCUMENTS
+{% for doc in missing_documents %}
+   {{ loop.index }}. {{ doc.label }}
+      - இந்த ஆவணம் கட்டாயம் தேவை.
+{% endfor %}
+{% endif %}
+
+{% if validation_flags %}
+ஆ. சரிபார்ப்பு சிக்கல்கள் / VALIDATION ISSUES
+{% for flag in validation_flags %}
+   {{ loop.index }}. [{{ flag.code }}] {{ flag.title }}
+      - தீவிரம் / Severity: {{ flag.severity }}
+      - விவரம் / Details: {{ flag.reason }}
+{% endfor %}
+{% endif %}
+
+{% if compliance_gaps %}
+இ. விதிமுறை இடைவெளிகள் / COMPLIANCE GAPS
+{% for gap in compliance_gaps %}
+   {{ loop.index }}. {{ gap.rule_description }}
+      - தேவை / Required: {{ gap.required_value }}
+      - அறிவிக்கப்பட்டது / Declared: {{ gap.declared_value }}
+{% endfor %}
+{% endif %}
+
+{{ deadline_days }} நாட்களுக்குள் திருத்தப்பட்ட ஆவணங்களை மீண்டும் சமர்ப்பிக்கவும்.
+
+குறிப்பு: இது ஒரு ஆலோசனை அறிவிப்பு மட்டுமே. இறுதி முடிவு AICTE அதிகாரிகளிடம் உள்ளது.
+
+அன்புடன்,
+{{ officer_name }}
+AICTE பிராந்திய அலுவலகம்
+
+---
+[ஆலோசனை மட்டும் - AICTE-Verify (போலி / SIMULATED)]

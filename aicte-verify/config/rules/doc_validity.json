@@ -1,0 +1,18 @@
+{
+  "_meta": {
+    "description": "Document validity periods for expiry checking in AICTE-Verify",
+    "illustrative": "replace with Approval Process Handbook values",
+    "simulated": true
+  },
+  "validity_periods": {
+    "fire_safety_certificate": {"validity_years": 1, "label": "Fire Safety Certificate"},
+    "noc": {"validity_years": 1, "label": "No Objection Certificate"},
+    "accreditation_certificate": {"validity_years": 5, "label": "Accreditation Certificate"},
+    "university_affiliation_letter": {"validity_years": 1, "label": "University Affiliation Letter"},
+    "land_document": {"validity_years": null, "label": "Land Document (no expiry)"},
+    "electricity_bill": {"validity_months": 3, "label": "Electricity/Water Bill"},
+    "financial_statement": {"validity_years": 1, "label": "Financial Statement"},
+    "affidavit": {"validity_years": 1, "label": "Affidavit"}
+  },
+  "reference_date_field": "application_submission_date"
+}

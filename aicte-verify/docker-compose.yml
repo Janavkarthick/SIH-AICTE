@@ -1,0 +1,57 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+      - ./scripts:/app/scripts
+    environment:
+      - DATABASE_URL=sqlite:///./data/aicte_verify.db
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-dev-secret-key-change-in-production-abc123}
+      - JWT_ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=480
+      - MAX_UPLOAD_SIZE_MB=50
+      - UPLOAD_DIR=./data/uploads
+      - FRONTEND_URL=http://localhost:5173
+      - DEBUG=true
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      backend:
+        condition: service_started
+    restart: unless-stopped
+
+  # Optional Postgres profile
+  postgres:
+    image: postgres:16-alpine
+    profiles:
+      - postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=aicte
+      - POSTGRES_PASSWORD=aicte_verify_dev
+      - POSTGRES_DB=aicte_verify
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

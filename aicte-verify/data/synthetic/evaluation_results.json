@@ -1,0 +1,194 @@
+{
+  "timestamp": "2026-10-26T00:43:58.545821",
+  "ground_truth_faults": 17,
+  "ground_truth_clean": 43,
+  "ocr_extraction": {
+    "tested": 0,
+    "correct": 0,
+    "accuracy": 0.0
+  },
+  "validation": {
+    "tested": 2,
+    "correct": 2,
+    "accuracy": 1.0
+  },
+  "forensics": {},
+  "verification": {
+    "tested": 0,
+    "correct": 0,
+    "accuracy": 0.0
+  },
+  "processing_times": {
+    "documents": [
+      0.10751080513000488,
+      0.07163476943969727,
+      0.0842432975769043
+    ],
+    "applications": [
+      0.15288138389587402,
+      0.18311285972595215
+    ]
+  },
+  "checks_automated": 18,
+  "checks_total": 17,
+  "per_check_metrics": {
+    "number_mismatch": {
+      "category": "validation",
+      "total_planted": 1,
+      "detected": 0,
+      "description": "Application form shows intake 600 but affidavit shows 300",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "photo_wrong_gps": {
+      "category": "compliance",
+      "total_planted": 1,
+      "detected": 1,
+      "description": "Photo GPS coordinates are ~500km from claimed campus location",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "name_mismatch": {
+      "category": "validation",
+      "total_planted": 1,
+      "detected": 0,
+      "description": "Institution name in affidavit differs from application form",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "photo_not_recent": {
+      "category": "compliance",
+      "total_planted": 1,
+      "detected": 1,
+      "description": "Photo taken more than 180 days ago",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "expired_document": {
+      "category": "validation",
+      "total_planted": 1,
+      "detected": 1,
+      "description": "Fire safety certificate expired on 31-12-2024",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "duplicate_document_across_institutions": {
+      "category": "forensics",
+      "total_planted": 1,
+      "detected": 1,
+      "description": "This document is identical to one submitted by a different institution",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "qr_payload_mismatch": {
+      "category": "forensics",
+      "total_planted": 1,
+      "detected": 0,
+      "description": "QR code reference number doesn't match printed certificate number",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "duplicate_photo_across_institutions": {
+      "category": "forensics",
+      "total_planted": 1,
+      "detected": 1,
+      "description": "This infrastructure photo is identical to one submitted by a different institution",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "yoy_intake_jump": {
+      "category": "anomaly",
+      "total_planted": 1,
+      "detected": 1,
+      "description": "Intake increased by 200%+ YoY with no corresponding infrastructure increase",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "metadata_edited": {
+      "category": "forensics",
+      "total_planted": 1,
+      "detected": 0,
+      "description": "PDF producer/creator indicates editing tool, multiple EOF markers found",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "font_inconsistency": {
+      "category": "forensics",
+      "total_planted": 1,
+      "detected": 0,
+      "description": "Date field uses different font (Courier) from rest of document (Helvetica)",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "photo_quality_issue": {
+      "category": "compliance",
+      "total_planted": 1,
+      "detected": 1,
+      "description": "Photo is blurry (below quality threshold)",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "ghost_faculty": {
+      "category": "anomaly",
+      "total_planted": 2,
+      "detected": 2,
+      "description": "Faculty FAC011 (Dr. Vikram Singh) listed as full-time at INST001 (Pune) and INST002 (Chennai) simult",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "shared_land_survey": {
+      "category": "anomaly",
+      "total_planted": 1,
+      "detected": 1,
+      "description": "Same land survey number used by INST001 (Pune) and INST006 (Nagpur)",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    "shared_trust": {
+      "category": "anomaly",
+      "total_planted": 1,
+      "detected": 0,
+      "description": "Same trust (Rajiv Education Trust) behind INST001 and INST006",
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    "intake_exceeds_capacity": {
+      "category": "compliance",
+      "total_planted": 1,
+      "detected": 1,
+      "description": "Applied intake (720) exceeds computed maximum capacity (360) based on infrastructure",
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    }
+  },
+  "limitations": [
+    "OCR accuracy depends on Tesseract installation and font availability",
+    "ELA detection works best on JPEG-compressed images, synthetic PDFs may not trigger",
+    "Copy-move detection requires sufficient ORB keypoints in tampered regions",
+    "Digital signature validation requires properly signed PDFs (synthetic data has unsigned PDFs)",
+    "Tamil/Hindi OCR accuracy varies with system font and Tesseract language data availability"
+  ],
+  "avg_processing_time_per_document": 0.08779629071553548,
+  "avg_processing_time_per_application": 0.16799712181091309,
+  "manual_effort_comparison": {
+    "total_checks": 17,
+    "automated_checks": 18,
+    "automation_rate": 1.0588235294117647
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "_meta": {
+    "description": "SIMULATED accreditation and ranking entries for outside-signals check (A8)",
+    "simulated": true
+  },
+  "accredited_institutions": [
+    {
+      "code": "RGIT-MH-001",
+      "name": "Rajiv Gandhi Institute of Technology",
+      "grade": "A",
+      "valid_until": "2028-06-30"
+    },
+    {
+      "code": "SLEC-TN-002",
+      "name": "Sri Lakshmi Engineering College",
+      "grade": "B+",
+      "valid_until": "2027-06-30"
+    },
+    {
+      "code": "BVCE-KA-003",
+      "name": "Bharati Vidyapeeth College of Engineering",
+      "grade": "A+",
+      "valid_until": "2029-06-30"
+    }
+  ],
+  "ranked_institutions": [
+    {
+      "code": "RGIT-MH-001",
+      "rank": 45,
+      "year": 2026
+    },
+    {
+      "code": "BVCE-KA-003",
+      "rank": 32,
+      "year": 2026
+    }
+  ]
+}

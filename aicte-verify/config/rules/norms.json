@@ -1,0 +1,46 @@
+{
+  "_meta": {
+    "description": "Infrastructure and faculty norms for AICTE-Verify compliance checks",
+    "illustrative": "replace with Approval Process Handbook values",
+    "simulated": true
+  },
+  "area_per_student_sqft": {
+    "classroom": 10,
+    "laboratory": 15,
+    "library": 2,
+    "total_built_up": 50,
+    "total_land_acres_per_100_students": 1.0
+  },
+  "faculty_student_ratio": {
+    "engineering": {"min_ratio": "1:15", "ratio_value": 15},
+    "management": {"min_ratio": "1:15", "ratio_value": 15},
+    "pharmacy": {"min_ratio": "1:15", "ratio_value": 15},
+    "architecture": {"min_ratio": "1:20", "ratio_value": 20}
+  },
+  "labs_required": {
+    "computer_science": ["programming_lab", "networking_lab", "database_lab", "project_lab"],
+    "electronics": ["basic_electronics_lab", "digital_lab", "communication_lab", "microprocessor_lab"],
+    "mechanical": ["workshop", "fluid_mechanics_lab", "thermal_lab", "metrology_lab"],
+    "civil": ["survey_lab", "soil_mechanics_lab", "concrete_lab", "environmental_lab"],
+    "general": ["physics_lab", "chemistry_lab", "computer_center"]
+  },
+  "intake_limits": {
+    "min_per_course": 30,
+    "max_per_course": 300,
+    "increment_step": 30
+  },
+  "max_intake_increase_percent_per_year": 50,
+  "infrastructure_requirements": {
+    "min_classrooms_per_course": 2,
+    "min_labs_per_course": 3,
+    "library_books_per_student": 15,
+    "internet_bandwidth_mbps_per_100_students": 10,
+    "power_backup_required": true,
+    "fire_safety_required": true,
+    "disabled_access_required": true
+  },
+  "campus_coordinates_tolerance_km": 5.0,
+  "photo_recency_days": 180,
+  "min_photo_resolution": {"width": 640, "height": 480},
+  "max_blur_threshold": 100
+}
