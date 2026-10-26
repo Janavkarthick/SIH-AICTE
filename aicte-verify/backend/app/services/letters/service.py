@@ -1,7 +1,8 @@
-"""Statutory Deficiency Letter Generation and AI Enhancement Service.
+"""Deficiency Notice Draft Generation and Officer Review Service.
 
-Generates official regulatory communication in English, Tamil, and Hindi using Jinja2 templates.
-Provides optional Google Gemini LLM integration for regulatory tone refinement.
+Generates draft deficiency communications in English, Tamil, and Hindi using Jinja2 templates.
+All notices are explicitly marked DRAFTS and require formal Regional Officer review and approval prior to dispatch.
+Clauses without verified authoritative text are labeled: '[Clause reference - verify against Approval Process Handbook]'.
 """
 
 from datetime import date, timedelta
@@ -21,7 +22,9 @@ from app.models.institution import Institution
 from app.schemas.letter import LetterResponse
 
 
-ENGLISH_TEMPLATE = """ALL INDIA COUNCIL FOR TECHNICAL EDUCATION
+ENGLISH_TEMPLATE = """*** DRAFT DEFICIENCY NOTICE - PENDING REGIONAL OFFICER SCRUTINY & APPROVAL ***
+
+ALL INDIA COUNCIL FOR TECHNICAL EDUCATION
 Nelson Mandela Marg, Vasant Kunj, New Delhi-110070
 APPROVAL PROCESS BUREAU
 
@@ -34,40 +37,40 @@ The Principal / Secretary,
 {{ institution.address }}, {{ institution.city }}, {{ institution.state }}
 Permanent Institute ID: {{ institution.code }}
 
-SUBJECT: NOTICE OF STATUTORY DEFICIENCIES AND REGULATORY DISCREPANCIES FOR APPROVAL CYCLE {{ application.academic_year }}
+SUBJECT: DRAFT NOTICE OF DEFICIENCIES FOR APPROVAL CYCLE {{ application.academic_year }}
 
 Sir / Madam,
 
-This has reference to your Application ID #{{ application.id }} submitted for {{ application.category.replace('_', ' ').title() }} under the Approval Process Handbook provisions.
+This has reference to Application ID #{{ application.id }} submitted for {{ application.category.replace('_', ' ').title() }}.
 
-Upon comprehensive automated verification, forensic artifact examination, and statutory compliance cross-checks, the competent authority has noted the following significant deficiencies and discrepancies:
+Upon automated preliminary checks and officer scrutiny, the following preliminary observations and potential discrepancies have been identified for institutional response:
 
 {% for flag in flags %}
 --------------------------------------------------------------------------------
 {{ loop.index }}. Discrepancy Code: {{ flag.code }} [Severity: {{ flag.severity.upper() }}]
    Category: {{ flag.flag_type.title() }}
    Title: {{ flag.title }}
-   Statutory Finding: {{ flag.reason }}
-   Rule Reference: {{ flag.rule_id or 'Statutory Regulations' }}
+   Preliminary Finding: {{ flag.reason }}
+   Clause Reference: [Clause reference - verify against Approval Process Handbook]
 {% endfor %}
 
 {% if additional_remarks %}
-Special Observations:
+Special Scrutiny Notes:
 {{ additional_remarks }}
 {% endif %}
 
-You are hereby directed to rectify the above deficiencies, upload verified replacement artifacts, and submit your formal compliance representation on the AICTE Portal within {{ deadline_days }} days from the date of issue of this letter (on or before {{ deadline_date }}).
+The institution is hereby requested to provide clarification, upload verified replacement documents, or submit a formal representation on the AICTE Portal within {{ deadline_days }} days from the date of formal dispatch of this notice (on or before {{ deadline_date }}).
 
-Failure to rectify the highlighted discrepancies within the stipulated timeline shall lead to adverse regulatory action, including reduction in sanctioned intake or rejection of the approval application.
-
-By Order of the Competent Authority,
+NOTE: This communication is a draft prepared for Expert Scrutiny Committee review. Formal action is subject to Competent Authority endorsement.
 
 Regional Officer
 Approval Process Bureau
 All India Council for Technical Education
 """
 
-TAMIL_TEMPLATE = """அகில இந்திய தொழில்நுட்பக் கல்விக் குழு (AICTE)
+TAMIL_TEMPLATE = """*** வரைவு குறைபாடு அறிவிப்பு - மண்டல அதிகாரி ஒப்புதலுக்கு உட்பட்டது ***
+
+அகில இந்திய தொழில்நுட்பக் கல்விக் குழு (AICTE)
 நெல்சன் மண்டேலா மார்க், வசந்த் குஞ்ச், புது தில்லி-110070
 
 குறிப்பு எண்: AICTE/APB/DEF/{{ application.academic_year }}/{{ application.id }}
@@ -79,17 +82,18 @@ TAMIL_TEMPLATE = """அகில இந்திய தொழில்நுட�
 {{ institution.address }}, {{ institution.city }}, {{ institution.state }}
 நிரந்தர நிறுவனக் குறியீடு: {{ institution.code }}
 
-பொருள்: {{ application.academic_year }} கல்வி ஆண்டிற்கான குறைபாடுகள் மற்றும் முரண்பாடுகள் குறித்த அறிவிப்பு
+பொருள்: {{ application.academic_year }} கல்வி ஆண்டிற்கான வரைவு குறைபாடுகள் குறித்த அறிவிப்பு
 
 ஐயா / அம்மையீர்,
 
-தங்களின் விண்ணப்ப எண் #{{ application.id }} ({{ application.category.replace('_', ' ').title() }}) மீதான சரிபார்ப்பில் கீழ்க்கண்ட குறைபாடுகள் கண்டறியப்பட்டுள்ளன:
+தங்களின் விண்ணப்ப எண் #{{ application.id }} ({{ application.category.replace('_', ' ').title() }}) மீதான சரிபார்ப்பில் கீழ்க்கண்ட குறைபாடுகள் தற்காலிகமாக கண்டறியப்பட்டுள்ளன:
 
 {% for flag in flags %}
 {{ loop.index }}. குறியீடு: {{ flag.code }} [தீவிரம்: {{ flag.severity.upper() }}]
    வகை: {{ flag.flag_type.title() }}
    விவரம்: {{ flag.title }}
    காரணம்: {{ flag.reason }}
+   விதிக்குறிப்பு: [Clause reference - verify against Approval Process Handbook]
 {% endfor %}
 
 மேற்கண்ட குறைபாடுகளை {{ deadline_days }} நாட்களுக்குள் (கடைசி நாள்: {{ deadline_date }}) சரிசெய்து இணையதளத்தில் பதிவேற்றுமாறு அறிவுறுத்தப்படுகிறீர்கள்.
@@ -98,7 +102,9 @@ TAMIL_TEMPLATE = """அகில இந்திய தொழில்நுட�
 அகில இந்திய தொழில்நுட்பக் கல்விக் குழு
 """
 
-HINDI_TEMPLATE = """अखिल भारतीय तकनीकी शिक्षा परिषद (AICTE)
+HINDI_TEMPLATE = """*** प्रारूप कमी सूचना - क्षेत्रीय अधिकारी के सत्यापन एवं अनुमोदन के अधीन ***
+
+अखिल भारतीय तकनीकी शिक्षा परिषद (AICTE)
 नेल्सन मंडेला मार्ग, वसंत कुंज, नई दिल्ली-110070
 
 संदर्भ संख्या: AICTE/APB/DEF/{{ application.academic_year }}/{{ application.id }}
@@ -110,20 +116,23 @@ HINDI_TEMPLATE = """अखिल भारतीय तकनीकी शिक
 {{ institution.address }}, {{ institution.city }}, {{ institution.state }}
 स्थायी संस्थान आईडी: {{ institution.code }}
 
-विषय: शैक्षणिक सत्र {{ application.academic_year }} के लिए अनुमोदन आवेदन में कमियों एवं विसंगतियों की सूचना
+विषय: शैक्षणिक सत्र {{ application.academic_year }} के लिए अनुमोदन आवेदन में कमियों का प्रारूप नोटिस
 
 महोदय / महोदया,
 
-आपके आवेदन संख्या #{{ application.id }} ({{ application.category.replace('_', ' ').title() }}) की जांच के उपरांत निम्नलिखित विसंगतियां पाई गई हैं:
+आपके आवेदन संख्या #{{ application.id }} ({{ application.category.replace('_', ' ').title() }}) की प्राथमिक जांच के उपरांत निम्नलिखित विसंगतियां पाई गई हैं:
 
 {% for flag in flags %}
 {{ loop.index }}. विसंगति कोड: {{ flag.code }} [गंभीरता: {{ flag.severity.upper() }}]
    श्रेणी: {{ flag.flag_type.title() }}
    शीर्षक: {{ flag.title }}
    विवरण: {{ flag.reason }}
+   खंड संदर्भ: [Clause reference - verify against Approval Process Handbook]
 {% endfor %}
 
-अतः आपको निर्देशित किया जाता है कि {{ deadline_days }} दिनों के भीतर (अंतिम तिथि: {{ deadline_date }}) तक इन कमियों का निवारण करें।
+अतः आपको निर्देशित किया जाता है कि {{ deadline_days }} दिनों के भीतर (अंतिम तिथि: {{ deadline_date }}) तक इन कमियों का निवारण प्रस्तुत करें।
+
+नोट: यह संचार क्षेत्रीय जांच समिति के मूल्यांकन हेतु एक प्रारूप है।
 
 सक्षम प्राधिकारी के आदेश से,
 क्षेत्रीय अधिकारी, AICTE

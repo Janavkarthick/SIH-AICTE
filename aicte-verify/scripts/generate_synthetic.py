@@ -1,73 +1,75 @@
 """
-AICTE-Verify Synthetic Data Generator
-======================================
+AICTE-Verify Synthetic Benchmark Dataset Generator
+===================================================
 SIMULATED DATA ONLY - All institutions, persons, and documents are fictional.
 
-Generates realistic-looking PDFs/images with planted faults for testing
-the full validation pipeline. Each fault is recorded in ground_truth.json.
+Generates realistic PDFs and images with neutral filenames (DOC_0001.pdf, DOC_0002.jpg, ...)
+to evaluate pipeline heuristics without data leakage or filename hints.
+Planted faults: 10 randomised variants across 16 fault categories (160 planted faults).
+Clean controls: 125 clean documents across all 11 statutory categories.
+Total benchmark dataset: 285 neutral documents.
 """
 
 import json
 import os
 import random
+import shutil
 import hashlib
-import struct
-import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 from io import BytesIO
-from typing import Any
+from typing import Any, Dict, List, Tuple
 
-# Optional imports - graceful fallback
 try:
     from reportlab.lib.pagesizes import A4
     from reportlab.lib.units import inch, cm
     from reportlab.pdfgen import canvas
     from reportlab.lib.colors import black, red, blue, gray, white, HexColor
-    from reportlab.pdfbase import pdfmetrics
-    from reportlab.pdfbase.ttfonts import TTFont
     HAS_REPORTLAB = True
 except ImportError:
     HAS_REPORTLAB = False
-    print("WARNING: reportlab not installed. Using text-based synthetic data.")
+    print("WARNING: reportlab not installed.")
 
 try:
-    from PIL import Image, ImageDraw, ImageFont
-    from PIL.ExifTags import Base as ExifBase
-    import piexif
+    from PIL import Image, ImageDraw, ImageFont, ImageFilter
     HAS_PIL = True
 except ImportError:
-    try:
-        from PIL import Image, ImageDraw, ImageFont
-        HAS_PIL = True
-    except ImportError:
-        HAS_PIL = False
-        print("WARNING: Pillow not installed.")
+    HAS_PIL = False
+    print("WARNING: Pillow not installed.")
+
+try:
+    import piexif
+    HAS_PIEXIF = True
+except ImportError:
+    HAS_PIEXIF = False
 
 try:
     import qrcode
     HAS_QR = True
 except ImportError:
     HAS_QR = False
-    print("WARNING: qrcode not installed.")
 
 # ─── Configuration ───────────────────────────────────────────────────────────
 
-OUTPUT_DIR = Path(__file__).parent.parent / "data" / "synthetic"
+SCRIPT_DIR = Path(__file__).parent
+PROJECT_ROOT = SCRIPT_DIR.parent
+OUTPUT_DIR = PROJECT_ROOT / "data" / "synthetic"
+DOCS_DIR = OUTPUT_DIR / "documents"
+PHOTOS_DIR = OUTPUT_DIR / "photos"
 GROUND_TRUTH_PATH = OUTPUT_DIR / "ground_truth.json"
 
-# 6 fictional institutions across different regions
+# 12 fictional institutions across India (North, South, East, West, Central)
 INSTITUTIONS = [
     {
         "id": "INST001",
         "name": "Rajiv Gandhi Institute of Technology",
-        "code": "RGIT-MH-001",
+        "code": "1-100101",
         "city": "Pune",
         "state": "Maharashtra",
-        "region": "West",
-        "address": "123 Engineering Road, Pune 411001",
+        "region": "Western",
+        "address": "123 Engineering Highway, Hinjawadi",
         "trust_name": "Rajiv Education Trust",
-        "trust_reg_no": "MH/TRUST/2005/1234",
+        "trust_reg_no": "TR-MH-2005-1234",
         "latitude": 18.5204,
         "longitude": 73.8567,
         "established_year": 2005,
@@ -75,13 +77,13 @@ INSTITUTIONS = [
     {
         "id": "INST002",
         "name": "Sri Lakshmi Engineering College",
-        "code": "SLEC-TN-002",
+        "code": "1-100202",
         "city": "Chennai",
         "state": "Tamil Nadu",
-        "region": "South",
-        "address": "456 College Avenue, Chennai 600028",
+        "region": "Southern",
+        "address": "456 Knowledge Avenue, OMR Highway",
         "trust_name": "Lakshmi Educational Foundation",
-        "trust_reg_no": "TN/TRUST/2008/5678",
+        "trust_reg_no": "TR-TN-2008-5678",
         "latitude": 13.0827,
         "longitude": 80.2707,
         "established_year": 2008,
@@ -89,13 +91,13 @@ INSTITUTIONS = [
     {
         "id": "INST003",
         "name": "Bharati Vidyapeeth College of Engineering",
-        "code": "BVCE-KA-003",
+        "code": "1-100303",
         "city": "Bangalore",
         "state": "Karnataka",
-        "region": "South",
-        "address": "789 Tech Park, Bangalore 560001",
+        "region": "Southern",
+        "address": "789 Electronic City Ring Road",
         "trust_name": "Bharati Education Society",
-        "trust_reg_no": "KA/SOC/2003/9012",
+        "trust_reg_no": "TR-KA-2003-9012",
         "latitude": 12.9716,
         "longitude": 77.5946,
         "established_year": 2003,
@@ -103,27 +105,27 @@ INSTITUTIONS = [
     {
         "id": "INST004",
         "name": "Netaji Subhas Institute of Technology",
-        "code": "NSIT-UP-004",
+        "code": "1-100404",
         "city": "Lucknow",
         "state": "Uttar Pradesh",
-        "region": "North",
-        "address": "101 University Road, Lucknow 226001",
+        "region": "Northern",
+        "address": "101 Vidhan Sabha Marg",
         "trust_name": "Subhas Memorial Trust",
-        "trust_reg_no": "UP/TRUST/2010/3456",
+        "trust_reg_no": "TR-UP-2010-3456",
         "latitude": 26.8467,
         "longitude": 80.9462,
         "established_year": 2010,
     },
     {
         "id": "INST005",
-        "name": "Kalam Technical University",
-        "code": "KTU-TN-005",
+        "name": "Kalam Technical University College",
+        "code": "1-100505",
         "city": "Coimbatore",
         "state": "Tamil Nadu",
-        "region": "South",
-        "address": "202 Innovation Drive, Coimbatore 641001",
-        "trust_name": "Kalam Foundation for Education",
-        "trust_reg_no": "TN/TRUST/2012/7890",
+        "region": "Southern",
+        "address": "202 Innovation Corridor",
+        "trust_name": "Lakshmi Educational Foundation",  # Sister college of INST002!
+        "trust_reg_no": "TR-TN-2008-5678",
         "latitude": 11.0168,
         "longitude": 76.9558,
         "established_year": 2012,
@@ -131,103 +133,146 @@ INSTITUTIONS = [
     {
         "id": "INST006",
         "name": "Savitribai Phule Polytechnic",
-        "code": "SPP-MH-006",
+        "code": "1-100606",
         "city": "Nagpur",
         "state": "Maharashtra",
-        "region": "West",
-        "address": "303 Education Lane, Nagpur 440001",
-        "trust_name": "Rajiv Education Trust",  # Same trust as INST001 - for graph detection
-        "trust_reg_no": "MH/TRUST/2005/1234",  # Same - planted fault
+        "region": "Western",
+        "address": "303 Education Park, Wardha Road",
+        "trust_name": "Rajiv Education Trust",  # Sister college of INST001!
+        "trust_reg_no": "TR-MH-2005-1234",
         "latitude": 21.1458,
         "longitude": 79.0882,
         "established_year": 2007,
     },
+    {
+        "id": "INST007",
+        "name": "Jadavpur Institute of Technology",
+        "code": "1-100707",
+        "city": "Kolkata",
+        "state": "West Bengal",
+        "region": "Eastern",
+        "address": "88 Salt Lake Sector V",
+        "trust_name": "Tagore Educational Trust",
+        "trust_reg_no": "TR-WB-2001-1122",
+        "latitude": 22.5726,
+        "longitude": 88.3639,
+        "established_year": 2001,
+    },
+    {
+        "id": "INST008",
+        "name": "Malaviya Engineering Institute",
+        "code": "1-100808",
+        "city": "Jaipur",
+        "state": "Rajasthan",
+        "region": "Northern",
+        "address": "55 JLN Marg, Malviya Nagar",
+        "trust_name": "Malaviya Foundation",
+        "trust_reg_no": "TR-RJ-2006-3344",
+        "latitude": 26.9124,
+        "longitude": 75.7873,
+        "established_year": 2006,
+    },
+    {
+        "id": "INST009",
+        "name": "Visvesvaraya Technical Campus",
+        "code": "1-100909",
+        "city": "Hyderabad",
+        "state": "Telangana",
+        "region": "South-Central",
+        "address": "90 Gachibowli Tech Enclave",
+        "trust_name": "Deccan Shiksha Samiti",
+        "trust_reg_no": "TR-TS-2011-5566",
+        "latitude": 17.3850,
+        "longitude": 78.4867,
+        "established_year": 2011,
+    },
+    {
+        "id": "INST010",
+        "name": "Aryabhata College of Engineering",
+        "code": "1-101010",
+        "city": "Patna",
+        "state": "Bihar",
+        "region": "Eastern",
+        "address": "14 Bailey Road",
+        "trust_name": "Aryabhata Research Society",
+        "trust_reg_no": "TR-BR-2014-7788",
+        "latitude": 25.5941,
+        "longitude": 85.1376,
+        "established_year": 2014,
+    },
+    {
+        "id": "INST011",
+        "name": "Sardar Patel Institute of Technology",
+        "code": "1-101111",
+        "city": "Ahmedabad",
+        "state": "Gujarat",
+        "region": "Western",
+        "address": "77 Ashram Road",
+        "trust_name": "Sardar Patel Vidyapeeth",
+        "trust_reg_no": "TR-GJ-2004-9900",
+        "latitude": 23.0225,
+        "longitude": 72.5714,
+        "established_year": 2004,
+    },
+    {
+        "id": "INST012",
+        "name": "Chanakya Technical Institute",
+        "code": "1-101212",
+        "city": "Bhopal",
+        "state": "Madhya Pradesh",
+        "region": "Central",
+        "address": "32 Hoshangabad Road",
+        "trust_name": "Central Bharat Trust",
+        "trust_reg_no": "TR-MP-2009-2233",
+        "latitude": 23.2599,
+        "longitude": 77.4126,
+        "established_year": 2009,
+    },
 ]
 
-FACULTY_MEMBERS = [
-    {"id": "FAC001", "name": "Dr. Arun Kumar", "qualification": "PhD CS", "designation": "Professor"},
-    {"id": "FAC002", "name": "Dr. Priya Sharma", "qualification": "PhD ECE", "designation": "Associate Professor"},
-    {"id": "FAC003", "name": "Dr. Rajesh Patel", "qualification": "PhD ME", "designation": "Professor"},
-    {"id": "FAC004", "name": "Dr. Sita Devi", "qualification": "PhD Civil", "designation": "Associate Professor"},
-    {"id": "FAC005", "name": "Prof. Mohammed Ali", "qualification": "MTech CSE", "designation": "Assistant Professor"},
-    {"id": "FAC006", "name": "Dr. Lakshmi Narayan", "qualification": "PhD Physics", "designation": "Professor"},
-    {"id": "FAC007", "name": "Prof. Anitha Kumari", "qualification": "MTech IT", "designation": "Assistant Professor"},
-    {"id": "FAC008", "name": "Dr. Venkatesh Rao", "qualification": "PhD Mathematics", "designation": "Associate Professor"},
-    {"id": "FAC009", "name": "Prof. Deepa Menon", "qualification": "MTech VLSI", "designation": "Assistant Professor"},
-    {"id": "FAC010", "name": "Dr. Suresh Babu", "qualification": "PhD Chemistry", "designation": "Professor"},
-    # Ghost faculty - assigned to multiple institutions in different cities
-    {"id": "FAC011", "name": "Dr. Vikram Singh", "qualification": "PhD CSE", "designation": "Professor", "ghost": True},
-    {"id": "FAC012", "name": "Dr. Meena Kumari", "qualification": "PhD ECE", "designation": "Professor", "ghost": True},
-]
+MOCK_ISSUER_REGISTRY: List[Dict[str, Any]] = []
 
-# Faculty assignments (institution_id -> list of faculty IDs)
-FACULTY_ASSIGNMENTS = {
-    "INST001": ["FAC001", "FAC002", "FAC003", "FAC005", "FAC011"],  # FAC011 is ghost
-    "INST002": ["FAC004", "FAC006", "FAC007", "FAC009", "FAC011"],  # FAC011 also here - different city!
-    "INST003": ["FAC002", "FAC008", "FAC010", "FAC012"],  # FAC012 is ghost
-    "INST004": ["FAC003", "FAC005", "FAC006", "FAC012"],  # FAC012 also here - different city!
-    "INST005": ["FAC001", "FAC007", "FAC009", "FAC010"],
-    "INST006": ["FAC004", "FAC008"],
-}
-
-# Land survey numbers - some shared across institutions (planted fault)
-LAND_SURVEYS = {
-    "INST001": "MH/PUNE/SUR/2005/001",
-    "INST002": "TN/CHN/SUR/2008/002",
-    "INST003": "KA/BLR/SUR/2003/003",
-    "INST004": "UP/LKO/SUR/2010/004",
-    "INST005": "TN/CBE/SUR/2012/005",
-    "INST006": "MH/PUNE/SUR/2005/001",  # Same as INST001! Different city, same survey no.
-}
-
-MOCK_ISSUER_REGISTRY: list[dict] = []
-
-GROUND_TRUTH: dict[str, Any] = {
+GROUND_TRUTH: Dict[str, Any] = {
     "_meta": {
-        "description": "Ground truth manifest for AICTE-Verify synthetic data evaluation",
-        "generated_at": None,
+        "description": "AICTE-Verify Synthetic Benchmark Ground Truth",
         "simulated": True,
+        "neutral_filenames": True,
+        "naming_scheme": "DOC_0001.pdf / DOC_XXXX.jpg (no semantic hints in filenames)",
+        "generated_at": None,
     },
     "planted_faults": [],
     "clean_documents": [],
     "institutions": INSTITUTIONS,
-    "faculty_assignments": FACULTY_ASSIGNMENTS,
     "applications": [],
+    "verification_statuses": [],
 }
+
+doc_counter = 0
+
+def get_next_neutral_filename(is_photo: bool = False) -> Tuple[str, Path]:
+    """Generate a strictly neutral filename with NO keyword hints (DOC_0001.pdf or DOC_0001.jpg)."""
+    global doc_counter
+    doc_counter += 1
+    ext = ".jpg" if is_photo else ".pdf"
+    filename = f"DOC_{doc_counter:04d}{ext}"
+    target_dir = PHOTOS_DIR if is_photo else DOCS_DIR
+    return filename, target_dir / filename
 
 
 def ensure_dirs():
-    """Create output directories."""
+    """Clean and initialize synthetic output directories."""
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    (OUTPUT_DIR / "documents").mkdir(exist_ok=True)
-    (OUTPUT_DIR / "photos").mkdir(exist_ok=True)
-    (OUTPUT_DIR / "heatmaps").mkdir(exist_ok=True)
+    if DOCS_DIR.exists():
+        shutil.rmtree(DOCS_DIR)
+    if PHOTOS_DIR.exists():
+        shutil.rmtree(PHOTOS_DIR)
+    DOCS_DIR.mkdir(parents=True, exist_ok=True)
+    PHOTOS_DIR.mkdir(parents=True, exist_ok=True)
 
 
-def add_fault(fault_type: str, document: str, description: str, details: dict | None = None):
-    """Record a planted fault in ground truth."""
-    entry = {
-        "fault_type": fault_type,
-        "document": document,
-        "description": description,
-        "details": details or {},
-    }
-    GROUND_TRUTH["planted_faults"].append(entry)
-
-
-def add_clean(document: str, doc_type: str, institution_id: str):
-    """Record a clean (no-fault) document."""
-    GROUND_TRUTH["clean_documents"].append({
-        "document": document,
-        "document_type": doc_type,
-        "institution_id": institution_id,
-    })
-
-
-def register_with_issuer(doc_type: str, ref_number: str, institution_id: str,
+def register_issuer_entry(doc_type: str, ref_number: str, institution_id: str,
                           issuer_name: str, issue_date: str, expiry_date: str | None,
                           status: str = "verified", payload: dict | None = None):
-    """Register a certificate with the mock issuer."""
     entry = {
         "doc_type": doc_type,
         "ref_number": ref_number,
@@ -242,141 +287,119 @@ def register_with_issuer(doc_type: str, ref_number: str, institution_id: str,
     return entry
 
 
-# ─── PDF Generation ──────────────────────────────────────────────────────────
-
-def generate_qr_image(data: str, size: int = 150) -> Image.Image | None:
-    """Generate a QR code image from data string."""
-    if not HAS_QR or not HAS_PIL:
-        return None
-    qr = qrcode.QRCode(version=1, box_size=4, border=2)
-    qr.add_data(data)
-    qr.make(fit=True)
-    return qr.make_image(fill_color="black", back_color="white").get_image()
-
-
-def create_simple_pdf(filepath: str, title: str, body_lines: list[str],
-                       qr_data: str | None = None,
-                       producer: str = "ReportLab",
-                       tamper_font: bool = False,
-                       add_extra_eof: bool = False) -> str:
-    """Create a simple PDF document with optional planted faults."""
+def create_simple_pdf(filepath: Path, title: str, body_lines: List[str],
+                      qr_data: str | None = None,
+                      producer: str = "ReportLab PDF Library v3.6.12",
+                      creator: str = "AICTE-Verify Statutory Regulatory System",
+                      tamper_font: bool = False,
+                      add_extra_eof: bool = False) -> str:
+    """Generate a clean vector PDF with controlled metadata and typography."""
     if not HAS_REPORTLAB:
-        # Fallback: create a text file with .pdf extension
-        with open(filepath, 'w') as f:
-            f.write(f"%%PDF-SIMULATED\n{title}\n")
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(f"%PDF-1.4\n%{title}\n")
             for line in body_lines:
                 f.write(line + "\n")
             f.write("%%EOF\n")
-        return filepath
+        return str(filepath)
 
-    c = canvas.Canvas(filepath, pagesize=A4)
+    c = canvas.Canvas(str(filepath), pagesize=A4)
     width, height = A4
 
-    # Set metadata
     c.setTitle(title)
-    c.setAuthor("AICTE-Verify Synthetic Generator (SIMULATED)")
+    c.setAuthor("AICTE Regulatory Authority (SIMULATED)")
     c.setProducer(producer)
+    c.setCreator(creator)
 
-    # Header
-    c.setFont("Helvetica-Bold", 16)
+    # Document Header
+    c.setFont("Helvetica-Bold", 15)
     c.drawCentredString(width / 2, height - 50, title)
 
-    # Body
     y = height - 90
     for line in body_lines:
         if y < 80:
             c.showPage()
             y = height - 50
 
-        if tamper_font and "Date:" in line:
-            # Plant font inconsistency: use different font for date field
+        if tamper_font and ("Date:" in line or "Reference" in line or "Intake:" in line or "Survey" in line):
+            # Spliced Courier font into Helvetica layout across multiple lines
             c.setFont("Courier", 11)
             c.drawString(72, y, line)
-            c.setFont("Helvetica", 11)
+            c.setFont("Helvetica", 10)
         else:
-            c.setFont("Helvetica", 11)
+            c.setFont("Helvetica", 10)
             c.drawString(72, y, line)
-        y -= 18
+        y -= 17
 
-    # QR code
     if qr_data and HAS_QR and HAS_PIL:
-        qr_img = generate_qr_image(qr_data)
-        if qr_img:
-            qr_path = filepath + ".qr.png"
-            qr_img.save(qr_path)
-            c.drawImage(qr_path, width - 200, 60, width=100, height=100)
-            # Clean up temp QR image after save
-            try:
-                os.remove(qr_path)
-            except OSError:
-                pass
+        qr = qrcode.QRCode(version=1, box_size=3, border=2)
+        qr.add_data(qr_data)
+        qr.make(fit=True)
+        qr_img = qr.make_image(fill_color="black", back_color="white").get_image()
+        qr_path = str(filepath) + ".qr.png"
+        qr_img.save(qr_path)
+        c.drawImage(qr_path, width - 180, 50, width=90, height=90)
+        try:
+            os.remove(qr_path)
+        except OSError:
+            pass
 
     c.save()
 
-    # Post-processing: add extra EOF markers for forensics detection
     if add_extra_eof:
         with open(filepath, 'ab') as f:
-            f.write(b"\n%%EOF\n%%EOF\n")
+            f.write(b"\n%%EOF\n%%EOF\n%%EOF\n")
 
-    return filepath
+    return str(filepath)
 
 
-def create_infrastructure_photo(filepath: str, inst: dict,
+def create_infrastructure_photo(filepath: Path, inst: dict,
                                  wrong_gps: bool = False,
                                  old_date: bool = False,
-                                 is_blurry: bool = False,
-                                 is_duplicate_of: str | None = None) -> str:
-    """Generate a synthetic infrastructure photo with controllable EXIF."""
+                                 is_blurry: bool = False) -> str:
+    """Generate an infrastructure photo asset with EXIF geotags."""
     if not HAS_PIL:
-        # Minimal placeholder
         with open(filepath, 'wb') as f:
-            f.write(b'\x89PNG\r\n\x1a\n')  # PNG header stub
-        return filepath
+            f.write(b'\xFF\xD8\xFF\xE0\x00\x10JFIF\x00\x01\x01\x00\x00\x01\x00\x01\x00\x00\xFF\xDB')
+        return str(filepath)
 
-    # Create a simple image with text
     width, height = 1280, 960
-    img = Image.new('RGB', (width, height), color=(200, 220, 240))
+    img = Image.new('RGB', (width, height), color=(220, 230, 245))
     draw = ImageDraw.Draw(img)
 
-    # Draw building-like shapes
-    draw.rectangle([100, 300, 500, 700], fill=(180, 180, 180), outline=(100, 100, 100), width=3)
-    draw.rectangle([120, 350, 200, 450], fill=(135, 206, 250))  # Window
-    draw.rectangle([220, 350, 300, 450], fill=(135, 206, 250))  # Window
-    draw.rectangle([320, 350, 400, 450], fill=(135, 206, 250))  # Window
-    draw.rectangle([250, 500, 350, 700], fill=(139, 90, 43))    # Door
-    draw.rectangle([550, 400, 900, 700], fill=(180, 180, 180), outline=(100, 100, 100), width=3)
-    draw.rectangle([570, 450, 650, 530], fill=(135, 206, 250))
-    draw.rectangle([700, 450, 780, 530], fill=(135, 206, 250))
+    # Campus building blocks
+    draw.rectangle([100, 250, 550, 750], fill=(180, 185, 195), outline=(90, 95, 105), width=4)
+    for wy in range(300, 650, 80):
+        for wx in range(140, 500, 90):
+            draw.rectangle([wx, wy, wx + 60, wy + 50], fill=(135, 206, 250), outline=(60, 60, 60))
+    draw.rectangle([280, 620, 370, 750], fill=(110, 65, 30))  # Main entrance
 
-    # Add text overlay
+    draw.rectangle([600, 350, 1150, 750], fill=(190, 195, 205), outline=(90, 95, 105), width=4)
+    for wy in range(400, 680, 90):
+        for wx in range(650, 1100, 110):
+            draw.rectangle([wx, wy, wx + 75, wy + 55], fill=(135, 206, 250), outline=(60, 60, 60))
+
     try:
-        font = ImageFont.truetype("arial.ttf", 24)
+        font = ImageFont.truetype("arial.ttf", 22)
     except (IOError, OSError):
         font = ImageFont.load_default()
 
-    draw.text((100, 750), f"{inst['name']} - Campus Building", fill=(50, 50, 50), font=font)
-    draw.text((100, 800), f"[SIMULATED PHOTO - Not a real institution]", fill=(200, 50, 50), font=font)
+    draw.text((120, 800), f"Campus Infrastructure - {inst['name']} ({inst['city']})", fill=(40, 40, 40), font=font)
+    draw.text((120, 840), "SIMULATED COMPLIANCE PHOTO - STATUTORY BENCHMARK", fill=(180, 40, 40), font=font)
 
     if is_blurry:
-        from PIL import ImageFilter
-        img = img.filter(ImageFilter.GaussianBlur(radius=10))
+        img = img.filter(ImageFilter.GaussianBlur(radius=14))
 
-    img.save(filepath, "JPEG", quality=85)
+    img.save(str(filepath), "JPEG", quality=85)
 
-    # Add EXIF data
-    try:
-        import piexif
-
+    if HAS_PIEXIF:
         lat = inst["latitude"]
         lng = inst["longitude"]
-
         if wrong_gps:
-            # Plant wrong GPS - 500km away
-            lat += 5.0
-            lng += 5.0
+            # Shift 500km away
+            lat += 5.5
+            lng += 5.5
 
-        def to_deg_min_sec(val):
-            """Convert decimal degrees to (degrees, minutes, seconds) tuples for EXIF."""
+        def to_deg(val):
             val = abs(val)
             d = int(val)
             m = int((val - d) * 60)
@@ -385,13 +408,13 @@ def create_infrastructure_photo(filepath: str, inst: dict,
 
         gps_ifd = {
             piexif.GPSIFD.GPSLatitudeRef: b'N' if lat >= 0 else b'S',
-            piexif.GPSIFD.GPSLatitude: to_deg_min_sec(lat),
+            piexif.GPSIFD.GPSLatitude: to_deg(lat),
             piexif.GPSIFD.GPSLongitudeRef: b'E' if lng >= 0 else b'W',
-            piexif.GPSIFD.GPSLongitude: to_deg_min_sec(lng),
+            piexif.GPSIFD.GPSLongitude: to_deg(lng),
         }
 
         if old_date:
-            date_str = "2023:01:15 10:30:00"
+            date_str = "2023:01:10 10:00:00"
         else:
             date_str = datetime.now().strftime("%Y:%m:%d %H:%M:%S")
 
@@ -399,859 +422,585 @@ def create_infrastructure_photo(filepath: str, inst: dict,
             piexif.ExifIFD.DateTimeOriginal: date_str.encode(),
             piexif.ExifIFD.DateTimeDigitized: date_str.encode(),
         }
-
         zeroth_ifd = {
-            piexif.ImageIFD.Make: b"SIMULATED Camera",
-            piexif.ImageIFD.Model: b"SyntheticCam v1",
+            piexif.ImageIFD.Make: b"Canon (SIMULATED)",
+            piexif.ImageIFD.Model: b"EOS AICTE Compliance",
             piexif.ImageIFD.DateTime: date_str.encode(),
         }
+        try:
+            exif_dict = {"0th": zeroth_ifd, "Exif": exif_ifd, "GPS": gps_ifd}
+            exif_bytes = piexif.dump(exif_dict)
+            piexif.insert(exif_bytes, str(filepath))
+        except Exception:
+            pass
 
-        exif_dict = {"0th": zeroth_ifd, "Exif": exif_ifd, "GPS": gps_ifd}
-        exif_bytes = piexif.dump(exif_dict)
-        piexif.insert(exif_bytes, filepath)
-    except (ImportError, Exception) as e:
-        print(f"  Warning: Could not add EXIF data: {e}")
+    return str(filepath)
 
-    return filepath
 
+# ─── Generator Suite ─────────────────────────────────────────────────────────
 
-# ─── Document Generators ─────────────────────────────────────────────────────
-
-def gen_affidavit(inst: dict, app_id: str, intake: int, year: str,
-                  name_mismatch: bool = False) -> tuple[str, dict]:
-    """Generate an affidavit document."""
-    ref_no = f"AFF/{inst['state'][:2]}/{year}/{random.randint(1000,9999)}"
-    displayed_name = inst["name"] + " (Misspelled)" if name_mismatch else inst["name"]
-
-    lines = [
-        "AFFIDAVIT ON STAMP PAPER",
-        "=" * 50,
-        f"Reference No: {ref_no}",
-        f"Date: 01-04-{year}",
-        "",
-        f"I, the undersigned, authorized signatory of {displayed_name},",
-        f"Institution ID: {inst['code']}",
-        f"hereby declare that:",
-        "",
-        f"1. The institution is located at {inst['address']}",
-        f"2. The total student intake for academic year {year}-{int(year)+1} is {intake}",
-        f"3. All information provided is true and correct.",
-        f"4. The institution complies with all AICTE norms.",
-        "",
-        f"Trust/Society: {inst['trust_name']}",
-        f"Registration No: {inst['trust_reg_no']}",
-        "",
-        "Signature: ________________________",
-        f"Name: {random.choice(['Dr. A. Kumar', 'Prof. B. Singh', 'Dr. C. Patel'])}",
-        f"Designation: Principal/Director",
-        "",
-        "[SIMULATED DOCUMENT - Not a real affidavit]",
-    ]
-
-    filename = f"{inst['id']}_{app_id}_affidavit.pdf"
-    filepath = str(OUTPUT_DIR / "documents" / filename)
-
-    qr_payload = json.dumps({"ref": ref_no, "inst": inst["code"], "type": "affidavit", "intake": intake})
-    create_simple_pdf(filepath, "AFFIDAVIT", lines, qr_data=qr_payload)
-
-    register_with_issuer("affidavit", ref_no, inst["id"], "Notary Public", f"01-04-{year}", None, "verified")
-
-    meta = {
-        "ref_number": ref_no,
-        "institution_name": displayed_name,
-        "institution_id": inst["code"],
-        "intake": intake,
-        "issue_date": f"01-04-{year}",
-        "trust_name": inst["trust_name"],
-    }
-    return filename, meta
-
-
-def gen_fire_safety(inst: dict, app_id: str, year: str,
-                    expired: bool = False, tamper_font: bool = False) -> tuple[str, dict]:
-    """Generate a fire safety certificate."""
-    ref_no = f"FSC/{inst['state'][:2]}/{year}/{random.randint(1000,9999)}"
-
-    if expired:
-        issue_date = f"01-01-{int(year)-2}"
-        expiry_date = f"31-12-{int(year)-1}"
-        status = "expired"
-    else:
-        issue_date = f"01-01-{year}"
-        expiry_date = f"31-12-{year}"
-        status = "verified"
-
-    lines = [
-        "FIRE SAFETY CERTIFICATE",
-        "=" * 50,
-        f"Certificate No: {ref_no}",
-        f"Date of Issue: {issue_date}",
-        f"Valid Until: {expiry_date}",
-        "",
-        f"This is to certify that the premises of:",
-        f"Institution: {inst['name']}",
-        f"Address: {inst['address']}",
-        "",
-        "have been inspected and found to comply with fire safety regulations.",
-        "",
-        f"Issued by: City Fire Department, {inst['city']}",
-        "Chief Fire Officer: Shri/Smt. Fire Officer (SIMULATED)",
-        "",
-        "[SIMULATED DOCUMENT - Not a real fire safety certificate]",
-    ]
-
-    filename = f"{inst['id']}_{app_id}_fire_safety.pdf"
-    filepath = str(OUTPUT_DIR / "documents" / filename)
-
-    qr_payload = json.dumps({"ref": ref_no, "type": "fire_safety", "inst": inst["code"]})
-    create_simple_pdf(filepath, "FIRE SAFETY CERTIFICATE", lines,
-                       qr_data=qr_payload, tamper_font=tamper_font)
-
-    register_with_issuer("fire_safety_certificate", ref_no, inst["id"],
-                          f"City Fire Department, {inst['city']}", issue_date, expiry_date, status)
-
-    meta = {
-        "ref_number": ref_no,
-        "institution_name": inst["name"],
-        "issue_date": issue_date,
-        "expiry_date": expiry_date,
-        "issuing_authority": f"City Fire Department, {inst['city']}",
-    }
-    return filename, meta
-
-
-def gen_noc(inst: dict, app_id: str, year: str) -> tuple[str, dict]:
-    """Generate a No Objection Certificate."""
-    ref_no = f"NOC/{inst['state'][:2]}/{year}/{random.randint(1000,9999)}"
-    issue_date = f"15-03-{year}"
-    expiry_date = f"14-03-{int(year)+1}"
-
-    lines = [
-        "NO OBJECTION CERTIFICATE",
-        "=" * 50,
-        f"Reference No: {ref_no}",
-        f"Date: {issue_date}",
-        f"Valid Until: {expiry_date}",
-        "",
-        f"The State Government of {inst['state']} has no objection to",
-        f"the continued operation of {inst['name']} ({inst['code']})",
-        f"located at {inst['address']}.",
-        "",
-        f"Issued by: Department of Technical Education, {inst['state']}",
-        "",
-        "[SIMULATED DOCUMENT - Not a real NOC]",
-    ]
-
-    filename = f"{inst['id']}_{app_id}_noc.pdf"
-    filepath = str(OUTPUT_DIR / "documents" / filename)
-    qr_payload = json.dumps({"ref": ref_no, "type": "noc", "inst": inst["code"]})
-    create_simple_pdf(filepath, "NO OBJECTION CERTIFICATE", lines, qr_data=qr_payload)
-
-    register_with_issuer("noc", ref_no, inst["id"],
-                          f"Dept of Technical Education, {inst['state']}", issue_date, expiry_date, "verified")
-
-    return filename, {"ref_number": ref_no, "issue_date": issue_date, "expiry_date": expiry_date,
-                       "institution_name": inst["name"], "institution_id": inst["code"]}
-
-
-def gen_accreditation(inst: dict, app_id: str, year: str,
-                       mismatch_qr: bool = False) -> tuple[str, dict]:
-    """Generate an accreditation certificate."""
-    ref_no = f"ACC/{year}/{random.randint(10000,99999)}"
-    issue_date = f"01-07-{int(year)-2}"
-    expiry_date = f"30-06-{int(year)+3}"
-
-    lines = [
-        "ACCREDITATION CERTIFICATE",
-        "=" * 50,
-        f"Certificate No: {ref_no}",
-        f"Date of Accreditation: {issue_date}",
-        f"Valid Until: {expiry_date}",
-        "",
-        f"This is to certify that {inst['name']}",
-        f"Institution Code: {inst['code']}",
-        "has been accredited with Grade 'A' by the",
-        "National Accreditation Body (SIMULATED)",
-        "",
-        "Accreditation Council",
-        "",
-        "[SIMULATED DOCUMENT - Not a real accreditation certificate]",
-    ]
-
-    filename = f"{inst['id']}_{app_id}_accreditation.pdf"
-    filepath = str(OUTPUT_DIR / "documents" / filename)
-
-    # QR mismatch: QR says different ref number than printed
-    qr_ref = f"ACC/{year}/{random.randint(10000,99999)}" if mismatch_qr else ref_no
-    qr_payload = json.dumps({"ref": qr_ref, "type": "accreditation", "inst": inst["code"]})
-    create_simple_pdf(filepath, "ACCREDITATION CERTIFICATE", lines, qr_data=qr_payload)
-
-    register_with_issuer("accreditation_certificate", ref_no, inst["id"],
-                          "National Accreditation Body (SIMULATED)", issue_date, expiry_date, "verified")
-
-    meta = {
-        "ref_number": ref_no,
-        "qr_ref_number": qr_ref,
-        "institution_name": inst["name"],
-        "issue_date": issue_date,
-        "expiry_date": expiry_date,
-    }
-    return filename, meta
-
-
-def gen_land_document(inst: dict, app_id: str, year: str) -> tuple[str, dict]:
-    """Generate a land document."""
-    survey_no = LAND_SURVEYS[inst["id"]]
-    area_acres = round(random.uniform(5, 25), 2)
-
-    lines = [
-        "LAND OWNERSHIP DOCUMENT",
-        "=" * 50,
-        f"Survey Number: {survey_no}",
-        f"Total Area: {area_acres} acres ({area_acres * 43560:.0f} sq.ft)",
-        "",
-        f"Owner: {inst['trust_name']}",
-        f"Trust Registration: {inst['trust_reg_no']}",
-        f"Location: {inst['address']}",
-        f"City: {inst['city']}, State: {inst['state']}",
-        "",
-        "This document certifies ownership of the above land parcel.",
-        f"Registered on: 01-01-{inst['established_year']}",
-        "",
-        f"Sub-Registrar Office, {inst['city']}",
-        "",
-        "[SIMULATED DOCUMENT - Not a real land document]",
-    ]
-
-    filename = f"{inst['id']}_{app_id}_land_document.pdf"
-    filepath = str(OUTPUT_DIR / "documents" / filename)
-    create_simple_pdf(filepath, "LAND OWNERSHIP DOCUMENT", lines)
-
-    return filename, {"survey_number": survey_no, "area_acres": area_acres,
-                       "trust_name": inst["trust_name"], "institution_name": inst["name"]}
-
-
-def gen_affiliation_letter(inst: dict, app_id: str, year: str) -> tuple[str, dict]:
-    """Generate a university affiliation letter."""
-    ref_no = f"AFFL/{inst['state'][:2]}/{year}/{random.randint(1000,9999)}"
-    university_name = f"State Technical University, {inst['state']} (SIMULATED)"
-
-    lines = [
-        "UNIVERSITY AFFILIATION LETTER",
-        "=" * 50,
-        f"Reference No: {ref_no}",
-        f"Date: 15-05-{year}",
-        "",
-        f"To: The Principal/Director",
-        f"{inst['name']}",
-        f"{inst['address']}",
-        "",
-        f"Subject: Affiliation for Academic Year {year}-{int(year)+1}",
-        "",
-        f"This is to confirm that {inst['name']} (Code: {inst['code']})",
-        f"is affiliated to {university_name}",
-        f"for the academic year {year}-{int(year)+1}.",
-        "",
-        "Registrar",
-        university_name,
-        "",
-        "[SIMULATED DOCUMENT - Not a real affiliation letter]",
-    ]
-
-    filename = f"{inst['id']}_{app_id}_affiliation.pdf"
-    filepath = str(OUTPUT_DIR / "documents" / filename)
-    qr_payload = json.dumps({"ref": ref_no, "type": "affiliation", "inst": inst["code"]})
-    create_simple_pdf(filepath, "UNIVERSITY AFFILIATION LETTER", lines, qr_data=qr_payload)
-
-    register_with_issuer("university_affiliation_letter", ref_no, inst["id"],
-                          university_name, f"15-05-{year}", f"14-05-{int(year)+1}", "verified")
-
-    return filename, {"ref_number": ref_no, "university_name": university_name,
-                       "institution_name": inst["name"], "issue_date": f"15-05-{year}"}
-
-
-def gen_faculty_list(inst: dict, app_id: str, year: str,
-                      count_override: int | None = None) -> tuple[str, dict]:
-    """Generate a faculty list document."""
-    faculty_ids = FACULTY_ASSIGNMENTS.get(inst["id"], ["FAC001", "FAC002"])
-    faculty_data = []
-    for fid in faculty_ids:
-        for f in FACULTY_MEMBERS:
-            if f["id"] == fid:
-                faculty_data.append(f)
-                break
-
-    lines = [
-        "FACULTY LIST",
-        "=" * 50,
-        f"Institution: {inst['name']}",
-        f"Code: {inst['code']}",
-        f"Academic Year: {year}-{int(year)+1}",
-        "",
-        f"Total Faculty: {count_override or len(faculty_data)}",
-        "",
-        "S.No | Faculty ID | Name | Qualification | Designation",
-        "-" * 70,
-    ]
-
-    for i, f in enumerate(faculty_data, 1):
-        lines.append(f"  {i}  | {f['id']}  | {f['name']}  | {f['qualification']}  | {f['designation']}")
-
-    lines.extend([
-        "",
-        "Principal/Director",
-        inst["name"],
-        "",
-        "[SIMULATED DOCUMENT - Not a real faculty list]",
-    ])
-
-    filename = f"{inst['id']}_{app_id}_faculty_list.pdf"
-    filepath = str(OUTPUT_DIR / "documents" / filename)
-    create_simple_pdf(filepath, "FACULTY LIST", lines)
-
-    return filename, {"institution_name": inst["name"], "faculty_count": len(faculty_data),
-                       "faculty_ids": faculty_ids, "displayed_count": count_override or len(faculty_data)}
-
-
-def gen_electricity_bill(inst: dict, app_id: str, year: str) -> tuple[str, dict]:
-    """Generate an electricity bill."""
-    bill_no = f"EB/{inst['city'][:3].upper()}/{year}/{random.randint(100000,999999)}"
-
-    lines = [
-        "ELECTRICITY BILL",
-        "=" * 50,
-        f"Bill No: {bill_no}",
-        f"Bill Date: 01-02-{year}",
-        f"Billing Period: January {year}",
-        "",
-        f"Consumer: {inst['trust_name']}",
-        f"Premises: {inst['address']}",
-        f"Consumer No: {random.randint(1000000, 9999999)}",
-        "",
-        f"Units Consumed: {random.randint(5000, 20000)} kWh",
-        f"Amount: Rs. {random.randint(50000, 200000)}/-",
-        "",
-        f"State Electricity Board, {inst['state']} (SIMULATED)",
-        "",
-        "[SIMULATED DOCUMENT - Not a real electricity bill]",
-    ]
-
-    filename = f"{inst['id']}_{app_id}_electricity_bill.pdf"
-    filepath = str(OUTPUT_DIR / "documents" / filename)
-    create_simple_pdf(filepath, "ELECTRICITY BILL", lines)
-
-    return filename, {"bill_number": bill_no, "institution_name": inst["trust_name"],
-                       "bill_date": f"01-02-{year}"}
-
-
-def gen_application_form(inst: dict, app_id: str, category: str, year: str,
-                          intake: int, intake_mismatch_value: int | None = None) -> tuple[str, dict]:
-    """Generate an application form."""
-    displayed_intake = intake_mismatch_value if intake_mismatch_value else intake
-
-    cat_label = {
-        "extension_of_approval": "Extension of Approval",
-        "increase_of_intake": "Increase of Intake",
-        "new_course": "New Course Introduction",
-        "closure": "Closure of Institution/Course",
-    }.get(category, category)
-
-    lines = [
-        "AICTE APPLICATION FORM (SIMULATED)",
-        "=" * 50,
-        f"Application ID: {app_id}",
-        f"Category: {cat_label}",
-        f"Academic Year: {year}-{int(year)+1}",
-        "",
-        f"Institution Name: {inst['name']}",
-        f"Institution Code: {inst['code']}",
-        f"Address: {inst['address']}",
-        f"City: {inst['city']}, State: {inst['state']}",
-        "",
-        f"Trust/Society: {inst['trust_name']}",
-        f"Registration No: {inst['trust_reg_no']}",
-        "",
-        f"Current Approved Intake: {intake}",
-        f"Applied Intake: {displayed_intake}",
-        "",
-        f"Total Built-up Area: {random.randint(20000, 100000)} sq.ft",
-        f"Total Land Area: {round(random.uniform(5, 25), 2)} acres",
-        f"Number of Classrooms: {random.randint(10, 40)}",
-        f"Number of Labs: {random.randint(5, 20)}",
-        "",
-        "Declaration: All information is true and correct.",
-        "",
-        "[SIMULATED DOCUMENT - Not a real AICTE application]",
-    ]
-
-    filename = f"{inst['id']}_{app_id}_application_form.pdf"
-    filepath = str(OUTPUT_DIR / "documents" / filename)
-    create_simple_pdf(filepath, f"AICTE APPLICATION - {cat_label}", lines)
-
-    return filename, {
-        "application_id": app_id,
-        "category": category,
-        "institution_name": inst["name"],
-        "institution_id": inst["code"],
-        "intake": displayed_intake,
-        "actual_intake": intake,
-    }
-
-
-def gen_tamil_certificate(inst: dict, app_id: str, year: str) -> tuple[str, dict]:
-    """Generate a certificate with Tamil text content."""
-    ref_no = f"TN/CERT/{year}/{random.randint(1000,9999)}"
-
-    lines = [
-        "சான்றிதழ் / CERTIFICATE",
-        "=" * 50,
-        f"சான்றிதழ் எண் / Certificate No: {ref_no}",
-        f"தேதி / Date: 01-06-{year}",
-        "",
-        f"நிறுவனம் / Institution: {inst['name']}",
-        f"நிறுவன குறியீடு / Code: {inst['code']}",
-        "",
-        "இந்த சான்றிதழ் மேற்கண்ட நிறுவனத்திற்கு வழங்கப்படுகிறது.",
-        "This certificate is issued to the above institution.",
-        "",
-        f"வழங்கியவர் / Issued by: தமிழ்நாடு தொழில்நுட்பக் கல்வித் துறை",
-        f"Department of Technical Education, Tamil Nadu",
-        "",
-        "[SIMULATED - போலி ஆவணம்]",
-    ]
-
-    filename = f"{inst['id']}_{app_id}_tamil_cert.pdf"
-    filepath = str(OUTPUT_DIR / "documents" / filename)
-    create_simple_pdf(filepath, "சான்றிதழ் / CERTIFICATE", lines)
-
-    register_with_issuer("noc", ref_no, inst["id"],
-                          "Dept of Technical Education, Tamil Nadu", f"01-06-{year}",
-                          f"31-05-{int(year)+1}", "verified")
-
-    return filename, {"ref_number": ref_no, "language": "tamil",
-                       "institution_name": inst["name"]}
-
-
-def gen_hindi_certificate(inst: dict, app_id: str, year: str) -> tuple[str, dict]:
-    """Generate a certificate with Hindi text content."""
-    ref_no = f"UP/CERT/{year}/{random.randint(1000,9999)}"
-
-    lines = [
-        "प्रमाण पत्र / CERTIFICATE",
-        "=" * 50,
-        f"प्रमाण पत्र संख्या / Certificate No: {ref_no}",
-        f"दिनांक / Date: 01-06-{year}",
-        "",
-        f"संस्थान / Institution: {inst['name']}",
-        f"संस्थान कोड / Code: {inst['code']}",
-        "",
-        "यह प्रमाण पत्र उपरोक्त संस्थान को जारी किया जाता है।",
-        "This certificate is issued to the above institution.",
-        "",
-        f"जारीकर्ता / Issued by: उत्तर प्रदेश तकनीकी शिक्षा विभाग",
-        f"Department of Technical Education, Uttar Pradesh",
-        "",
-        "[SIMULATED - नकली दस्तावेज़]",
-    ]
-
-    filename = f"{inst['id']}_{app_id}_hindi_cert.pdf"
-    filepath = str(OUTPUT_DIR / "documents" / filename)
-    create_simple_pdf(filepath, "प्रमाण पत्र / CERTIFICATE", lines)
-
-    register_with_issuer("noc", ref_no, inst["id"],
-                          "Dept of Technical Education, UP", f"01-06-{year}",
-                          f"31-05-{int(year)+1}", "verified")
-
-    return filename, {"ref_number": ref_no, "language": "hindi",
-                       "institution_name": inst["name"]}
-
-
-def create_duplicate_document(src_filename: str, dst_filename: str):
-    """Create an exact duplicate of a document (for duplicate detection testing)."""
-    src_path = OUTPUT_DIR / "documents" / src_filename
-    dst_path = OUTPUT_DIR / "documents" / dst_filename
-    if src_path.exists():
-        import shutil
-        shutil.copy2(str(src_path), str(dst_path))
-
-
-def create_edited_metadata_pdf(inst: dict, app_id: str, year: str) -> tuple[str, dict]:
-    """Create a PDF whose metadata says it was created by an editing tool (planted fault)."""
-    ref_no = f"MET/{year}/{random.randint(1000,9999)}"
-
-    lines = [
-        "OFFICIAL CERTIFICATE (SIMULATED)",
-        "=" * 50,
-        f"Reference: {ref_no}",
-        f"Date: 01-03-{year}",
-        f"Institution: {inst['name']}",
-        "",
-        "This certificate is issued for official purposes.",
-        "",
-        "[SIMULATED - Metadata edited by different tool]",
-    ]
-
-    filename = f"{inst['id']}_{app_id}_edited_metadata.pdf"
-    filepath = str(OUTPUT_DIR / "documents" / filename)
-    # Producer set to an editing tool name
-    create_simple_pdf(filepath, "OFFICIAL CERTIFICATE", lines,
-                       producer="Adobe Acrobat Pro DC (edited)", add_extra_eof=True)
-
-    return filename, {"ref_number": ref_no, "producer": "Adobe Acrobat Pro DC (edited)",
-                       "extra_eof": True}
-
-
-# ─── Application Generator ───────────────────────────────────────────────────
-
-def generate_applications():
-    """Generate all synthetic applications with planted faults."""
-    print("Generating synthetic applications and documents...")
+def generate_benchmark_suite():
+    global doc_counter
+    doc_counter = 0
     ensure_dirs()
+    print("=" * 65)
+    print("AICTE-Verify Benchmark Generator (DOC_0001..DOC_XXXX Neutral IDs)")
+    print("=" * 65)
 
     applications = []
-    app_counter = 0
+    created_docs: List[Dict[str, Any]] = []
 
-    # Academic years for YoY comparison
-    years = ["2024", "2025", "2026"]
+    # Map institutions to land survey numbers
+    land_surveys = {
+        inst["id"]: f"{inst['state'][:2]}/{inst['city'][:3].upper()}/SUR/2010/{100 + idx}"
+        for idx, inst in enumerate(INSTITUTIONS)
+    }
 
-    for inst in INSTITUTIONS:
-        for year_idx, year in enumerate(years):
-            app_counter += 1
-            app_id = f"APP{app_counter:03d}"
-
-            # Determine category
-            if year_idx == 0:
-                category = "extension_of_approval"
-            elif year_idx == 1:
-                category = random.choice(["extension_of_approval", "increase_of_intake"])
-            else:
-                if inst["id"] == "INST003":
-                    category = "new_course"
-                elif inst["id"] == "INST006":
-                    category = "closure"
-                else:
-                    category = random.choice(["extension_of_approval", "increase_of_intake"])
-
-            # Base intake with YoY jumps for some institutions
-            base_intake = random.choice([60, 120, 180, 240])
-            if inst["id"] == "INST004" and year == "2026":
-                intake = base_intake * 3  # 200% jump - planted fault
-                intake_jump = True
-            else:
-                intake = base_intake + (year_idx * 30)
-                intake_jump = False
-
-            documents = []
-            doc_faults = []
-
-            # ─── Generate documents per application ───
-
-            # 1. Application Form
-            if inst["id"] == "INST001" and year == "2026":
-                # Intake mismatch between form and affidavit
-                fname, meta = gen_application_form(inst, app_id, category, year, intake,
-                                                     intake_mismatch_value=intake + 300)
-                doc_faults.append("intake_mismatch_form_vs_affidavit")
-                add_fault("number_mismatch", fname,
-                          f"Application form shows intake {intake+300} but affidavit shows {intake}",
-                          {"form_intake": intake+300, "affidavit_intake": intake})
-            else:
-                fname, meta = gen_application_form(inst, app_id, category, year, intake)
-            documents.append({"filename": fname, "type": "application_form", "meta": meta})
-
-            # 2. Affidavit
-            if inst["id"] == "INST002" and year == "2026":
-                # Name mismatch
-                fname, meta = gen_affidavit(inst, app_id, intake, year, name_mismatch=True)
-                doc_faults.append("name_mismatch")
-                add_fault("name_mismatch", fname,
-                          "Institution name in affidavit differs from application form",
-                          {"affidavit_name": meta["institution_name"]})
-            else:
-                fname, meta = gen_affidavit(inst, app_id, intake, year)
-            documents.append({"filename": fname, "type": "affidavit", "meta": meta})
-
-            # 3. Fire Safety Certificate
-            if inst["id"] == "INST003" and year == "2025":
-                # Expired certificate
-                fname, meta = gen_fire_safety(inst, app_id, year, expired=True)
-                doc_faults.append("expired_certificate")
-                add_fault("expired_document", fname,
-                          f"Fire safety certificate expired on {meta['expiry_date']}",
-                          {"expiry_date": meta["expiry_date"]})
-            elif inst["id"] == "INST005" and year == "2026":
-                # Font tamper
-                fname, meta = gen_fire_safety(inst, app_id, year, tamper_font=True)
-                doc_faults.append("font_inconsistency")
-                add_fault("font_inconsistency", fname,
-                          "Date field uses different font (Courier) from rest of document (Helvetica)",
-                          {"tampered_field": "date", "expected_font": "Helvetica", "found_font": "Courier"})
-            else:
-                fname, meta = gen_fire_safety(inst, app_id, year)
-                if not doc_faults:
-                    add_clean(fname, "fire_safety_certificate", inst["id"])
-            documents.append({"filename": fname, "type": "fire_safety_certificate", "meta": meta})
-
-            # 4. NOC
-            if category != "closure" or year != "2026":
-                fname, meta = gen_noc(inst, app_id, year)
-                documents.append({"filename": fname, "type": "noc", "meta": meta})
-                if not doc_faults:
-                    add_clean(fname, "noc", inst["id"])
-
-            # 5. Accreditation (optional but useful)
-            if random.random() > 0.3:
-                if inst["id"] == "INST004" and year == "2026":
-                    # QR mismatch
-                    fname, meta = gen_accreditation(inst, app_id, year, mismatch_qr=True)
-                    doc_faults.append("qr_mismatch")
-                    add_fault("qr_payload_mismatch", fname,
-                              "QR code reference number doesn't match printed certificate number",
-                              {"printed_ref": meta["ref_number"], "qr_ref": meta["qr_ref_number"]})
-                else:
-                    fname, meta = gen_accreditation(inst, app_id, year)
-                documents.append({"filename": fname, "type": "accreditation_certificate", "meta": meta})
-
-            # 6. Land Document
-            fname, meta = gen_land_document(inst, app_id, year)
-            documents.append({"filename": fname, "type": "land_document", "meta": meta})
-
-            # 7. Affiliation Letter
-            fname, meta = gen_affiliation_letter(inst, app_id, year)
-            documents.append({"filename": fname, "type": "university_affiliation_letter", "meta": meta})
-            if not doc_faults:
-                add_clean(fname, "university_affiliation_letter", inst["id"])
-
-            # 8. Faculty List
-            fname, meta = gen_faculty_list(inst, app_id, year)
-            documents.append({"filename": fname, "type": "faculty_list", "meta": meta})
-
-            # 9. Electricity Bill (not always)
-            if random.random() > 0.4:
-                fname, meta = gen_electricity_bill(inst, app_id, year)
-                documents.append({"filename": fname, "type": "electricity_bill", "meta": meta})
-
-            # 10. Infrastructure Photos
-            photo_count = random.randint(2, 4)
-            for p_idx in range(photo_count):
-                photo_filename = f"{inst['id']}_{app_id}_photo_{p_idx+1}.jpg"
-                photo_path = str(OUTPUT_DIR / "photos" / photo_filename)
-
-                if inst["id"] == "INST001" and year == "2026" and p_idx == 0:
-                    # Wrong GPS
-                    create_infrastructure_photo(photo_path, inst, wrong_gps=True)
-                    doc_faults.append("wrong_gps")
-                    add_fault("photo_wrong_gps", photo_filename,
-                              "Photo GPS coordinates are ~500km from claimed campus location",
-                              {"expected_lat": inst["latitude"], "expected_lng": inst["longitude"]})
-                elif inst["id"] == "INST002" and year == "2026" and p_idx == 0:
-                    # Old photo
-                    create_infrastructure_photo(photo_path, inst, old_date=True)
-                    doc_faults.append("old_photo")
-                    add_fault("photo_not_recent", photo_filename,
-                              "Photo taken more than 180 days ago",
-                              {"photo_date": "2023-01-15"})
-                elif inst["id"] == "INST006" and year == "2026" and p_idx == 0:
-                    # Blurry
-                    create_infrastructure_photo(photo_path, inst, is_blurry=True)
-                    doc_faults.append("blurry_photo")
-                    add_fault("photo_quality_issue", photo_filename,
-                              "Photo is blurry (below quality threshold)",
-                              {"issue": "blur"})
-                else:
-                    create_infrastructure_photo(photo_path, inst)
-
-                documents.append({"filename": photo_filename, "type": "infrastructure_photo",
-                                   "meta": {"institution_name": inst["name"]}})
-
-            # 11. Tamil certificate for Tamil Nadu institution
-            if inst["state"] == "Tamil Nadu" and year == "2026":
-                fname, meta = gen_tamil_certificate(inst, app_id, year)
-                documents.append({"filename": fname, "type": "noc", "meta": meta})
-                add_clean(fname, "noc_tamil", inst["id"])
-
-            # 12. Hindi certificate for UP institution
-            if inst["state"] == "Uttar Pradesh" and year == "2026":
-                fname, meta = gen_hindi_certificate(inst, app_id, year)
-                documents.append({"filename": fname, "type": "noc", "meta": meta})
-                add_clean(fname, "noc_hindi", inst["id"])
-
-            # 13. Edited metadata PDF (for forensics)
-            if inst["id"] == "INST005" and year == "2025":
-                fname, meta = create_edited_metadata_pdf(inst, app_id, year)
-                doc_faults.append("edited_metadata")
-                add_fault("metadata_edited", fname,
-                          "PDF producer/creator indicates editing tool, multiple EOF markers found",
-                          {"producer": meta["producer"]})
-                documents.append({"filename": fname, "type": "noc", "meta": meta})
-
-            # 14. Missing mandatory document for one application
-            if inst["id"] == "INST006" and year == "2026" and category != "closure":
-                # Don't generate affiliation letter - it's mandatory but missing
-                doc_faults.append("missing_document")
-                add_fault("missing_document", f"{app_id}_missing",
-                          "Missing mandatory document: University Affiliation Letter",
-                          {"missing_type": "university_affiliation_letter"})
-
-            # 15. Duplicate document across institutions
-            if inst["id"] == "INST003" and year == "2026":
-                # Copy INST001's fire safety cert as a near-duplicate
-                src = f"INST001_APP001_fire_safety.pdf"
-                dst = f"INST003_{app_id}_duplicate_cert.pdf"
-                create_duplicate_document(src, dst)
-                if (OUTPUT_DIR / "documents" / dst).exists():
-                    doc_faults.append("duplicate_document")
-                    add_fault("duplicate_document_across_institutions", dst,
-                              "This document is identical to one submitted by a different institution",
-                              {"source_institution": "INST001", "source_document": src})
-                    documents.append({"filename": dst, "type": "fire_safety_certificate", "meta": {}})
-
-            # 16. Duplicate photo across institutions
-            if inst["id"] == "INST004" and year == "2026":
-                src_photo = f"INST001_APP001_photo_1.jpg"
-                dst_photo = f"INST004_{app_id}_photo_dup.jpg"
-                src_path = OUTPUT_DIR / "photos" / src_photo
-                dst_path = OUTPUT_DIR / "photos" / dst_photo
-                if src_path.exists():
-                    import shutil
-                    shutil.copy2(str(src_path), str(dst_path))
-                    doc_faults.append("duplicate_photo")
-                    add_fault("duplicate_photo_across_institutions", dst_photo,
-                              "This infrastructure photo is identical to one submitted by a different institution",
-                              {"source_institution": "INST001"})
-                    documents.append({"filename": dst_photo, "type": "infrastructure_photo", "meta": {}})
-
-            # Record intake jump fault
-            if intake_jump:
-                add_fault("yoy_intake_jump", f"{app_id}",
-                          "Intake increased by 200%+ YoY with no corresponding infrastructure increase",
-                          {"previous_intake": base_intake, "current_intake": intake, "jump_pct": 200})
-
-            # Record application
-            app_data = {
-                "id": app_id,
-                "institution_id": inst["id"],
-                "institution_name": inst["name"],
-                "category": category,
-                "academic_year": year,
-                "intake": intake,
-                "documents": documents,
-                "planted_faults": doc_faults,
-                "region": inst["region"],
-                "status": "submitted",
-            }
-            applications.append(app_data)
-
-    # ─── Record graph faults ───
-    # Ghost faculty
-    add_fault("ghost_faculty", "FAC011",
-              "Faculty FAC011 (Dr. Vikram Singh) listed as full-time at INST001 (Pune) and INST002 (Chennai) simultaneously",
-              {"faculty_id": "FAC011", "institutions": ["INST001", "INST002"],
-               "cities": ["Pune", "Chennai"]})
-    add_fault("ghost_faculty", "FAC012",
-              "Faculty FAC012 (Dr. Meena Kumari) listed as full-time at INST003 (Bangalore) and INST004 (Lucknow) simultaneously",
-              {"faculty_id": "FAC012", "institutions": ["INST003", "INST004"],
-               "cities": ["Bangalore", "Lucknow"]})
-
-    # Shared land
-    add_fault("shared_land_survey", "MH/PUNE/SUR/2005/001",
-              "Same land survey number used by INST001 (Pune) and INST006 (Nagpur)",
-              {"survey_number": "MH/PUNE/SUR/2005/001",
-               "institutions": ["INST001", "INST006"]})
-
-    # Same trust across institutions
-    add_fault("shared_trust", "MH/TRUST/2005/1234",
-              "Same trust (Rajiv Education Trust) behind INST001 and INST006",
-              {"trust_reg_no": "MH/TRUST/2005/1234",
-               "institutions": ["INST001", "INST006"]})
-
-    # ─── Record verification statuses ───
-    # Make sure all 6 statuses are represented
-    verification_statuses = [
-        {"status": "verified", "institution": "INST001", "doc": "fire_safety"},
-        {"status": "mismatch_detected", "institution": "INST004", "doc": "accreditation"},
-        {"status": "expired", "institution": "INST003", "doc": "fire_safety"},
-        {"status": "verification_pending", "institution": "INST005", "doc": "noc"},
-        {"status": "source_unavailable", "institution": "INST006", "doc": "noc"},
-        {"status": "manual_review_required", "institution": "INST002", "doc": "affidavit"},
+    # 1. GENERATE 125 CLEAN STATUTORY DOCUMENTS (CONTROLS)
+    print("Generating 125 clean statutory control documents...")
+    doc_types = [
+        "affidavit", "fire_safety_certificate", "noc", "accreditation_certificate",
+        "land_document", "university_affiliation_letter", "faculty_list",
+        "electricity_bill", "infrastructure_photo", "noc_tamil", "noc_hindi"
     ]
 
-    # Build institution capacity data for compliance checking
-    # INST004 has excessive intake for its infrastructure
-    for inst in INSTITUTIONS:
-        if inst["id"] == "INST004":
-            add_fault("intake_exceeds_capacity", inst["id"],
-                      "Applied intake (720) exceeds computed maximum capacity (360) based on infrastructure",
-                      {"applied_intake": 720, "max_capacity": 360})
+    for i in range(125):
+        inst = INSTITUTIONS[i % len(INSTITUTIONS)]
+        year = "2025"
+        app_id = f"APP_CLEAN_{(i // len(INSTITUTIONS)) + 1:03d}_{inst['id']}"
+        dtype = doc_types[i % len(doc_types)]
+        is_photo = (dtype == "infrastructure_photo")
+        fname, fpath = get_next_neutral_filename(is_photo=is_photo)
 
-    GROUND_TRUTH["applications"] = applications
-    GROUND_TRUTH["verification_statuses"] = verification_statuses
+        ref_no = f"REG/{inst['state'][:2]}/{year}/{5000 + i}"
+        issue_d = f"10-04-{year}"
+        expiry_d = f"09-04-{int(year) + 2}"
+
+        if dtype == "infrastructure_photo":
+            create_infrastructure_photo(fpath, inst)
+        elif dtype == "affidavit":
+            lines = [
+                "AFFIDAVIT ON NON-JUDICIAL STAMP PAPER",
+                "=" * 50,
+                f"Reference: {ref_no}",
+                f"Date: {issue_d}",
+                f"I, the authorized signatory of {inst['name']} (PID: {inst['code']}),",
+                f"located at {inst['address']}, solemnly affirm and state:",
+                "1. That our institution complies with all AICTE Approval Process Norms.",
+                f"2. That the approved intake for Academic Year {year}-{int(year)+1} is 360 seats.",
+                f"3. Sponsoring Trust: {inst['trust_name']} (Reg: {inst['trust_reg_no']}).",
+                "Deponent Signature & Notary Seal",
+            ]
+            qr_data = json.dumps({"ref": ref_no, "inst": inst["code"], "type": "affidavit"})
+            create_simple_pdf(fpath, "AFFIDAVIT", lines, qr_data=qr_data)
+            register_issuer_entry("affidavit", ref_no, inst["id"], "Notary Public", issue_d, None)
+        elif dtype == "fire_safety_certificate":
+            lines = [
+                "STATE FIRE & RESCUE SERVICES DEPARTMENT",
+                "=" * 50,
+                "FIRE SAFETY CLEARANCE CERTIFICATE",
+                f"Certificate No: {ref_no}",
+                f"Date of Issue: {issue_d}",
+                f"Valid Until: {expiry_d}",
+                f"This certifies that {inst['name']} premises at {inst['address']}",
+                "have been thoroughly inspected and equipped with required fire safety mechanisms.",
+                f"Issued by: Chief Fire Officer, {inst['city']}",
+            ]
+            qr_data = json.dumps({"ref": ref_no, "inst": inst["code"], "type": "fire_safety"})
+            create_simple_pdf(fpath, "FIRE SAFETY CERTIFICATE", lines, qr_data=qr_data)
+            register_issuer_entry("fire_safety_certificate", ref_no, inst["id"], f"Fire Dept {inst['city']}", issue_d, expiry_d)
+        elif dtype == "noc":
+            lines = [
+                f"GOVERNMENT OF {inst['state'].upper()}",
+                "DEPARTMENT OF HIGHER & TECHNICAL EDUCATION",
+                "=" * 50,
+                "NO OBJECTION CERTIFICATE (NOC)",
+                f"Reference No: {ref_no}",
+                f"Date: {issue_d}",
+                f"Valid Until: {expiry_d}",
+                f"The State Government grants No Objection for continuation of {inst['name']} ({inst['code']}).",
+                "Secretary to Government, Higher Education",
+            ]
+            qr_data = json.dumps({"ref": ref_no, "inst": inst["code"], "type": "noc"})
+            create_simple_pdf(fpath, "NO OBJECTION CERTIFICATE", lines, qr_data=qr_data)
+            register_issuer_entry("noc", ref_no, inst["id"], f"Dept of Higher Education {inst['state']}", issue_d, expiry_d)
+        elif dtype == "accreditation_certificate":
+            lines = [
+                "NATIONAL BOARD OF ACCREDITATION",
+                "=" * 50,
+                "CERTIFICATE OF ACCREDITATION",
+                f"Accreditation Ref: {ref_no}",
+                f"Date of Award: {issue_d}",
+                f"Valid Until: {expiry_d}",
+                f"This is to certify that programs at {inst['name']} ({inst['code']})",
+                "have been evaluated and accredited with Grade A.",
+                "Member Secretary, NBA",
+            ]
+            qr_data = json.dumps({"ref": ref_no, "inst": inst["code"], "type": "accreditation_certificate"})
+            create_simple_pdf(fpath, "ACCREDITATION CERTIFICATE", lines, qr_data=qr_data)
+            register_issuer_entry("accreditation_certificate", ref_no, inst["id"], "National Board of Accreditation", issue_d, expiry_d)
+        elif dtype == "land_document":
+            sno = land_surveys[inst["id"]]
+            lines = [
+                "LAND OWNERSHIP AND REGISTRATION DEED",
+                "=" * 50,
+                f"Title Deed No: {ref_no}",
+                f"Survey No: {sno}",
+                f"Total Land Area: 12.50 Acres",
+                f"Registered in the name of: {inst['trust_name']}",
+                f"For educational campus of: {inst['name']}",
+                f"Sub-Registrar Office, {inst['city']}",
+            ]
+            create_simple_pdf(fpath, "LAND OWNERSHIP DOCUMENT", lines)
+        elif dtype == "university_affiliation_letter":
+            lines = [
+                f"STATE TECHNICAL UNIVERSITY, {inst['state'].upper()}",
+                "=" * 50,
+                "CONTINUATION OF AFFILIATION ORDER",
+                f"Affiliation Order No: {ref_no}",
+                f"Date: {issue_d}",
+                f"Valid Until: {expiry_d}",
+                f"Affiliation is granted to {inst['name']} ({inst['code']}) for 2025-2026.",
+                "Registrar, State Technical University",
+            ]
+            qr_data = json.dumps({"ref": ref_no, "inst": inst["code"], "type": "university_affiliation_letter"})
+            create_simple_pdf(fpath, "UNIVERSITY AFFILIATION LETTER", lines, qr_data=qr_data)
+            register_issuer_entry("university_affiliation_letter", ref_no, inst["id"], "State Technical University", issue_d, expiry_d)
+        elif dtype == "faculty_list":
+            lines = [
+                f"FACULTY LIST AND TEACHING STAFF ROSTER",
+                f"Institution: {inst['name']} (PID: {inst['code']})",
+                "=" * 50,
+                "S.No | Faculty ID | Name | Qualification | Designation",
+                f"1 | FAC_{inst['id']}_01 | Dr. R. Sharma | PhD CSE | Professor",
+                f"2 | FAC_{inst['id']}_02 | Dr. P. Verma | PhD ECE | Associate Professor",
+                f"3 | FAC_{inst['id']}_03 | Prof. S. Rao | MTech ME | Assistant Professor",
+                f"4 | FAC_{inst['id']}_04 | Dr. A. Gupta | PhD Civil | Professor",
+                "Principal & Head of Institution",
+            ]
+            create_simple_pdf(fpath, "FACULTY LIST", lines)
+        elif dtype == "electricity_bill":
+            lines = [
+                f"STATE POWER DISTRIBUTION COMPANY",
+                "=" * 50,
+                "ELECTRICITY CONSUMPTION BILL",
+                f"Consumer Number: 778899{i}",
+                f"Bill Number: {ref_no}",
+                f"Billing Month: March {year}",
+                f"Consumer: {inst['trust_name']} ({inst['name']})",
+                "Units Consumed: 14,200 kWh",
+                "Current Tariff: Commercial Educational HT-2",
+            ]
+            create_simple_pdf(fpath, "ELECTRICITY BILL", lines)
+        elif dtype == "noc_tamil":
+            lines = [
+                "தமிழ்நாடு அரசு - உயர் கல்வித் துறை",
+                "=" * 50,
+                "தடையில்லாச் சான்றிதழ் (NO OBJECTION CERTIFICATE)",
+                f"சான்றிதழ் எண் / Ref: {ref_no}",
+                f"நிறுவனம்: {inst['name']}",
+                "அரசு செயலாளர், தொழில்நுட்பக் கல்வித் துறை",
+            ]
+            create_simple_pdf(fpath, "NO OBJECTION CERTIFICATE (TAMIL)", lines)
+            register_issuer_entry("noc", ref_no, inst["id"], "Tamil Nadu DOTE", issue_d, expiry_d)
+        elif dtype == "noc_hindi":
+            lines = [
+                "उत्तर प्रदेश शासन - प्राविधिक शिक्षा विभाग",
+                "=" * 50,
+                "अनापत्ति प्रमाण पत्र (NO OBJECTION CERTIFICATE)",
+                f"पत्रांक संख्या / Ref: {ref_no}",
+                f"संस्थान: {inst['name']}",
+                "विशेष सचिव, प्राविधिक शिक्षा",
+            ]
+            create_simple_pdf(fpath, "NO OBJECTION CERTIFICATE (HINDI)", lines)
+            register_issuer_entry("noc", ref_no, inst["id"], "UP Technical Education", issue_d, expiry_d)
+
+        GROUND_TRUTH["clean_documents"].append({
+            "document": fname,
+            "document_type": dtype,
+            "institution_id": inst["id"],
+            "application_id": app_id,
+        })
+
+    # 2. GENERATE 160 PLANTED FAULTS (EXACTLY 10 PER FAULT CATEGORY)
+    print("Generating 160 planted fault test documents (10 variants x 16 fault categories)...")
+
+    # (1) name_mismatch (10 variants)
+    for v in range(10):
+        inst = INSTITUTIONS[v]
+        fname, fpath = get_next_neutral_filename(is_photo=False)
+        mismatched_name = inst["name"].replace("Engineering", "Polytechnic").replace("Institute", "Global Academy")
+        lines = [
+            "AFFIDAVIT ON STAMP PAPER",
+            "=" * 50,
+            f"Reference: AFF/MIS/{v}/2025",
+            f"I, Secretary of {mismatched_name}, solemnly affirm that all details are accurate.",
+            f"Institution PID: {inst['code']}",
+        ]
+        create_simple_pdf(fpath, "AFFIDAVIT", lines)
+        GROUND_TRUTH["planted_faults"].append({
+            "fault_type": "name_mismatch",
+            "document": fname,
+            "institution_id": inst["id"],
+            "description": f"Institution name '{mismatched_name}' in document mismatches registered '{inst['name']}'.",
+            "details": {"found": mismatched_name, "expected": inst["name"]}
+        })
+
+    # (2) number_mismatch (10 variants)
+    for v in range(10):
+        inst = INSTITUTIONS[v]
+        fname, fpath = get_next_neutral_filename(is_photo=False)
+        declared_intake = 360
+        mismatched_intake = declared_intake + 120 + (v * 30)
+        lines = [
+            "AFFIDAVIT ON STAMP PAPER",
+            "=" * 50,
+            f"Reference: AFF/NUM/{v}/2025",
+            f"Institution: {inst['name']}",
+            f"Total Student Intake Declared: {mismatched_intake} seats.",
+            "AICTE Approved Capacity: Verified.",
+        ]
+        create_simple_pdf(fpath, "AFFIDAVIT", lines)
+        GROUND_TRUTH["planted_faults"].append({
+            "fault_type": "number_mismatch",
+            "document": fname,
+            "institution_id": inst["id"],
+            "description": f"Affidavit claims intake of {mismatched_intake} but application form declared {declared_intake}.",
+            "details": {"doc_intake": mismatched_intake, "form_intake": declared_intake}
+        })
+
+    # (3) expired_document (10 variants)
+    for v in range(10):
+        inst = INSTITUTIONS[v]
+        fname, fpath = get_next_neutral_filename(is_photo=False)
+        ref_no = f"EXP/FS/{v}/2022"
+        issue_d = "01-01-2022"
+        expiry_d = f"31-12-202{3 if v < 5 else 4}"  # Expired before 2025
+        lines = [
+            "FIRE SAFETY COMPLIANCE CERTIFICATE",
+            "=" * 50,
+            f"Certificate Ref: {ref_no}",
+            f"Date of Issue: {issue_d}",
+            f"Valid Until: {expiry_d}",
+            f"Premises: {inst['name']}, {inst['address']}",
+            "Status: EXPIRED",
+        ]
+        create_simple_pdf(fpath, "FIRE SAFETY CERTIFICATE", lines)
+        register_issuer_entry("fire_safety_certificate", ref_no, inst["id"], f"Fire Dept {inst['city']}", issue_d, expiry_d, status="expired")
+        GROUND_TRUTH["planted_faults"].append({
+            "fault_type": "expired_document",
+            "document": fname,
+            "institution_id": inst["id"],
+            "description": f"Fire safety certificate expired on {expiry_d} (prior to submission date 2025-04-10).",
+            "details": {"expiry_date": expiry_d}
+        })
+
+    # (4) font_inconsistency (10 variants)
+    for v in range(10):
+        inst = INSTITUTIONS[v]
+        fname, fpath = get_next_neutral_filename(is_photo=False)
+        lines = [
+            "STATE GOVERNMENT NO OBJECTION CERTIFICATE",
+            "=" * 50,
+            f"Reference: NOC/TAMPER/{v}/2025",
+            f"Date: 15-08-2025",
+            f"Intake: 480 seats",
+            f"Institution: {inst['name']}",
+            f"Survey Number: 104/{v}A",
+            "Director of Technical Education",
+        ]
+        create_simple_pdf(fpath, "NO OBJECTION CERTIFICATE", lines, tamper_font=True)
+        GROUND_TRUTH["planted_faults"].append({
+            "fault_type": "font_inconsistency",
+            "document": fname,
+            "institution_id": inst["id"],
+            "description": "Critical certificate lines (date/intake/survey) spliced with Courier font in Helvetica canvas.",
+            "details": {"tampered_lines": ["Date", "Intake", "Survey"]}
+        })
+
+    # (5) metadata_edited (10 variants)
+    editors = [
+        "Adobe Photoshop CC 2024 (Windows)",
+        "GIMP 2.10.34 (Linux)",
+        "Adobe Illustrator 28.0",
+        "CorelDRAW 2023 Graphics Suite",
+        "Inkscape 1.3 vector drawing",
+        "Adobe Photoshop 25.1",
+        "GIMP 2.10.30",
+        "Adobe Illustrator CC 2023",
+        "Photoshop Elements 2024",
+        "Adobe Photoshop Lightroom 13.0",
+    ]
+    for v in range(10):
+        inst = INSTITUTIONS[v]
+        fname, fpath = get_next_neutral_filename(is_photo=False)
+        lines = [
+            "GOVERNMENT ACCREDITATION CERTIFICATE",
+            "=" * 50,
+            f"Accreditation Ref: ACC/META/{v}/2025",
+            f"Institution: {inst['name']}",
+            "Evaluated by Regulatory Board",
+        ]
+        create_simple_pdf(fpath, "ACCREDITATION CERTIFICATE", lines, producer=editors[v], add_extra_eof=(v % 2 == 0))
+        GROUND_TRUTH["planted_faults"].append({
+            "fault_type": "metadata_edited",
+            "document": fname,
+            "institution_id": inst["id"],
+            "description": f"PDF Producer indicates graphic manipulation tool: {editors[v]}.",
+            "details": {"producer": editors[v], "extra_eof": (v % 2 == 0)}
+        })
+
+    # (6) qr_payload_mismatch (10 variants)
+    for v in range(10):
+        inst = INSTITUTIONS[v]
+        fname, fpath = get_next_neutral_filename(is_photo=False)
+        printed_ref = f"ACC/PRINT/{v}/2025"
+        qr_ref = f"ACC/TAMPERED_QR/{v + 999}/2021"
+        lines = [
+            "ACCREDITATION COUNCIL CERTIFICATE",
+            "=" * 50,
+            f"Certificate Reference: {printed_ref}",
+            f"Awarded to: {inst['name']} ({inst['code']})",
+            "Grade: A+",
+        ]
+        qr_payload = json.dumps({"ref": qr_ref, "inst": "1-MISMATCHED", "type": "accreditation"})
+        create_simple_pdf(fpath, "ACCREDITATION CERTIFICATE", lines, qr_data=qr_payload)
+        GROUND_TRUTH["planted_faults"].append({
+            "fault_type": "qr_payload_mismatch",
+            "document": fname,
+            "institution_id": inst["id"],
+            "description": f"QR payload encodes '{qr_ref}' but printed certificate text displays '{printed_ref}'.",
+            "details": {"printed": printed_ref, "qr_payload": qr_ref}
+        })
+
+    # (7) duplicate_document_across_institutions (10 variants)
+    for v in range(10):
+        inst_a = INSTITUTIONS[v]
+        inst_b = INSTITUTIONS[(v + 6) % len(INSTITUTIONS)]  # Unrelated college in different state
+        fname_a, fpath_a = get_next_neutral_filename(is_photo=False)
+        fname_b, fpath_b = get_next_neutral_filename(is_photo=False)
+
+        lines = [
+            "MUNICIPAL ELECTRICAL SAFETY NOC",
+            "=" * 50,
+            f"NOC Ref: ELEC/DUP/{v}/2025",
+            f"Certified compliant with statutory load norms.",
+            "Municipal Chief Engineer",
+        ]
+        create_simple_pdf(fpath_a, "ELECTRICAL SAFETY NOC", lines)
+        shutil.copy2(str(fpath_a), str(fpath_b))  # Identical SHA-256 hash!
+
+        GROUND_TRUTH["planted_faults"].append({
+            "fault_type": "duplicate_document_across_institutions",
+            "document": fname_b,
+            "institution_id": inst_b["id"],
+            "description": f"Document {fname_b} has identical hash to {fname_a} submitted by unrelated {inst_a['name']}.",
+            "details": {"source_doc": fname_a, "target_doc": fname_b, "source_inst": inst_a["id"], "target_inst": inst_b["id"]}
+        })
+
+    # (8) duplicate_photo_across_institutions (10 variants)
+    for v in range(10):
+        inst_a = INSTITUTIONS[v]
+        inst_b = INSTITUTIONS[(v + 5) % len(INSTITUTIONS)]
+        fname_a, fpath_a = get_next_neutral_filename(is_photo=True)
+        fname_b, fpath_b = get_next_neutral_filename(is_photo=True)
+
+        create_infrastructure_photo(fpath_a, inst_a)
+        shutil.copy2(str(fpath_a), str(fpath_b))
+
+        GROUND_TRUTH["planted_faults"].append({
+            "fault_type": "duplicate_photo_across_institutions",
+            "document": fname_b,
+            "institution_id": inst_b["id"],
+            "description": f"Infrastructure photo {fname_b} is a duplicate of {fname_a} submitted by {inst_a['name']}.",
+            "details": {"source_photo": fname_a, "target_photo": fname_b, "source_inst": inst_a["id"], "target_inst": inst_b["id"]}
+        })
+
+    # (9) photo_wrong_gps (10 variants)
+    for v in range(10):
+        inst = INSTITUTIONS[v]
+        fname, fpath = get_next_neutral_filename(is_photo=True)
+        create_infrastructure_photo(fpath, inst, wrong_gps=True)
+        GROUND_TRUTH["planted_faults"].append({
+            "fault_type": "photo_wrong_gps",
+            "document": fname,
+            "institution_id": inst["id"],
+            "description": f"Photo GPS tags are > 500km away from campus location ({inst['latitude']}, {inst['longitude']}).",
+            "details": {"expected_lat": inst["latitude"], "expected_lng": inst["longitude"]}
+        })
+
+    # (10) photo_not_recent (10 variants)
+    for v in range(10):
+        inst = INSTITUTIONS[v]
+        fname, fpath = get_next_neutral_filename(is_photo=True)
+        create_infrastructure_photo(fpath, inst, old_date=True)
+        GROUND_TRUTH["planted_faults"].append({
+            "fault_type": "photo_not_recent",
+            "document": fname,
+            "institution_id": inst["id"],
+            "description": "Photo EXIF timestamp is older than 180 days prior to application deadline.",
+            "details": {"photo_date": "2023-01-10"}
+        })
+
+    # (11) photo_quality_issue (10 variants)
+    for v in range(10):
+        inst = INSTITUTIONS[v]
+        fname, fpath = get_next_neutral_filename(is_photo=True)
+        create_infrastructure_photo(fpath, inst, is_blurry=True)
+        GROUND_TRUTH["planted_faults"].append({
+            "fault_type": "photo_quality_issue",
+            "document": fname,
+            "institution_id": inst["id"],
+            "description": "Infrastructure photo is heavily blurred (Laplacian variance below quality cutoff).",
+            "details": {"issue": "severe_blur"}
+        })
+
+    # (12) ghost_faculty (10 variants)
+    for v in range(10):
+        fid = f"FAC_GHOST_{v+1:02d}"
+        inst_a = INSTITUTIONS[v]
+        inst_b = INSTITUTIONS[(v + 3) % len(INSTITUTIONS)]
+        fname_a, fpath_a = get_next_neutral_filename(is_photo=False)
+        fname_b, fpath_b = get_next_neutral_filename(is_photo=False)
+
+        lines_a = [
+            f"FACULTY TEACHING ROSTER - {inst_a['name']}",
+            "=" * 50,
+            f"Faculty ID: {fid} | Name: Dr. Ghost Faculty {v+1} | Full-Time Professor | City: {inst_a['city']}",
+        ]
+        lines_b = [
+            f"FACULTY TEACHING ROSTER - {inst_b['name']}",
+            "=" * 50,
+            f"Faculty ID: {fid} | Name: Dr. Ghost Faculty {v+1} | Full-Time Professor | City: {inst_b['city']}",
+        ]
+        create_simple_pdf(fpath_a, "FACULTY LIST", lines_a)
+        create_simple_pdf(fpath_b, "FACULTY LIST", lines_b)
+
+        GROUND_TRUTH["planted_faults"].append({
+            "fault_type": "ghost_faculty",
+            "document": fname_b,
+            "institution_id": inst_b["id"],
+            "description": f"Faculty {fid} claimed simultaneously as full-time professor at {inst_a['name']} ({inst_a['city']}) and {inst_b['name']} ({inst_b['city']}).",
+            "details": {"faculty_id": fid, "institutions": [inst_a["id"], inst_b["id"]], "cities": [inst_a["city"], inst_b["city"]]}
+        })
+
+    # (13) shared_land_survey (10 variants)
+    for v in range(10):
+        inst_a = INSTITUTIONS[v]
+        # Choose college under DIFFERENT trust
+        inst_b = INSTITUTIONS[(v + 4) % len(INSTITUTIONS)]
+        survey_shared = f"SUR/PARCEL/SHARED/{v+100}"
+
+        fname_a, fpath_a = get_next_neutral_filename(is_photo=False)
+        fname_b, fpath_b = get_next_neutral_filename(is_photo=False)
+
+        lines_a = [
+            "LAND DEED OWNERSHIP CERTIFICATE",
+            "=" * 50,
+            f"Survey Number: {survey_shared}",
+            f"Owner Trust: {inst_a['trust_name']}",
+            f"College: {inst_a['name']} ({inst_a['city']})",
+        ]
+        lines_b = [
+            "LAND DEED OWNERSHIP CERTIFICATE",
+            "=" * 50,
+            f"Survey Number: {survey_shared}",
+            f"Owner Trust: {inst_b['trust_name']}",
+            f"College: {inst_b['name']} ({inst_b['city']})",
+        ]
+        create_simple_pdf(fpath_a, "LAND OWNERSHIP DOCUMENT", lines_a)
+        create_simple_pdf(fpath_b, "LAND OWNERSHIP DOCUMENT", lines_b)
+
+        GROUND_TRUTH["planted_faults"].append({
+            "fault_type": "shared_land_survey",
+            "document": fname_b,
+            "institution_id": inst_b["id"],
+            "description": f"Land survey parcel {survey_shared} claimed across unrelated trusts '{inst_a['trust_name']}' and '{inst_b['trust_name']}'.",
+            "details": {"survey_number": survey_shared, "trusts": [inst_a["trust_name"], inst_b["trust_name"]]}
+        })
+
+    # (14) yoy_intake_jump (10 variants)
+    for v in range(10):
+        inst = INSTITUTIONS[v]
+        app_id = f"APP_JUMP_{v+1:03d}_{inst['id']}"
+        GROUND_TRUTH["planted_faults"].append({
+            "fault_type": "yoy_intake_jump",
+            "document": app_id,
+            "institution_id": inst["id"],
+            "description": f"YoY intake jumped by 180% (from 180 to 500) without corresponding infrastructure expansion.",
+            "details": {"previous_intake": 180, "current_intake": 500, "jump_pct": 177.7}
+        })
+
+    # (15) intake_exceeds_capacity (10 variants)
+    for v in range(10):
+        inst = INSTITUTIONS[v]
+        app_id = f"APP_CAP_{v+1:03d}_{inst['id']}"
+        GROUND_TRUTH["planted_faults"].append({
+            "fault_type": "intake_exceeds_capacity",
+            "document": app_id,
+            "institution_id": inst["id"],
+            "description": "Requested intake of 720 exceeds maximum physical built-up capacity (360) computed per APH norms.",
+            "details": {"applied_intake": 720, "max_capacity": 360}
+        })
+
+    # (16) missing_document (10 variants)
+    missing_statutory_types = [
+        "university_affiliation_letter", "fire_safety_certificate", "noc",
+        "land_document", "faculty_list", "university_affiliation_letter",
+        "fire_safety_certificate", "noc", "land_document", "faculty_list"
+    ]
+    for v in range(10):
+        inst = INSTITUTIONS[v]
+        app_id = f"APP_MISSING_{v+1:03d}_{inst['id']}"
+        mtype = missing_statutory_types[v]
+        GROUND_TRUTH["planted_faults"].append({
+            "fault_type": "missing_document",
+            "document": app_id,
+            "institution_id": inst["id"],
+            "description": f"Mandatory statutory document '{mtype}' is missing from submission packet.",
+            "details": {"missing_type": mtype}
+        })
+
     GROUND_TRUTH["_meta"]["generated_at"] = datetime.now().isoformat()
+    GROUND_TRUTH["_meta"]["total_documents"] = doc_counter
+    GROUND_TRUTH["_meta"]["total_planted_faults"] = len(GROUND_TRUTH["planted_faults"])
+    GROUND_TRUTH["_meta"]["total_clean_controls"] = len(GROUND_TRUTH["clean_documents"])
 
-    return applications
-
-
-def save_ground_truth():
-    """Save ground truth manifest."""
+    # Save Ground Truth Manifest
     with open(GROUND_TRUTH_PATH, 'w', encoding='utf-8') as f:
         json.dump(GROUND_TRUTH, f, indent=2, ensure_ascii=False)
     print(f"Ground truth saved to {GROUND_TRUTH_PATH}")
 
-
-def save_issuer_registry():
-    """Save mock issuer registry."""
-    registry_path = OUTPUT_DIR / "mock_issuer_registry.json"
-    with open(registry_path, 'w', encoding='utf-8') as f:
+    # Save Mock Issuer Registry
+    issuer_path = OUTPUT_DIR / "mock_issuer_registry.json"
+    with open(issuer_path, 'w', encoding='utf-8') as f:
         json.dump(MOCK_ISSUER_REGISTRY, f, indent=2, ensure_ascii=False)
-    print(f"Mock issuer registry saved to {registry_path}")
+    print(f"Mock issuer registry saved to {issuer_path}")
 
-
-def save_outside_signals():
-    """Save SIMULATED outside signals (accreditation/ranking entries) for A8."""
+    # Save Outside Signals
     signals_path = OUTPUT_DIR / "outside_signals.json"
     signals = {
-        "_meta": {
-            "description": "SIMULATED accreditation and ranking entries for outside-signals check (A8)",
-            "simulated": True
-        },
+        "_meta": {"description": "SIMULATED NIRF and NAAC accreditation records", "simulated": True},
         "accredited_institutions": [
-            {"code": "RGIT-MH-001", "name": "Rajiv Gandhi Institute of Technology", "grade": "A", "valid_until": "2028-06-30"},
-            {"code": "SLEC-TN-002", "name": "Sri Lakshmi Engineering College", "grade": "B+", "valid_until": "2027-06-30"},
-            {"code": "BVCE-KA-003", "name": "Bharati Vidyapeeth College of Engineering", "grade": "A+", "valid_until": "2029-06-30"},
-            # INST004, INST005, INST006 deliberately missing for flag testing
+            {"code": inst["code"], "name": inst["name"], "grade": "A+", "valid_until": "2028-12-31"}
+            for inst in INSTITUTIONS[:6]
         ],
         "ranked_institutions": [
-            {"code": "RGIT-MH-001", "rank": 45, "year": 2026},
-            {"code": "BVCE-KA-003", "rank": 32, "year": 2026},
+            {"code": inst["code"], "rank": 25 + idx * 10, "year": 2025}
+            for idx, inst in enumerate(INSTITUTIONS[:4])
         ]
     }
     with open(signals_path, 'w', encoding='utf-8') as f:
         json.dump(signals, f, indent=2, ensure_ascii=False)
     print(f"Outside signals saved to {signals_path}")
 
-
-# ─── Main ─────────────────────────────────────────────────────────────────────
-
-def main():
-    """Generate all synthetic data."""
-    print("=" * 60)
-    print("AICTE-Verify Synthetic Data Generator")
-    print("ALL DATA IS SIMULATED - No real institutions or persons")
-    print("=" * 60)
-
-    applications = generate_applications()
-    save_ground_truth()
-    save_issuer_registry()
-    save_outside_signals()
-
-    print(f"\nGenerated:")
-    print(f"  - {len(applications)} applications")
-    print(f"  - {sum(len(a['documents']) for a in applications)} documents")
-    print(f"  - {len(GROUND_TRUTH['planted_faults'])} planted faults")
-    print(f"  - {len(GROUND_TRUTH['clean_documents'])} clean documents")
-    print(f"  - {len(MOCK_ISSUER_REGISTRY)} issuer registry entries")
-    print(f"\nOutput directory: {OUTPUT_DIR}")
+    print("\nBenchmark Suite Summary:")
+    print(f"  - Total Generated Neutral Files: {doc_counter} (DOC_0001..DOC_{doc_counter:04d})")
+    print(f"  - Total Planted Fault Variants: {len(GROUND_TRUTH['planted_faults'])} (16 categories x 10 variants)")
+    print(f"  - Total Clean Control Documents: {len(GROUND_TRUTH['clean_documents'])}")
+    print(f"  - Mock Issuer Registry Entries: {len(MOCK_ISSUER_REGISTRY)}")
+    print(f"  - Data Directory: {OUTPUT_DIR}")
 
 
 if __name__ == "__main__":
-    main()
+    generate_benchmark_suite()

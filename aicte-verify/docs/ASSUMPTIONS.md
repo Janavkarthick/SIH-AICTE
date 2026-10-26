@@ -75,11 +75,12 @@ All assumptions made during development are documented here.
 32. **Vite 5**: Fast build tool for React development.
 33. **Tailwind CSS 3**: Utility-first CSS framework.
 
-## Known Limitations
+## Known Limitations & Operating Boundaries
 
-- OCR accuracy is limited by Tesseract capabilities and synthetic document quality
-- Forensics checks are heuristic-based, not trained on real forged documents  
-- Tamil/Hindi OCR requires proper language packs and fonts
-- No real digital certificates exist in synthetic data for signature validation
-- Photo analysis is basic (GPS, date, blur) - no object detection or scene understanding
-- Knowledge graph detection is based on exact ID matching, not fuzzy matching
+1. **Skilled-Forger Bypass**: Flattening edited PDFs to raster image scans (or printing and re-scanning) or stripping EXIF/PDF metadata removes digital manipulation artifacts. Digital forensics heuristics (metadata inspection, font splice analysis) are preliminary advisory signals, not absolute guarantees; true authenticity requires cryptographic issuer verification (e.g., DigiLocker integration or issuing authority signature verification).
+2. **Simulated Issuing Authorities**: All third-party issuing authorities (State Technical Education Departments, Fire & Emergency Services, Municipal Corporations, Universities) are simulated via an internal mock issuer registry. Production deployment requires live API integration with state portals.
+3. **Illustrative Normative Thresholds**: Built-up instructional area requirements, faculty-to-student ratios (1:20), and lab capacity bounds are illustrative administrative heuristics calibrated to the 2024-27 Approval Process Handbook; actual regional council approvals depend on expert scrutiny committee evaluations.
+4. **Synthetic-Only Benchmark Evaluation**: The evaluation suite evaluates against 285 synthetic test units with neutral IDs (`DOC_0001`..`DOC_0295`) to prevent data leakage. Real-world document distribution contains varied paper scans, handwritten notary stamps, folded sheets, and low-contrast mobile camera captures requiring human officer scrutiny.
+5. **Document Classification**: Operates via deterministic statutory keyword pattern and regex scoring across 11 statutory categories (no black-box machine learning model is claimed or deployed).
+6. **Deficiency Notice Governance**: Deficiency notices are strictly generated as **DRAFT DEFICIENCY NOTICES** requiring regional officer review and authorization; no notices are dispatched automatically. Any adverse application status transition to `Rejected` mandates officer confirmation and written justification.
+7. **Sister Campus Trust Recognition**: Colleges operating under the same registered educational trust sharing land or faculty are recognized as legitimate sister campuses and not falsely flagged as collusion. Collusion flags are reserved for cross-trust claims across unrelated sponsoring entities.

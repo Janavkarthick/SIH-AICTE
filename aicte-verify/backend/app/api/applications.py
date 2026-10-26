@@ -229,6 +229,14 @@ async def update_application_status(
     if not app:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Application not found")
 
+    # Mandatory officer confirmation & written justification for REJECTED status
+    if payload.status.lower() == "rejected":
+        if not payload.reason or len(payload.reason.strip()) < 10:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="A formal written justification (minimum 10 characters) is statutorily mandatory when executing a REJECTED recommendation."
+            )
+
     old_status = app.status
     app.status = payload.status
     app.assigned_officer = current_user.id

@@ -82,13 +82,14 @@ This script walks through the key features of AICTE-Verify using the seeded synt
 4. See the pipeline evaluation results: OCR accuracy, detection P/R/F1, processing times
 5. Note: These are REAL measured numbers, including limitations
 
-### Step 8: Deficiency Letter (15 seconds)
+### Step 8: Draft Deficiency Notice & Governance (15 seconds)
 
 1. Return to a flagged application
-2. Click **"Generate Deficiency Letter"**
-3. Preview the letter listing all open flags and required actions
-4. Select language (English/Tamil/Hindi template)
-5. Click **"Approve Letter"** (officer action, logged in audit trail)
+2. Click **"Generate Draft Deficiency Notice"**
+3. Preview the draft notice listing open discrepancies with statutory clause placeholders: `[Clause reference - verify against Approval Process Handbook]`
+4. Notice prominent warning banner: `*** DRAFT DEFICIENCY NOTICE - PENDING REGIONAL OFFICER SCRUTINY & APPROVAL ***`
+5. Select language template (English, Tamil, or Hindi)
+6. Any status transition to `Rejected` requires officer confirmation, a written justification of at least 10 characters, and is cryptographically audit-logged (no automatic email dispatch).
 
 ---
 
@@ -96,17 +97,18 @@ This script walks through the key features of AICTE-Verify using the seeded synt
 
 | Username | Password | Role | Scope |
 |----------|----------|------|-------|
-| admin | admin123 | Admin | Full access, all regions |
-| officer1 | officer123 | Officer | West region |
-| officer2 | officer123 | Officer | South region |
-| college1 | college123 | College User | Own applications only |
-| college2 | college123 | College User | Own applications only |
+| `admin` | `admin123` | Central Admin | Full access, all regions, user management |
+| `officer1` | `officer123` | Regional Officer | Southern Region (OMR / Chennai / Bangalore) |
+| `officer2` | `officer123` | Regional Officer | Northern Region (Lucknow / Delhi / Jaipur) |
+| `college1` | `college123` | College User | Apex Institute of Technology (PID: 1-100234) |
+| `college2` | `college123` | College User | Zenith College of Engineering (PID: 1-100567) |
 
 ### Key Points to Highlight
 
-- ✅ **Advisory only**: Every flag says "preliminary indicator — human verification required"
-- ✅ **Explainable**: Every flag has code, reason, evidence, confidence, and rule ID
-- ✅ **Auditable**: Every action is logged in a tamper-evident audit chain
-- ✅ **No auto-reject**: Officers must confirm every adverse action
+- ✅ **Advisory only**: Every finding explicitly tagged "preliminary indicator — human verification required"
+- ✅ **Explainable**: Every flag has code, reason, evidence, confidence, and rule ID (no black-box ML claims)
+- ✅ **Auditable**: Every action is cryptographically chained in a SHA-256 tamper-evident audit ledger
+- ✅ **No auto-reject / No auto-dispatch**: Officers must confirm every adverse action and provide written justification
+- ✅ **Sister Campus Recognition**: Sister colleges under the same sponsoring trust sharing land or faculty are recognized as legitimate sister campuses, not flagged as collusion rings
 - ✅ **Simulated**: All verification services are clearly labelled SIMULATED
-- ✅ **Configurable**: All thresholds in JSON config files, easily replaced with real norms
+- ✅ **Configurable**: All normative thresholds stored in JSON config files, easily updated to official Approval Process Handbook updates

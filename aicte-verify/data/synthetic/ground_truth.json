@@ -1,408 +1,2519 @@
 {
   "_meta": {
-    "description": "Ground truth manifest for AICTE-Verify synthetic data evaluation",
-    "generated_at": "2026-10-26T00:38:53.003449",
-    "simulated": true
+    "description": "AICTE-Verify Synthetic Benchmark Ground Truth",
+    "simulated": true,
+    "neutral_filenames": true,
+    "naming_scheme": "DOC_0001.pdf / DOC_XXXX.jpg (no semantic hints in filenames)",
+    "generated_at": "2026-10-27T00:37:34.521202",
+    "total_documents": 295,
+    "total_planted_faults": 160,
+    "total_clean_controls": 125
   },
   "planted_faults": [
     {
-      "fault_type": "number_mismatch",
-      "document": "INST001_APP003_application_form.pdf",
-      "description": "Application form shows intake 600 but affidavit shows 300",
+      "fault_type": "name_mismatch",
+      "document": "DOC_0126.pdf",
+      "institution_id": "INST001",
+      "description": "Institution name 'Rajiv Gandhi Global Academy of Technology' in document mismatches registered 'Rajiv Gandhi Institute of Technology'.",
       "details": {
-        "form_intake": 600,
-        "affidavit_intake": 300
+        "found": "Rajiv Gandhi Global Academy of Technology",
+        "expected": "Rajiv Gandhi Institute of Technology"
+      }
+    },
+    {
+      "fault_type": "name_mismatch",
+      "document": "DOC_0127.pdf",
+      "institution_id": "INST002",
+      "description": "Institution name 'Sri Lakshmi Polytechnic College' in document mismatches registered 'Sri Lakshmi Engineering College'.",
+      "details": {
+        "found": "Sri Lakshmi Polytechnic College",
+        "expected": "Sri Lakshmi Engineering College"
+      }
+    },
+    {
+      "fault_type": "name_mismatch",
+      "document": "DOC_0128.pdf",
+      "institution_id": "INST003",
+      "description": "Institution name 'Bharati Vidyapeeth College of Polytechnic' in document mismatches registered 'Bharati Vidyapeeth College of Engineering'.",
+      "details": {
+        "found": "Bharati Vidyapeeth College of Polytechnic",
+        "expected": "Bharati Vidyapeeth College of Engineering"
+      }
+    },
+    {
+      "fault_type": "name_mismatch",
+      "document": "DOC_0129.pdf",
+      "institution_id": "INST004",
+      "description": "Institution name 'Netaji Subhas Global Academy of Technology' in document mismatches registered 'Netaji Subhas Institute of Technology'.",
+      "details": {
+        "found": "Netaji Subhas Global Academy of Technology",
+        "expected": "Netaji Subhas Institute of Technology"
+      }
+    },
+    {
+      "fault_type": "name_mismatch",
+      "document": "DOC_0130.pdf",
+      "institution_id": "INST005",
+      "description": "Institution name 'Kalam Technical University College' in document mismatches registered 'Kalam Technical University College'.",
+      "details": {
+        "found": "Kalam Technical University College",
+        "expected": "Kalam Technical University College"
+      }
+    },
+    {
+      "fault_type": "name_mismatch",
+      "document": "DOC_0131.pdf",
+      "institution_id": "INST006",
+      "description": "Institution name 'Savitribai Phule Polytechnic' in document mismatches registered 'Savitribai Phule Polytechnic'.",
+      "details": {
+        "found": "Savitribai Phule Polytechnic",
+        "expected": "Savitribai Phule Polytechnic"
+      }
+    },
+    {
+      "fault_type": "name_mismatch",
+      "document": "DOC_0132.pdf",
+      "institution_id": "INST007",
+      "description": "Institution name 'Jadavpur Global Academy of Technology' in document mismatches registered 'Jadavpur Institute of Technology'.",
+      "details": {
+        "found": "Jadavpur Global Academy of Technology",
+        "expected": "Jadavpur Institute of Technology"
+      }
+    },
+    {
+      "fault_type": "name_mismatch",
+      "document": "DOC_0133.pdf",
+      "institution_id": "INST008",
+      "description": "Institution name 'Malaviya Polytechnic Global Academy' in document mismatches registered 'Malaviya Engineering Institute'.",
+      "details": {
+        "found": "Malaviya Polytechnic Global Academy",
+        "expected": "Malaviya Engineering Institute"
+      }
+    },
+    {
+      "fault_type": "name_mismatch",
+      "document": "DOC_0134.pdf",
+      "institution_id": "INST009",
+      "description": "Institution name 'Visvesvaraya Technical Campus' in document mismatches registered 'Visvesvaraya Technical Campus'.",
+      "details": {
+        "found": "Visvesvaraya Technical Campus",
+        "expected": "Visvesvaraya Technical Campus"
+      }
+    },
+    {
+      "fault_type": "name_mismatch",
+      "document": "DOC_0135.pdf",
+      "institution_id": "INST010",
+      "description": "Institution name 'Aryabhata College of Polytechnic' in document mismatches registered 'Aryabhata College of Engineering'.",
+      "details": {
+        "found": "Aryabhata College of Polytechnic",
+        "expected": "Aryabhata College of Engineering"
+      }
+    },
+    {
+      "fault_type": "number_mismatch",
+      "document": "DOC_0136.pdf",
+      "institution_id": "INST001",
+      "description": "Affidavit claims intake of 480 but application form declared 360.",
+      "details": {
+        "doc_intake": 480,
+        "form_intake": 360
+      }
+    },
+    {
+      "fault_type": "number_mismatch",
+      "document": "DOC_0137.pdf",
+      "institution_id": "INST002",
+      "description": "Affidavit claims intake of 510 but application form declared 360.",
+      "details": {
+        "doc_intake": 510,
+        "form_intake": 360
+      }
+    },
+    {
+      "fault_type": "number_mismatch",
+      "document": "DOC_0138.pdf",
+      "institution_id": "INST003",
+      "description": "Affidavit claims intake of 540 but application form declared 360.",
+      "details": {
+        "doc_intake": 540,
+        "form_intake": 360
+      }
+    },
+    {
+      "fault_type": "number_mismatch",
+      "document": "DOC_0139.pdf",
+      "institution_id": "INST004",
+      "description": "Affidavit claims intake of 570 but application form declared 360.",
+      "details": {
+        "doc_intake": 570,
+        "form_intake": 360
+      }
+    },
+    {
+      "fault_type": "number_mismatch",
+      "document": "DOC_0140.pdf",
+      "institution_id": "INST005",
+      "description": "Affidavit claims intake of 600 but application form declared 360.",
+      "details": {
+        "doc_intake": 600,
+        "form_intake": 360
+      }
+    },
+    {
+      "fault_type": "number_mismatch",
+      "document": "DOC_0141.pdf",
+      "institution_id": "INST006",
+      "description": "Affidavit claims intake of 630 but application form declared 360.",
+      "details": {
+        "doc_intake": 630,
+        "form_intake": 360
+      }
+    },
+    {
+      "fault_type": "number_mismatch",
+      "document": "DOC_0142.pdf",
+      "institution_id": "INST007",
+      "description": "Affidavit claims intake of 660 but application form declared 360.",
+      "details": {
+        "doc_intake": 660,
+        "form_intake": 360
+      }
+    },
+    {
+      "fault_type": "number_mismatch",
+      "document": "DOC_0143.pdf",
+      "institution_id": "INST008",
+      "description": "Affidavit claims intake of 690 but application form declared 360.",
+      "details": {
+        "doc_intake": 690,
+        "form_intake": 360
+      }
+    },
+    {
+      "fault_type": "number_mismatch",
+      "document": "DOC_0144.pdf",
+      "institution_id": "INST009",
+      "description": "Affidavit claims intake of 720 but application form declared 360.",
+      "details": {
+        "doc_intake": 720,
+        "form_intake": 360
+      }
+    },
+    {
+      "fault_type": "number_mismatch",
+      "document": "DOC_0145.pdf",
+      "institution_id": "INST010",
+      "description": "Affidavit claims intake of 750 but application form declared 360.",
+      "details": {
+        "doc_intake": 750,
+        "form_intake": 360
+      }
+    },
+    {
+      "fault_type": "expired_document",
+      "document": "DOC_0146.pdf",
+      "institution_id": "INST001",
+      "description": "Fire safety certificate expired on 31-12-2023 (prior to submission date 2025-04-10).",
+      "details": {
+        "expiry_date": "31-12-2023"
+      }
+    },
+    {
+      "fault_type": "expired_document",
+      "document": "DOC_0147.pdf",
+      "institution_id": "INST002",
+      "description": "Fire safety certificate expired on 31-12-2023 (prior to submission date 2025-04-10).",
+      "details": {
+        "expiry_date": "31-12-2023"
+      }
+    },
+    {
+      "fault_type": "expired_document",
+      "document": "DOC_0148.pdf",
+      "institution_id": "INST003",
+      "description": "Fire safety certificate expired on 31-12-2023 (prior to submission date 2025-04-10).",
+      "details": {
+        "expiry_date": "31-12-2023"
+      }
+    },
+    {
+      "fault_type": "expired_document",
+      "document": "DOC_0149.pdf",
+      "institution_id": "INST004",
+      "description": "Fire safety certificate expired on 31-12-2023 (prior to submission date 2025-04-10).",
+      "details": {
+        "expiry_date": "31-12-2023"
+      }
+    },
+    {
+      "fault_type": "expired_document",
+      "document": "DOC_0150.pdf",
+      "institution_id": "INST005",
+      "description": "Fire safety certificate expired on 31-12-2023 (prior to submission date 2025-04-10).",
+      "details": {
+        "expiry_date": "31-12-2023"
+      }
+    },
+    {
+      "fault_type": "expired_document",
+      "document": "DOC_0151.pdf",
+      "institution_id": "INST006",
+      "description": "Fire safety certificate expired on 31-12-2024 (prior to submission date 2025-04-10).",
+      "details": {
+        "expiry_date": "31-12-2024"
+      }
+    },
+    {
+      "fault_type": "expired_document",
+      "document": "DOC_0152.pdf",
+      "institution_id": "INST007",
+      "description": "Fire safety certificate expired on 31-12-2024 (prior to submission date 2025-04-10).",
+      "details": {
+        "expiry_date": "31-12-2024"
+      }
+    },
+    {
+      "fault_type": "expired_document",
+      "document": "DOC_0153.pdf",
+      "institution_id": "INST008",
+      "description": "Fire safety certificate expired on 31-12-2024 (prior to submission date 2025-04-10).",
+      "details": {
+        "expiry_date": "31-12-2024"
+      }
+    },
+    {
+      "fault_type": "expired_document",
+      "document": "DOC_0154.pdf",
+      "institution_id": "INST009",
+      "description": "Fire safety certificate expired on 31-12-2024 (prior to submission date 2025-04-10).",
+      "details": {
+        "expiry_date": "31-12-2024"
+      }
+    },
+    {
+      "fault_type": "expired_document",
+      "document": "DOC_0155.pdf",
+      "institution_id": "INST010",
+      "description": "Fire safety certificate expired on 31-12-2024 (prior to submission date 2025-04-10).",
+      "details": {
+        "expiry_date": "31-12-2024"
+      }
+    },
+    {
+      "fault_type": "font_inconsistency",
+      "document": "DOC_0156.pdf",
+      "institution_id": "INST001",
+      "description": "Critical certificate lines (date/intake/survey) spliced with Courier font in Helvetica canvas.",
+      "details": {
+        "tampered_lines": [
+          "Date",
+          "Intake",
+          "Survey"
+        ]
+      }
+    },
+    {
+      "fault_type": "font_inconsistency",
+      "document": "DOC_0157.pdf",
+      "institution_id": "INST002",
+      "description": "Critical certificate lines (date/intake/survey) spliced with Courier font in Helvetica canvas.",
+      "details": {
+        "tampered_lines": [
+          "Date",
+          "Intake",
+          "Survey"
+        ]
+      }
+    },
+    {
+      "fault_type": "font_inconsistency",
+      "document": "DOC_0158.pdf",
+      "institution_id": "INST003",
+      "description": "Critical certificate lines (date/intake/survey) spliced with Courier font in Helvetica canvas.",
+      "details": {
+        "tampered_lines": [
+          "Date",
+          "Intake",
+          "Survey"
+        ]
+      }
+    },
+    {
+      "fault_type": "font_inconsistency",
+      "document": "DOC_0159.pdf",
+      "institution_id": "INST004",
+      "description": "Critical certificate lines (date/intake/survey) spliced with Courier font in Helvetica canvas.",
+      "details": {
+        "tampered_lines": [
+          "Date",
+          "Intake",
+          "Survey"
+        ]
+      }
+    },
+    {
+      "fault_type": "font_inconsistency",
+      "document": "DOC_0160.pdf",
+      "institution_id": "INST005",
+      "description": "Critical certificate lines (date/intake/survey) spliced with Courier font in Helvetica canvas.",
+      "details": {
+        "tampered_lines": [
+          "Date",
+          "Intake",
+          "Survey"
+        ]
+      }
+    },
+    {
+      "fault_type": "font_inconsistency",
+      "document": "DOC_0161.pdf",
+      "institution_id": "INST006",
+      "description": "Critical certificate lines (date/intake/survey) spliced with Courier font in Helvetica canvas.",
+      "details": {
+        "tampered_lines": [
+          "Date",
+          "Intake",
+          "Survey"
+        ]
+      }
+    },
+    {
+      "fault_type": "font_inconsistency",
+      "document": "DOC_0162.pdf",
+      "institution_id": "INST007",
+      "description": "Critical certificate lines (date/intake/survey) spliced with Courier font in Helvetica canvas.",
+      "details": {
+        "tampered_lines": [
+          "Date",
+          "Intake",
+          "Survey"
+        ]
+      }
+    },
+    {
+      "fault_type": "font_inconsistency",
+      "document": "DOC_0163.pdf",
+      "institution_id": "INST008",
+      "description": "Critical certificate lines (date/intake/survey) spliced with Courier font in Helvetica canvas.",
+      "details": {
+        "tampered_lines": [
+          "Date",
+          "Intake",
+          "Survey"
+        ]
+      }
+    },
+    {
+      "fault_type": "font_inconsistency",
+      "document": "DOC_0164.pdf",
+      "institution_id": "INST009",
+      "description": "Critical certificate lines (date/intake/survey) spliced with Courier font in Helvetica canvas.",
+      "details": {
+        "tampered_lines": [
+          "Date",
+          "Intake",
+          "Survey"
+        ]
+      }
+    },
+    {
+      "fault_type": "font_inconsistency",
+      "document": "DOC_0165.pdf",
+      "institution_id": "INST010",
+      "description": "Critical certificate lines (date/intake/survey) spliced with Courier font in Helvetica canvas.",
+      "details": {
+        "tampered_lines": [
+          "Date",
+          "Intake",
+          "Survey"
+        ]
+      }
+    },
+    {
+      "fault_type": "metadata_edited",
+      "document": "DOC_0166.pdf",
+      "institution_id": "INST001",
+      "description": "PDF Producer indicates graphic manipulation tool: Adobe Photoshop CC 2024 (Windows).",
+      "details": {
+        "producer": "Adobe Photoshop CC 2024 (Windows)",
+        "extra_eof": true
+      }
+    },
+    {
+      "fault_type": "metadata_edited",
+      "document": "DOC_0167.pdf",
+      "institution_id": "INST002",
+      "description": "PDF Producer indicates graphic manipulation tool: GIMP 2.10.34 (Linux).",
+      "details": {
+        "producer": "GIMP 2.10.34 (Linux)",
+        "extra_eof": false
+      }
+    },
+    {
+      "fault_type": "metadata_edited",
+      "document": "DOC_0168.pdf",
+      "institution_id": "INST003",
+      "description": "PDF Producer indicates graphic manipulation tool: Adobe Illustrator 28.0.",
+      "details": {
+        "producer": "Adobe Illustrator 28.0",
+        "extra_eof": true
+      }
+    },
+    {
+      "fault_type": "metadata_edited",
+      "document": "DOC_0169.pdf",
+      "institution_id": "INST004",
+      "description": "PDF Producer indicates graphic manipulation tool: CorelDRAW 2023 Graphics Suite.",
+      "details": {
+        "producer": "CorelDRAW 2023 Graphics Suite",
+        "extra_eof": false
+      }
+    },
+    {
+      "fault_type": "metadata_edited",
+      "document": "DOC_0170.pdf",
+      "institution_id": "INST005",
+      "description": "PDF Producer indicates graphic manipulation tool: Inkscape 1.3 vector drawing.",
+      "details": {
+        "producer": "Inkscape 1.3 vector drawing",
+        "extra_eof": true
+      }
+    },
+    {
+      "fault_type": "metadata_edited",
+      "document": "DOC_0171.pdf",
+      "institution_id": "INST006",
+      "description": "PDF Producer indicates graphic manipulation tool: Adobe Photoshop 25.1.",
+      "details": {
+        "producer": "Adobe Photoshop 25.1",
+        "extra_eof": false
+      }
+    },
+    {
+      "fault_type": "metadata_edited",
+      "document": "DOC_0172.pdf",
+      "institution_id": "INST007",
+      "description": "PDF Producer indicates graphic manipulation tool: GIMP 2.10.30.",
+      "details": {
+        "producer": "GIMP 2.10.30",
+        "extra_eof": true
+      }
+    },
+    {
+      "fault_type": "metadata_edited",
+      "document": "DOC_0173.pdf",
+      "institution_id": "INST008",
+      "description": "PDF Producer indicates graphic manipulation tool: Adobe Illustrator CC 2023.",
+      "details": {
+        "producer": "Adobe Illustrator CC 2023",
+        "extra_eof": false
+      }
+    },
+    {
+      "fault_type": "metadata_edited",
+      "document": "DOC_0174.pdf",
+      "institution_id": "INST009",
+      "description": "PDF Producer indicates graphic manipulation tool: Photoshop Elements 2024.",
+      "details": {
+        "producer": "Photoshop Elements 2024",
+        "extra_eof": true
+      }
+    },
+    {
+      "fault_type": "metadata_edited",
+      "document": "DOC_0175.pdf",
+      "institution_id": "INST010",
+      "description": "PDF Producer indicates graphic manipulation tool: Adobe Photoshop Lightroom 13.0.",
+      "details": {
+        "producer": "Adobe Photoshop Lightroom 13.0",
+        "extra_eof": false
+      }
+    },
+    {
+      "fault_type": "qr_payload_mismatch",
+      "document": "DOC_0176.pdf",
+      "institution_id": "INST001",
+      "description": "QR payload encodes 'ACC/TAMPERED_QR/999/2021' but printed certificate text displays 'ACC/PRINT/0/2025'.",
+      "details": {
+        "printed": "ACC/PRINT/0/2025",
+        "qr_payload": "ACC/TAMPERED_QR/999/2021"
+      }
+    },
+    {
+      "fault_type": "qr_payload_mismatch",
+      "document": "DOC_0177.pdf",
+      "institution_id": "INST002",
+      "description": "QR payload encodes 'ACC/TAMPERED_QR/1000/2021' but printed certificate text displays 'ACC/PRINT/1/2025'.",
+      "details": {
+        "printed": "ACC/PRINT/1/2025",
+        "qr_payload": "ACC/TAMPERED_QR/1000/2021"
+      }
+    },
+    {
+      "fault_type": "qr_payload_mismatch",
+      "document": "DOC_0178.pdf",
+      "institution_id": "INST003",
+      "description": "QR payload encodes 'ACC/TAMPERED_QR/1001/2021' but printed certificate text displays 'ACC/PRINT/2/2025'.",
+      "details": {
+        "printed": "ACC/PRINT/2/2025",
+        "qr_payload": "ACC/TAMPERED_QR/1001/2021"
+      }
+    },
+    {
+      "fault_type": "qr_payload_mismatch",
+      "document": "DOC_0179.pdf",
+      "institution_id": "INST004",
+      "description": "QR payload encodes 'ACC/TAMPERED_QR/1002/2021' but printed certificate text displays 'ACC/PRINT/3/2025'.",
+      "details": {
+        "printed": "ACC/PRINT/3/2025",
+        "qr_payload": "ACC/TAMPERED_QR/1002/2021"
+      }
+    },
+    {
+      "fault_type": "qr_payload_mismatch",
+      "document": "DOC_0180.pdf",
+      "institution_id": "INST005",
+      "description": "QR payload encodes 'ACC/TAMPERED_QR/1003/2021' but printed certificate text displays 'ACC/PRINT/4/2025'.",
+      "details": {
+        "printed": "ACC/PRINT/4/2025",
+        "qr_payload": "ACC/TAMPERED_QR/1003/2021"
+      }
+    },
+    {
+      "fault_type": "qr_payload_mismatch",
+      "document": "DOC_0181.pdf",
+      "institution_id": "INST006",
+      "description": "QR payload encodes 'ACC/TAMPERED_QR/1004/2021' but printed certificate text displays 'ACC/PRINT/5/2025'.",
+      "details": {
+        "printed": "ACC/PRINT/5/2025",
+        "qr_payload": "ACC/TAMPERED_QR/1004/2021"
+      }
+    },
+    {
+      "fault_type": "qr_payload_mismatch",
+      "document": "DOC_0182.pdf",
+      "institution_id": "INST007",
+      "description": "QR payload encodes 'ACC/TAMPERED_QR/1005/2021' but printed certificate text displays 'ACC/PRINT/6/2025'.",
+      "details": {
+        "printed": "ACC/PRINT/6/2025",
+        "qr_payload": "ACC/TAMPERED_QR/1005/2021"
+      }
+    },
+    {
+      "fault_type": "qr_payload_mismatch",
+      "document": "DOC_0183.pdf",
+      "institution_id": "INST008",
+      "description": "QR payload encodes 'ACC/TAMPERED_QR/1006/2021' but printed certificate text displays 'ACC/PRINT/7/2025'.",
+      "details": {
+        "printed": "ACC/PRINT/7/2025",
+        "qr_payload": "ACC/TAMPERED_QR/1006/2021"
+      }
+    },
+    {
+      "fault_type": "qr_payload_mismatch",
+      "document": "DOC_0184.pdf",
+      "institution_id": "INST009",
+      "description": "QR payload encodes 'ACC/TAMPERED_QR/1007/2021' but printed certificate text displays 'ACC/PRINT/8/2025'.",
+      "details": {
+        "printed": "ACC/PRINT/8/2025",
+        "qr_payload": "ACC/TAMPERED_QR/1007/2021"
+      }
+    },
+    {
+      "fault_type": "qr_payload_mismatch",
+      "document": "DOC_0185.pdf",
+      "institution_id": "INST010",
+      "description": "QR payload encodes 'ACC/TAMPERED_QR/1008/2021' but printed certificate text displays 'ACC/PRINT/9/2025'.",
+      "details": {
+        "printed": "ACC/PRINT/9/2025",
+        "qr_payload": "ACC/TAMPERED_QR/1008/2021"
+      }
+    },
+    {
+      "fault_type": "duplicate_document_across_institutions",
+      "document": "DOC_0187.pdf",
+      "institution_id": "INST007",
+      "description": "Document DOC_0187.pdf has identical hash to DOC_0186.pdf submitted by unrelated Rajiv Gandhi Institute of Technology.",
+      "details": {
+        "source_doc": "DOC_0186.pdf",
+        "target_doc": "DOC_0187.pdf",
+        "source_inst": "INST001",
+        "target_inst": "INST007"
+      }
+    },
+    {
+      "fault_type": "duplicate_document_across_institutions",
+      "document": "DOC_0189.pdf",
+      "institution_id": "INST008",
+      "description": "Document DOC_0189.pdf has identical hash to DOC_0188.pdf submitted by unrelated Sri Lakshmi Engineering College.",
+      "details": {
+        "source_doc": "DOC_0188.pdf",
+        "target_doc": "DOC_0189.pdf",
+        "source_inst": "INST002",
+        "target_inst": "INST008"
+      }
+    },
+    {
+      "fault_type": "duplicate_document_across_institutions",
+      "document": "DOC_0191.pdf",
+      "institution_id": "INST009",
+      "description": "Document DOC_0191.pdf has identical hash to DOC_0190.pdf submitted by unrelated Bharati Vidyapeeth College of Engineering.",
+      "details": {
+        "source_doc": "DOC_0190.pdf",
+        "target_doc": "DOC_0191.pdf",
+        "source_inst": "INST003",
+        "target_inst": "INST009"
+      }
+    },
+    {
+      "fault_type": "duplicate_document_across_institutions",
+      "document": "DOC_0193.pdf",
+      "institution_id": "INST010",
+      "description": "Document DOC_0193.pdf has identical hash to DOC_0192.pdf submitted by unrelated Netaji Subhas Institute of Technology.",
+      "details": {
+        "source_doc": "DOC_0192.pdf",
+        "target_doc": "DOC_0193.pdf",
+        "source_inst": "INST004",
+        "target_inst": "INST010"
+      }
+    },
+    {
+      "fault_type": "duplicate_document_across_institutions",
+      "document": "DOC_0195.pdf",
+      "institution_id": "INST011",
+      "description": "Document DOC_0195.pdf has identical hash to DOC_0194.pdf submitted by unrelated Kalam Technical University College.",
+      "details": {
+        "source_doc": "DOC_0194.pdf",
+        "target_doc": "DOC_0195.pdf",
+        "source_inst": "INST005",
+        "target_inst": "INST011"
+      }
+    },
+    {
+      "fault_type": "duplicate_document_across_institutions",
+      "document": "DOC_0197.pdf",
+      "institution_id": "INST012",
+      "description": "Document DOC_0197.pdf has identical hash to DOC_0196.pdf submitted by unrelated Savitribai Phule Polytechnic.",
+      "details": {
+        "source_doc": "DOC_0196.pdf",
+        "target_doc": "DOC_0197.pdf",
+        "source_inst": "INST006",
+        "target_inst": "INST012"
+      }
+    },
+    {
+      "fault_type": "duplicate_document_across_institutions",
+      "document": "DOC_0199.pdf",
+      "institution_id": "INST001",
+      "description": "Document DOC_0199.pdf has identical hash to DOC_0198.pdf submitted by unrelated Jadavpur Institute of Technology.",
+      "details": {
+        "source_doc": "DOC_0198.pdf",
+        "target_doc": "DOC_0199.pdf",
+        "source_inst": "INST007",
+        "target_inst": "INST001"
+      }
+    },
+    {
+      "fault_type": "duplicate_document_across_institutions",
+      "document": "DOC_0201.pdf",
+      "institution_id": "INST002",
+      "description": "Document DOC_0201.pdf has identical hash to DOC_0200.pdf submitted by unrelated Malaviya Engineering Institute.",
+      "details": {
+        "source_doc": "DOC_0200.pdf",
+        "target_doc": "DOC_0201.pdf",
+        "source_inst": "INST008",
+        "target_inst": "INST002"
+      }
+    },
+    {
+      "fault_type": "duplicate_document_across_institutions",
+      "document": "DOC_0203.pdf",
+      "institution_id": "INST003",
+      "description": "Document DOC_0203.pdf has identical hash to DOC_0202.pdf submitted by unrelated Visvesvaraya Technical Campus.",
+      "details": {
+        "source_doc": "DOC_0202.pdf",
+        "target_doc": "DOC_0203.pdf",
+        "source_inst": "INST009",
+        "target_inst": "INST003"
+      }
+    },
+    {
+      "fault_type": "duplicate_document_across_institutions",
+      "document": "DOC_0205.pdf",
+      "institution_id": "INST004",
+      "description": "Document DOC_0205.pdf has identical hash to DOC_0204.pdf submitted by unrelated Aryabhata College of Engineering.",
+      "details": {
+        "source_doc": "DOC_0204.pdf",
+        "target_doc": "DOC_0205.pdf",
+        "source_inst": "INST010",
+        "target_inst": "INST004"
+      }
+    },
+    {
+      "fault_type": "duplicate_photo_across_institutions",
+      "document": "DOC_0207.jpg",
+      "institution_id": "INST006",
+      "description": "Infrastructure photo DOC_0207.jpg is a duplicate of DOC_0206.jpg submitted by Rajiv Gandhi Institute of Technology.",
+      "details": {
+        "source_photo": "DOC_0206.jpg",
+        "target_photo": "DOC_0207.jpg",
+        "source_inst": "INST001",
+        "target_inst": "INST006"
+      }
+    },
+    {
+      "fault_type": "duplicate_photo_across_institutions",
+      "document": "DOC_0209.jpg",
+      "institution_id": "INST007",
+      "description": "Infrastructure photo DOC_0209.jpg is a duplicate of DOC_0208.jpg submitted by Sri Lakshmi Engineering College.",
+      "details": {
+        "source_photo": "DOC_0208.jpg",
+        "target_photo": "DOC_0209.jpg",
+        "source_inst": "INST002",
+        "target_inst": "INST007"
+      }
+    },
+    {
+      "fault_type": "duplicate_photo_across_institutions",
+      "document": "DOC_0211.jpg",
+      "institution_id": "INST008",
+      "description": "Infrastructure photo DOC_0211.jpg is a duplicate of DOC_0210.jpg submitted by Bharati Vidyapeeth College of Engineering.",
+      "details": {
+        "source_photo": "DOC_0210.jpg",
+        "target_photo": "DOC_0211.jpg",
+        "source_inst": "INST003",
+        "target_inst": "INST008"
+      }
+    },
+    {
+      "fault_type": "duplicate_photo_across_institutions",
+      "document": "DOC_0213.jpg",
+      "institution_id": "INST009",
+      "description": "Infrastructure photo DOC_0213.jpg is a duplicate of DOC_0212.jpg submitted by Netaji Subhas Institute of Technology.",
+      "details": {
+        "source_photo": "DOC_0212.jpg",
+        "target_photo": "DOC_0213.jpg",
+        "source_inst": "INST004",
+        "target_inst": "INST009"
+      }
+    },
+    {
+      "fault_type": "duplicate_photo_across_institutions",
+      "document": "DOC_0215.jpg",
+      "institution_id": "INST010",
+      "description": "Infrastructure photo DOC_0215.jpg is a duplicate of DOC_0214.jpg submitted by Kalam Technical University College.",
+      "details": {
+        "source_photo": "DOC_0214.jpg",
+        "target_photo": "DOC_0215.jpg",
+        "source_inst": "INST005",
+        "target_inst": "INST010"
+      }
+    },
+    {
+      "fault_type": "duplicate_photo_across_institutions",
+      "document": "DOC_0217.jpg",
+      "institution_id": "INST011",
+      "description": "Infrastructure photo DOC_0217.jpg is a duplicate of DOC_0216.jpg submitted by Savitribai Phule Polytechnic.",
+      "details": {
+        "source_photo": "DOC_0216.jpg",
+        "target_photo": "DOC_0217.jpg",
+        "source_inst": "INST006",
+        "target_inst": "INST011"
+      }
+    },
+    {
+      "fault_type": "duplicate_photo_across_institutions",
+      "document": "DOC_0219.jpg",
+      "institution_id": "INST012",
+      "description": "Infrastructure photo DOC_0219.jpg is a duplicate of DOC_0218.jpg submitted by Jadavpur Institute of Technology.",
+      "details": {
+        "source_photo": "DOC_0218.jpg",
+        "target_photo": "DOC_0219.jpg",
+        "source_inst": "INST007",
+        "target_inst": "INST012"
+      }
+    },
+    {
+      "fault_type": "duplicate_photo_across_institutions",
+      "document": "DOC_0221.jpg",
+      "institution_id": "INST001",
+      "description": "Infrastructure photo DOC_0221.jpg is a duplicate of DOC_0220.jpg submitted by Malaviya Engineering Institute.",
+      "details": {
+        "source_photo": "DOC_0220.jpg",
+        "target_photo": "DOC_0221.jpg",
+        "source_inst": "INST008",
+        "target_inst": "INST001"
+      }
+    },
+    {
+      "fault_type": "duplicate_photo_across_institutions",
+      "document": "DOC_0223.jpg",
+      "institution_id": "INST002",
+      "description": "Infrastructure photo DOC_0223.jpg is a duplicate of DOC_0222.jpg submitted by Visvesvaraya Technical Campus.",
+      "details": {
+        "source_photo": "DOC_0222.jpg",
+        "target_photo": "DOC_0223.jpg",
+        "source_inst": "INST009",
+        "target_inst": "INST002"
+      }
+    },
+    {
+      "fault_type": "duplicate_photo_across_institutions",
+      "document": "DOC_0225.jpg",
+      "institution_id": "INST003",
+      "description": "Infrastructure photo DOC_0225.jpg is a duplicate of DOC_0224.jpg submitted by Aryabhata College of Engineering.",
+      "details": {
+        "source_photo": "DOC_0224.jpg",
+        "target_photo": "DOC_0225.jpg",
+        "source_inst": "INST010",
+        "target_inst": "INST003"
       }
     },
     {
       "fault_type": "photo_wrong_gps",
-      "document": "INST001_APP003_photo_1.jpg",
-      "description": "Photo GPS coordinates are ~500km from claimed campus location",
+      "document": "DOC_0226.jpg",
+      "institution_id": "INST001",
+      "description": "Photo GPS tags are > 500km away from campus location (18.5204, 73.8567).",
       "details": {
         "expected_lat": 18.5204,
         "expected_lng": 73.8567
       }
     },
     {
-      "fault_type": "name_mismatch",
-      "document": "INST002_APP006_affidavit.pdf",
-      "description": "Institution name in affidavit differs from application form",
+      "fault_type": "photo_wrong_gps",
+      "document": "DOC_0227.jpg",
+      "institution_id": "INST002",
+      "description": "Photo GPS tags are > 500km away from campus location (13.0827, 80.2707).",
       "details": {
-        "affidavit_name": "Sri Lakshmi Engineering College (Misspelled)"
+        "expected_lat": 13.0827,
+        "expected_lng": 80.2707
+      }
+    },
+    {
+      "fault_type": "photo_wrong_gps",
+      "document": "DOC_0228.jpg",
+      "institution_id": "INST003",
+      "description": "Photo GPS tags are > 500km away from campus location (12.9716, 77.5946).",
+      "details": {
+        "expected_lat": 12.9716,
+        "expected_lng": 77.5946
+      }
+    },
+    {
+      "fault_type": "photo_wrong_gps",
+      "document": "DOC_0229.jpg",
+      "institution_id": "INST004",
+      "description": "Photo GPS tags are > 500km away from campus location (26.8467, 80.9462).",
+      "details": {
+        "expected_lat": 26.8467,
+        "expected_lng": 80.9462
+      }
+    },
+    {
+      "fault_type": "photo_wrong_gps",
+      "document": "DOC_0230.jpg",
+      "institution_id": "INST005",
+      "description": "Photo GPS tags are > 500km away from campus location (11.0168, 76.9558).",
+      "details": {
+        "expected_lat": 11.0168,
+        "expected_lng": 76.9558
+      }
+    },
+    {
+      "fault_type": "photo_wrong_gps",
+      "document": "DOC_0231.jpg",
+      "institution_id": "INST006",
+      "description": "Photo GPS tags are > 500km away from campus location (21.1458, 79.0882).",
+      "details": {
+        "expected_lat": 21.1458,
+        "expected_lng": 79.0882
+      }
+    },
+    {
+      "fault_type": "photo_wrong_gps",
+      "document": "DOC_0232.jpg",
+      "institution_id": "INST007",
+      "description": "Photo GPS tags are > 500km away from campus location (22.5726, 88.3639).",
+      "details": {
+        "expected_lat": 22.5726,
+        "expected_lng": 88.3639
+      }
+    },
+    {
+      "fault_type": "photo_wrong_gps",
+      "document": "DOC_0233.jpg",
+      "institution_id": "INST008",
+      "description": "Photo GPS tags are > 500km away from campus location (26.9124, 75.7873).",
+      "details": {
+        "expected_lat": 26.9124,
+        "expected_lng": 75.7873
+      }
+    },
+    {
+      "fault_type": "photo_wrong_gps",
+      "document": "DOC_0234.jpg",
+      "institution_id": "INST009",
+      "description": "Photo GPS tags are > 500km away from campus location (17.385, 78.4867).",
+      "details": {
+        "expected_lat": 17.385,
+        "expected_lng": 78.4867
+      }
+    },
+    {
+      "fault_type": "photo_wrong_gps",
+      "document": "DOC_0235.jpg",
+      "institution_id": "INST010",
+      "description": "Photo GPS tags are > 500km away from campus location (25.5941, 85.1376).",
+      "details": {
+        "expected_lat": 25.5941,
+        "expected_lng": 85.1376
       }
     },
     {
       "fault_type": "photo_not_recent",
-      "document": "INST002_APP006_photo_1.jpg",
-      "description": "Photo taken more than 180 days ago",
+      "document": "DOC_0236.jpg",
+      "institution_id": "INST001",
+      "description": "Photo EXIF timestamp is older than 180 days prior to application deadline.",
       "details": {
-        "photo_date": "2023-01-15"
+        "photo_date": "2023-01-10"
       }
     },
     {
-      "fault_type": "expired_document",
-      "document": "INST003_APP008_fire_safety.pdf",
-      "description": "Fire safety certificate expired on 31-12-2024",
+      "fault_type": "photo_not_recent",
+      "document": "DOC_0237.jpg",
+      "institution_id": "INST002",
+      "description": "Photo EXIF timestamp is older than 180 days prior to application deadline.",
       "details": {
-        "expiry_date": "31-12-2024"
+        "photo_date": "2023-01-10"
       }
     },
     {
-      "fault_type": "duplicate_document_across_institutions",
-      "document": "INST003_APP009_duplicate_cert.pdf",
-      "description": "This document is identical to one submitted by a different institution",
+      "fault_type": "photo_not_recent",
+      "document": "DOC_0238.jpg",
+      "institution_id": "INST003",
+      "description": "Photo EXIF timestamp is older than 180 days prior to application deadline.",
       "details": {
-        "source_institution": "INST001",
-        "source_document": "INST001_APP001_fire_safety.pdf"
+        "photo_date": "2023-01-10"
       }
     },
     {
-      "fault_type": "qr_payload_mismatch",
-      "document": "INST004_APP012_accreditation.pdf",
-      "description": "QR code reference number doesn't match printed certificate number",
+      "fault_type": "photo_not_recent",
+      "document": "DOC_0239.jpg",
+      "institution_id": "INST004",
+      "description": "Photo EXIF timestamp is older than 180 days prior to application deadline.",
       "details": {
-        "printed_ref": "ACC/2026/67529",
-        "qr_ref": "ACC/2026/78940"
+        "photo_date": "2023-01-10"
       }
     },
     {
-      "fault_type": "duplicate_photo_across_institutions",
-      "document": "INST004_APP012_photo_dup.jpg",
-      "description": "This infrastructure photo is identical to one submitted by a different institution",
+      "fault_type": "photo_not_recent",
+      "document": "DOC_0240.jpg",
+      "institution_id": "INST005",
+      "description": "Photo EXIF timestamp is older than 180 days prior to application deadline.",
       "details": {
-        "source_institution": "INST001"
+        "photo_date": "2023-01-10"
       }
     },
     {
-      "fault_type": "yoy_intake_jump",
-      "document": "APP012",
-      "description": "Intake increased by 200%+ YoY with no corresponding infrastructure increase",
+      "fault_type": "photo_not_recent",
+      "document": "DOC_0241.jpg",
+      "institution_id": "INST006",
+      "description": "Photo EXIF timestamp is older than 180 days prior to application deadline.",
       "details": {
-        "previous_intake": 60,
-        "current_intake": 180,
-        "jump_pct": 200
+        "photo_date": "2023-01-10"
       }
     },
     {
-      "fault_type": "metadata_edited",
-      "document": "INST005_APP014_edited_metadata.pdf",
-      "description": "PDF producer/creator indicates editing tool, multiple EOF markers found",
+      "fault_type": "photo_not_recent",
+      "document": "DOC_0242.jpg",
+      "institution_id": "INST007",
+      "description": "Photo EXIF timestamp is older than 180 days prior to application deadline.",
       "details": {
-        "producer": "Adobe Acrobat Pro DC (edited)"
+        "photo_date": "2023-01-10"
       }
     },
     {
-      "fault_type": "font_inconsistency",
-      "document": "INST005_APP015_fire_safety.pdf",
-      "description": "Date field uses different font (Courier) from rest of document (Helvetica)",
+      "fault_type": "photo_not_recent",
+      "document": "DOC_0243.jpg",
+      "institution_id": "INST008",
+      "description": "Photo EXIF timestamp is older than 180 days prior to application deadline.",
       "details": {
-        "tampered_field": "date",
-        "expected_font": "Helvetica",
-        "found_font": "Courier"
+        "photo_date": "2023-01-10"
+      }
+    },
+    {
+      "fault_type": "photo_not_recent",
+      "document": "DOC_0244.jpg",
+      "institution_id": "INST009",
+      "description": "Photo EXIF timestamp is older than 180 days prior to application deadline.",
+      "details": {
+        "photo_date": "2023-01-10"
+      }
+    },
+    {
+      "fault_type": "photo_not_recent",
+      "document": "DOC_0245.jpg",
+      "institution_id": "INST010",
+      "description": "Photo EXIF timestamp is older than 180 days prior to application deadline.",
+      "details": {
+        "photo_date": "2023-01-10"
       }
     },
     {
       "fault_type": "photo_quality_issue",
-      "document": "INST006_APP018_photo_1.jpg",
-      "description": "Photo is blurry (below quality threshold)",
+      "document": "DOC_0246.jpg",
+      "institution_id": "INST001",
+      "description": "Infrastructure photo is heavily blurred (Laplacian variance below quality cutoff).",
       "details": {
-        "issue": "blur"
+        "issue": "severe_blur"
+      }
+    },
+    {
+      "fault_type": "photo_quality_issue",
+      "document": "DOC_0247.jpg",
+      "institution_id": "INST002",
+      "description": "Infrastructure photo is heavily blurred (Laplacian variance below quality cutoff).",
+      "details": {
+        "issue": "severe_blur"
+      }
+    },
+    {
+      "fault_type": "photo_quality_issue",
+      "document": "DOC_0248.jpg",
+      "institution_id": "INST003",
+      "description": "Infrastructure photo is heavily blurred (Laplacian variance below quality cutoff).",
+      "details": {
+        "issue": "severe_blur"
+      }
+    },
+    {
+      "fault_type": "photo_quality_issue",
+      "document": "DOC_0249.jpg",
+      "institution_id": "INST004",
+      "description": "Infrastructure photo is heavily blurred (Laplacian variance below quality cutoff).",
+      "details": {
+        "issue": "severe_blur"
+      }
+    },
+    {
+      "fault_type": "photo_quality_issue",
+      "document": "DOC_0250.jpg",
+      "institution_id": "INST005",
+      "description": "Infrastructure photo is heavily blurred (Laplacian variance below quality cutoff).",
+      "details": {
+        "issue": "severe_blur"
+      }
+    },
+    {
+      "fault_type": "photo_quality_issue",
+      "document": "DOC_0251.jpg",
+      "institution_id": "INST006",
+      "description": "Infrastructure photo is heavily blurred (Laplacian variance below quality cutoff).",
+      "details": {
+        "issue": "severe_blur"
+      }
+    },
+    {
+      "fault_type": "photo_quality_issue",
+      "document": "DOC_0252.jpg",
+      "institution_id": "INST007",
+      "description": "Infrastructure photo is heavily blurred (Laplacian variance below quality cutoff).",
+      "details": {
+        "issue": "severe_blur"
+      }
+    },
+    {
+      "fault_type": "photo_quality_issue",
+      "document": "DOC_0253.jpg",
+      "institution_id": "INST008",
+      "description": "Infrastructure photo is heavily blurred (Laplacian variance below quality cutoff).",
+      "details": {
+        "issue": "severe_blur"
+      }
+    },
+    {
+      "fault_type": "photo_quality_issue",
+      "document": "DOC_0254.jpg",
+      "institution_id": "INST009",
+      "description": "Infrastructure photo is heavily blurred (Laplacian variance below quality cutoff).",
+      "details": {
+        "issue": "severe_blur"
+      }
+    },
+    {
+      "fault_type": "photo_quality_issue",
+      "document": "DOC_0255.jpg",
+      "institution_id": "INST010",
+      "description": "Infrastructure photo is heavily blurred (Laplacian variance below quality cutoff).",
+      "details": {
+        "issue": "severe_blur"
       }
     },
     {
       "fault_type": "ghost_faculty",
-      "document": "FAC011",
-      "description": "Faculty FAC011 (Dr. Vikram Singh) listed as full-time at INST001 (Pune) and INST002 (Chennai) simultaneously",
+      "document": "DOC_0257.pdf",
+      "institution_id": "INST004",
+      "description": "Faculty FAC_GHOST_01 claimed simultaneously as full-time professor at Rajiv Gandhi Institute of Technology (Pune) and Netaji Subhas Institute of Technology (Lucknow).",
       "details": {
-        "faculty_id": "FAC011",
+        "faculty_id": "FAC_GHOST_01",
         "institutions": [
           "INST001",
-          "INST002"
-        ],
-        "cities": [
-          "Pune",
-          "Chennai"
-        ]
-      }
-    },
-    {
-      "fault_type": "ghost_faculty",
-      "document": "FAC012",
-      "description": "Faculty FAC012 (Dr. Meena Kumari) listed as full-time at INST003 (Bangalore) and INST004 (Lucknow) simultaneously",
-      "details": {
-        "faculty_id": "FAC012",
-        "institutions": [
-          "INST003",
           "INST004"
         ],
         "cities": [
-          "Bangalore",
+          "Pune",
           "Lucknow"
         ]
       }
     },
     {
-      "fault_type": "shared_land_survey",
-      "document": "MH/PUNE/SUR/2005/001",
-      "description": "Same land survey number used by INST001 (Pune) and INST006 (Nagpur)",
+      "fault_type": "ghost_faculty",
+      "document": "DOC_0259.pdf",
+      "institution_id": "INST005",
+      "description": "Faculty FAC_GHOST_02 claimed simultaneously as full-time professor at Sri Lakshmi Engineering College (Chennai) and Kalam Technical University College (Coimbatore).",
       "details": {
-        "survey_number": "MH/PUNE/SUR/2005/001",
+        "faculty_id": "FAC_GHOST_02",
         "institutions": [
-          "INST001",
-          "INST006"
+          "INST002",
+          "INST005"
+        ],
+        "cities": [
+          "Chennai",
+          "Coimbatore"
         ]
       }
     },
     {
-      "fault_type": "shared_trust",
-      "document": "MH/TRUST/2005/1234",
-      "description": "Same trust (Rajiv Education Trust) behind INST001 and INST006",
+      "fault_type": "ghost_faculty",
+      "document": "DOC_0261.pdf",
+      "institution_id": "INST006",
+      "description": "Faculty FAC_GHOST_03 claimed simultaneously as full-time professor at Bharati Vidyapeeth College of Engineering (Bangalore) and Savitribai Phule Polytechnic (Nagpur).",
       "details": {
-        "trust_reg_no": "MH/TRUST/2005/1234",
+        "faculty_id": "FAC_GHOST_03",
         "institutions": [
-          "INST001",
+          "INST003",
           "INST006"
+        ],
+        "cities": [
+          "Bangalore",
+          "Nagpur"
         ]
+      }
+    },
+    {
+      "fault_type": "ghost_faculty",
+      "document": "DOC_0263.pdf",
+      "institution_id": "INST007",
+      "description": "Faculty FAC_GHOST_04 claimed simultaneously as full-time professor at Netaji Subhas Institute of Technology (Lucknow) and Jadavpur Institute of Technology (Kolkata).",
+      "details": {
+        "faculty_id": "FAC_GHOST_04",
+        "institutions": [
+          "INST004",
+          "INST007"
+        ],
+        "cities": [
+          "Lucknow",
+          "Kolkata"
+        ]
+      }
+    },
+    {
+      "fault_type": "ghost_faculty",
+      "document": "DOC_0265.pdf",
+      "institution_id": "INST008",
+      "description": "Faculty FAC_GHOST_05 claimed simultaneously as full-time professor at Kalam Technical University College (Coimbatore) and Malaviya Engineering Institute (Jaipur).",
+      "details": {
+        "faculty_id": "FAC_GHOST_05",
+        "institutions": [
+          "INST005",
+          "INST008"
+        ],
+        "cities": [
+          "Coimbatore",
+          "Jaipur"
+        ]
+      }
+    },
+    {
+      "fault_type": "ghost_faculty",
+      "document": "DOC_0267.pdf",
+      "institution_id": "INST009",
+      "description": "Faculty FAC_GHOST_06 claimed simultaneously as full-time professor at Savitribai Phule Polytechnic (Nagpur) and Visvesvaraya Technical Campus (Hyderabad).",
+      "details": {
+        "faculty_id": "FAC_GHOST_06",
+        "institutions": [
+          "INST006",
+          "INST009"
+        ],
+        "cities": [
+          "Nagpur",
+          "Hyderabad"
+        ]
+      }
+    },
+    {
+      "fault_type": "ghost_faculty",
+      "document": "DOC_0269.pdf",
+      "institution_id": "INST010",
+      "description": "Faculty FAC_GHOST_07 claimed simultaneously as full-time professor at Jadavpur Institute of Technology (Kolkata) and Aryabhata College of Engineering (Patna).",
+      "details": {
+        "faculty_id": "FAC_GHOST_07",
+        "institutions": [
+          "INST007",
+          "INST010"
+        ],
+        "cities": [
+          "Kolkata",
+          "Patna"
+        ]
+      }
+    },
+    {
+      "fault_type": "ghost_faculty",
+      "document": "DOC_0271.pdf",
+      "institution_id": "INST011",
+      "description": "Faculty FAC_GHOST_08 claimed simultaneously as full-time professor at Malaviya Engineering Institute (Jaipur) and Sardar Patel Institute of Technology (Ahmedabad).",
+      "details": {
+        "faculty_id": "FAC_GHOST_08",
+        "institutions": [
+          "INST008",
+          "INST011"
+        ],
+        "cities": [
+          "Jaipur",
+          "Ahmedabad"
+        ]
+      }
+    },
+    {
+      "fault_type": "ghost_faculty",
+      "document": "DOC_0273.pdf",
+      "institution_id": "INST012",
+      "description": "Faculty FAC_GHOST_09 claimed simultaneously as full-time professor at Visvesvaraya Technical Campus (Hyderabad) and Chanakya Technical Institute (Bhopal).",
+      "details": {
+        "faculty_id": "FAC_GHOST_09",
+        "institutions": [
+          "INST009",
+          "INST012"
+        ],
+        "cities": [
+          "Hyderabad",
+          "Bhopal"
+        ]
+      }
+    },
+    {
+      "fault_type": "ghost_faculty",
+      "document": "DOC_0275.pdf",
+      "institution_id": "INST001",
+      "description": "Faculty FAC_GHOST_10 claimed simultaneously as full-time professor at Aryabhata College of Engineering (Patna) and Rajiv Gandhi Institute of Technology (Pune).",
+      "details": {
+        "faculty_id": "FAC_GHOST_10",
+        "institutions": [
+          "INST010",
+          "INST001"
+        ],
+        "cities": [
+          "Patna",
+          "Pune"
+        ]
+      }
+    },
+    {
+      "fault_type": "shared_land_survey",
+      "document": "DOC_0277.pdf",
+      "institution_id": "INST005",
+      "description": "Land survey parcel SUR/PARCEL/SHARED/100 claimed across unrelated trusts 'Rajiv Education Trust' and 'Lakshmi Educational Foundation'.",
+      "details": {
+        "survey_number": "SUR/PARCEL/SHARED/100",
+        "trusts": [
+          "Rajiv Education Trust",
+          "Lakshmi Educational Foundation"
+        ]
+      }
+    },
+    {
+      "fault_type": "shared_land_survey",
+      "document": "DOC_0279.pdf",
+      "institution_id": "INST006",
+      "description": "Land survey parcel SUR/PARCEL/SHARED/101 claimed across unrelated trusts 'Lakshmi Educational Foundation' and 'Rajiv Education Trust'.",
+      "details": {
+        "survey_number": "SUR/PARCEL/SHARED/101",
+        "trusts": [
+          "Lakshmi Educational Foundation",
+          "Rajiv Education Trust"
+        ]
+      }
+    },
+    {
+      "fault_type": "shared_land_survey",
+      "document": "DOC_0281.pdf",
+      "institution_id": "INST007",
+      "description": "Land survey parcel SUR/PARCEL/SHARED/102 claimed across unrelated trusts 'Bharati Education Society' and 'Tagore Educational Trust'.",
+      "details": {
+        "survey_number": "SUR/PARCEL/SHARED/102",
+        "trusts": [
+          "Bharati Education Society",
+          "Tagore Educational Trust"
+        ]
+      }
+    },
+    {
+      "fault_type": "shared_land_survey",
+      "document": "DOC_0283.pdf",
+      "institution_id": "INST008",
+      "description": "Land survey parcel SUR/PARCEL/SHARED/103 claimed across unrelated trusts 'Subhas Memorial Trust' and 'Malaviya Foundation'.",
+      "details": {
+        "survey_number": "SUR/PARCEL/SHARED/103",
+        "trusts": [
+          "Subhas Memorial Trust",
+          "Malaviya Foundation"
+        ]
+      }
+    },
+    {
+      "fault_type": "shared_land_survey",
+      "document": "DOC_0285.pdf",
+      "institution_id": "INST009",
+      "description": "Land survey parcel SUR/PARCEL/SHARED/104 claimed across unrelated trusts 'Lakshmi Educational Foundation' and 'Deccan Shiksha Samiti'.",
+      "details": {
+        "survey_number": "SUR/PARCEL/SHARED/104",
+        "trusts": [
+          "Lakshmi Educational Foundation",
+          "Deccan Shiksha Samiti"
+        ]
+      }
+    },
+    {
+      "fault_type": "shared_land_survey",
+      "document": "DOC_0287.pdf",
+      "institution_id": "INST010",
+      "description": "Land survey parcel SUR/PARCEL/SHARED/105 claimed across unrelated trusts 'Rajiv Education Trust' and 'Aryabhata Research Society'.",
+      "details": {
+        "survey_number": "SUR/PARCEL/SHARED/105",
+        "trusts": [
+          "Rajiv Education Trust",
+          "Aryabhata Research Society"
+        ]
+      }
+    },
+    {
+      "fault_type": "shared_land_survey",
+      "document": "DOC_0289.pdf",
+      "institution_id": "INST011",
+      "description": "Land survey parcel SUR/PARCEL/SHARED/106 claimed across unrelated trusts 'Tagore Educational Trust' and 'Sardar Patel Vidyapeeth'.",
+      "details": {
+        "survey_number": "SUR/PARCEL/SHARED/106",
+        "trusts": [
+          "Tagore Educational Trust",
+          "Sardar Patel Vidyapeeth"
+        ]
+      }
+    },
+    {
+      "fault_type": "shared_land_survey",
+      "document": "DOC_0291.pdf",
+      "institution_id": "INST012",
+      "description": "Land survey parcel SUR/PARCEL/SHARED/107 claimed across unrelated trusts 'Malaviya Foundation' and 'Central Bharat Trust'.",
+      "details": {
+        "survey_number": "SUR/PARCEL/SHARED/107",
+        "trusts": [
+          "Malaviya Foundation",
+          "Central Bharat Trust"
+        ]
+      }
+    },
+    {
+      "fault_type": "shared_land_survey",
+      "document": "DOC_0293.pdf",
+      "institution_id": "INST001",
+      "description": "Land survey parcel SUR/PARCEL/SHARED/108 claimed across unrelated trusts 'Deccan Shiksha Samiti' and 'Rajiv Education Trust'.",
+      "details": {
+        "survey_number": "SUR/PARCEL/SHARED/108",
+        "trusts": [
+          "Deccan Shiksha Samiti",
+          "Rajiv Education Trust"
+        ]
+      }
+    },
+    {
+      "fault_type": "shared_land_survey",
+      "document": "DOC_0295.pdf",
+      "institution_id": "INST002",
+      "description": "Land survey parcel SUR/PARCEL/SHARED/109 claimed across unrelated trusts 'Aryabhata Research Society' and 'Lakshmi Educational Foundation'.",
+      "details": {
+        "survey_number": "SUR/PARCEL/SHARED/109",
+        "trusts": [
+          "Aryabhata Research Society",
+          "Lakshmi Educational Foundation"
+        ]
+      }
+    },
+    {
+      "fault_type": "yoy_intake_jump",
+      "document": "APP_JUMP_001_INST001",
+      "institution_id": "INST001",
+      "description": "YoY intake jumped by 180% (from 180 to 500) without corresponding infrastructure expansion.",
+      "details": {
+        "previous_intake": 180,
+        "current_intake": 500,
+        "jump_pct": 177.7
+      }
+    },
+    {
+      "fault_type": "yoy_intake_jump",
+      "document": "APP_JUMP_002_INST002",
+      "institution_id": "INST002",
+      "description": "YoY intake jumped by 180% (from 180 to 500) without corresponding infrastructure expansion.",
+      "details": {
+        "previous_intake": 180,
+        "current_intake": 500,
+        "jump_pct": 177.7
+      }
+    },
+    {
+      "fault_type": "yoy_intake_jump",
+      "document": "APP_JUMP_003_INST003",
+      "institution_id": "INST003",
+      "description": "YoY intake jumped by 180% (from 180 to 500) without corresponding infrastructure expansion.",
+      "details": {
+        "previous_intake": 180,
+        "current_intake": 500,
+        "jump_pct": 177.7
+      }
+    },
+    {
+      "fault_type": "yoy_intake_jump",
+      "document": "APP_JUMP_004_INST004",
+      "institution_id": "INST004",
+      "description": "YoY intake jumped by 180% (from 180 to 500) without corresponding infrastructure expansion.",
+      "details": {
+        "previous_intake": 180,
+        "current_intake": 500,
+        "jump_pct": 177.7
+      }
+    },
+    {
+      "fault_type": "yoy_intake_jump",
+      "document": "APP_JUMP_005_INST005",
+      "institution_id": "INST005",
+      "description": "YoY intake jumped by 180% (from 180 to 500) without corresponding infrastructure expansion.",
+      "details": {
+        "previous_intake": 180,
+        "current_intake": 500,
+        "jump_pct": 177.7
+      }
+    },
+    {
+      "fault_type": "yoy_intake_jump",
+      "document": "APP_JUMP_006_INST006",
+      "institution_id": "INST006",
+      "description": "YoY intake jumped by 180% (from 180 to 500) without corresponding infrastructure expansion.",
+      "details": {
+        "previous_intake": 180,
+        "current_intake": 500,
+        "jump_pct": 177.7
+      }
+    },
+    {
+      "fault_type": "yoy_intake_jump",
+      "document": "APP_JUMP_007_INST007",
+      "institution_id": "INST007",
+      "description": "YoY intake jumped by 180% (from 180 to 500) without corresponding infrastructure expansion.",
+      "details": {
+        "previous_intake": 180,
+        "current_intake": 500,
+        "jump_pct": 177.7
+      }
+    },
+    {
+      "fault_type": "yoy_intake_jump",
+      "document": "APP_JUMP_008_INST008",
+      "institution_id": "INST008",
+      "description": "YoY intake jumped by 180% (from 180 to 500) without corresponding infrastructure expansion.",
+      "details": {
+        "previous_intake": 180,
+        "current_intake": 500,
+        "jump_pct": 177.7
+      }
+    },
+    {
+      "fault_type": "yoy_intake_jump",
+      "document": "APP_JUMP_009_INST009",
+      "institution_id": "INST009",
+      "description": "YoY intake jumped by 180% (from 180 to 500) without corresponding infrastructure expansion.",
+      "details": {
+        "previous_intake": 180,
+        "current_intake": 500,
+        "jump_pct": 177.7
+      }
+    },
+    {
+      "fault_type": "yoy_intake_jump",
+      "document": "APP_JUMP_010_INST010",
+      "institution_id": "INST010",
+      "description": "YoY intake jumped by 180% (from 180 to 500) without corresponding infrastructure expansion.",
+      "details": {
+        "previous_intake": 180,
+        "current_intake": 500,
+        "jump_pct": 177.7
       }
     },
     {
       "fault_type": "intake_exceeds_capacity",
-      "document": "INST004",
-      "description": "Applied intake (720) exceeds computed maximum capacity (360) based on infrastructure",
+      "document": "APP_CAP_001_INST001",
+      "institution_id": "INST001",
+      "description": "Requested intake of 720 exceeds maximum physical built-up capacity (360) computed per APH norms.",
       "details": {
         "applied_intake": 720,
         "max_capacity": 360
+      }
+    },
+    {
+      "fault_type": "intake_exceeds_capacity",
+      "document": "APP_CAP_002_INST002",
+      "institution_id": "INST002",
+      "description": "Requested intake of 720 exceeds maximum physical built-up capacity (360) computed per APH norms.",
+      "details": {
+        "applied_intake": 720,
+        "max_capacity": 360
+      }
+    },
+    {
+      "fault_type": "intake_exceeds_capacity",
+      "document": "APP_CAP_003_INST003",
+      "institution_id": "INST003",
+      "description": "Requested intake of 720 exceeds maximum physical built-up capacity (360) computed per APH norms.",
+      "details": {
+        "applied_intake": 720,
+        "max_capacity": 360
+      }
+    },
+    {
+      "fault_type": "intake_exceeds_capacity",
+      "document": "APP_CAP_004_INST004",
+      "institution_id": "INST004",
+      "description": "Requested intake of 720 exceeds maximum physical built-up capacity (360) computed per APH norms.",
+      "details": {
+        "applied_intake": 720,
+        "max_capacity": 360
+      }
+    },
+    {
+      "fault_type": "intake_exceeds_capacity",
+      "document": "APP_CAP_005_INST005",
+      "institution_id": "INST005",
+      "description": "Requested intake of 720 exceeds maximum physical built-up capacity (360) computed per APH norms.",
+      "details": {
+        "applied_intake": 720,
+        "max_capacity": 360
+      }
+    },
+    {
+      "fault_type": "intake_exceeds_capacity",
+      "document": "APP_CAP_006_INST006",
+      "institution_id": "INST006",
+      "description": "Requested intake of 720 exceeds maximum physical built-up capacity (360) computed per APH norms.",
+      "details": {
+        "applied_intake": 720,
+        "max_capacity": 360
+      }
+    },
+    {
+      "fault_type": "intake_exceeds_capacity",
+      "document": "APP_CAP_007_INST007",
+      "institution_id": "INST007",
+      "description": "Requested intake of 720 exceeds maximum physical built-up capacity (360) computed per APH norms.",
+      "details": {
+        "applied_intake": 720,
+        "max_capacity": 360
+      }
+    },
+    {
+      "fault_type": "intake_exceeds_capacity",
+      "document": "APP_CAP_008_INST008",
+      "institution_id": "INST008",
+      "description": "Requested intake of 720 exceeds maximum physical built-up capacity (360) computed per APH norms.",
+      "details": {
+        "applied_intake": 720,
+        "max_capacity": 360
+      }
+    },
+    {
+      "fault_type": "intake_exceeds_capacity",
+      "document": "APP_CAP_009_INST009",
+      "institution_id": "INST009",
+      "description": "Requested intake of 720 exceeds maximum physical built-up capacity (360) computed per APH norms.",
+      "details": {
+        "applied_intake": 720,
+        "max_capacity": 360
+      }
+    },
+    {
+      "fault_type": "intake_exceeds_capacity",
+      "document": "APP_CAP_010_INST010",
+      "institution_id": "INST010",
+      "description": "Requested intake of 720 exceeds maximum physical built-up capacity (360) computed per APH norms.",
+      "details": {
+        "applied_intake": 720,
+        "max_capacity": 360
+      }
+    },
+    {
+      "fault_type": "missing_document",
+      "document": "APP_MISSING_001_INST001",
+      "institution_id": "INST001",
+      "description": "Mandatory statutory document 'university_affiliation_letter' is missing from submission packet.",
+      "details": {
+        "missing_type": "university_affiliation_letter"
+      }
+    },
+    {
+      "fault_type": "missing_document",
+      "document": "APP_MISSING_002_INST002",
+      "institution_id": "INST002",
+      "description": "Mandatory statutory document 'fire_safety_certificate' is missing from submission packet.",
+      "details": {
+        "missing_type": "fire_safety_certificate"
+      }
+    },
+    {
+      "fault_type": "missing_document",
+      "document": "APP_MISSING_003_INST003",
+      "institution_id": "INST003",
+      "description": "Mandatory statutory document 'noc' is missing from submission packet.",
+      "details": {
+        "missing_type": "noc"
+      }
+    },
+    {
+      "fault_type": "missing_document",
+      "document": "APP_MISSING_004_INST004",
+      "institution_id": "INST004",
+      "description": "Mandatory statutory document 'land_document' is missing from submission packet.",
+      "details": {
+        "missing_type": "land_document"
+      }
+    },
+    {
+      "fault_type": "missing_document",
+      "document": "APP_MISSING_005_INST005",
+      "institution_id": "INST005",
+      "description": "Mandatory statutory document 'faculty_list' is missing from submission packet.",
+      "details": {
+        "missing_type": "faculty_list"
+      }
+    },
+    {
+      "fault_type": "missing_document",
+      "document": "APP_MISSING_006_INST006",
+      "institution_id": "INST006",
+      "description": "Mandatory statutory document 'university_affiliation_letter' is missing from submission packet.",
+      "details": {
+        "missing_type": "university_affiliation_letter"
+      }
+    },
+    {
+      "fault_type": "missing_document",
+      "document": "APP_MISSING_007_INST007",
+      "institution_id": "INST007",
+      "description": "Mandatory statutory document 'fire_safety_certificate' is missing from submission packet.",
+      "details": {
+        "missing_type": "fire_safety_certificate"
+      }
+    },
+    {
+      "fault_type": "missing_document",
+      "document": "APP_MISSING_008_INST008",
+      "institution_id": "INST008",
+      "description": "Mandatory statutory document 'noc' is missing from submission packet.",
+      "details": {
+        "missing_type": "noc"
+      }
+    },
+    {
+      "fault_type": "missing_document",
+      "document": "APP_MISSING_009_INST009",
+      "institution_id": "INST009",
+      "description": "Mandatory statutory document 'land_document' is missing from submission packet.",
+      "details": {
+        "missing_type": "land_document"
+      }
+    },
+    {
+      "fault_type": "missing_document",
+      "document": "APP_MISSING_010_INST010",
+      "institution_id": "INST010",
+      "description": "Mandatory statutory document 'faculty_list' is missing from submission packet.",
+      "details": {
+        "missing_type": "faculty_list"
       }
     }
   ],
   "clean_documents": [
     {
-      "document": "INST001_APP001_fire_safety.pdf",
+      "document": "DOC_0001.pdf",
+      "document_type": "affidavit",
+      "institution_id": "INST001",
+      "application_id": "APP_CLEAN_001_INST001"
+    },
+    {
+      "document": "DOC_0002.pdf",
       "document_type": "fire_safety_certificate",
-      "institution_id": "INST001"
+      "institution_id": "INST002",
+      "application_id": "APP_CLEAN_001_INST002"
     },
     {
-      "document": "INST001_APP001_noc.pdf",
+      "document": "DOC_0003.pdf",
       "document_type": "noc",
-      "institution_id": "INST001"
+      "institution_id": "INST003",
+      "application_id": "APP_CLEAN_001_INST003"
     },
     {
-      "document": "INST001_APP001_affiliation.pdf",
+      "document": "DOC_0004.pdf",
+      "document_type": "accreditation_certificate",
+      "institution_id": "INST004",
+      "application_id": "APP_CLEAN_001_INST004"
+    },
+    {
+      "document": "DOC_0005.pdf",
+      "document_type": "land_document",
+      "institution_id": "INST005",
+      "application_id": "APP_CLEAN_001_INST005"
+    },
+    {
+      "document": "DOC_0006.pdf",
       "document_type": "university_affiliation_letter",
-      "institution_id": "INST001"
+      "institution_id": "INST006",
+      "application_id": "APP_CLEAN_001_INST006"
     },
     {
-      "document": "INST001_APP002_fire_safety.pdf",
-      "document_type": "fire_safety_certificate",
-      "institution_id": "INST001"
+      "document": "DOC_0007.pdf",
+      "document_type": "faculty_list",
+      "institution_id": "INST007",
+      "application_id": "APP_CLEAN_001_INST007"
     },
     {
-      "document": "INST001_APP002_noc.pdf",
-      "document_type": "noc",
-      "institution_id": "INST001"
+      "document": "DOC_0008.pdf",
+      "document_type": "electricity_bill",
+      "institution_id": "INST008",
+      "application_id": "APP_CLEAN_001_INST008"
     },
     {
-      "document": "INST001_APP002_affiliation.pdf",
-      "document_type": "university_affiliation_letter",
-      "institution_id": "INST001"
+      "document": "DOC_0009.jpg",
+      "document_type": "infrastructure_photo",
+      "institution_id": "INST009",
+      "application_id": "APP_CLEAN_001_INST009"
     },
     {
-      "document": "INST002_APP004_fire_safety.pdf",
-      "document_type": "fire_safety_certificate",
-      "institution_id": "INST002"
-    },
-    {
-      "document": "INST002_APP004_noc.pdf",
-      "document_type": "noc",
-      "institution_id": "INST002"
-    },
-    {
-      "document": "INST002_APP004_affiliation.pdf",
-      "document_type": "university_affiliation_letter",
-      "institution_id": "INST002"
-    },
-    {
-      "document": "INST002_APP005_fire_safety.pdf",
-      "document_type": "fire_safety_certificate",
-      "institution_id": "INST002"
-    },
-    {
-      "document": "INST002_APP005_noc.pdf",
-      "document_type": "noc",
-      "institution_id": "INST002"
-    },
-    {
-      "document": "INST002_APP005_affiliation.pdf",
-      "document_type": "university_affiliation_letter",
-      "institution_id": "INST002"
-    },
-    {
-      "document": "INST002_APP006_tamil_cert.pdf",
+      "document": "DOC_0010.pdf",
       "document_type": "noc_tamil",
-      "institution_id": "INST002"
+      "institution_id": "INST010",
+      "application_id": "APP_CLEAN_001_INST010"
     },
     {
-      "document": "INST003_APP007_fire_safety.pdf",
-      "document_type": "fire_safety_certificate",
-      "institution_id": "INST003"
-    },
-    {
-      "document": "INST003_APP007_noc.pdf",
-      "document_type": "noc",
-      "institution_id": "INST003"
-    },
-    {
-      "document": "INST003_APP007_affiliation.pdf",
-      "document_type": "university_affiliation_letter",
-      "institution_id": "INST003"
-    },
-    {
-      "document": "INST003_APP009_fire_safety.pdf",
-      "document_type": "fire_safety_certificate",
-      "institution_id": "INST003"
-    },
-    {
-      "document": "INST003_APP009_noc.pdf",
-      "document_type": "noc",
-      "institution_id": "INST003"
-    },
-    {
-      "document": "INST003_APP009_affiliation.pdf",
-      "document_type": "university_affiliation_letter",
-      "institution_id": "INST003"
-    },
-    {
-      "document": "INST004_APP010_fire_safety.pdf",
-      "document_type": "fire_safety_certificate",
-      "institution_id": "INST004"
-    },
-    {
-      "document": "INST004_APP010_noc.pdf",
-      "document_type": "noc",
-      "institution_id": "INST004"
-    },
-    {
-      "document": "INST004_APP010_affiliation.pdf",
-      "document_type": "university_affiliation_letter",
-      "institution_id": "INST004"
-    },
-    {
-      "document": "INST004_APP011_fire_safety.pdf",
-      "document_type": "fire_safety_certificate",
-      "institution_id": "INST004"
-    },
-    {
-      "document": "INST004_APP011_noc.pdf",
-      "document_type": "noc",
-      "institution_id": "INST004"
-    },
-    {
-      "document": "INST004_APP011_affiliation.pdf",
-      "document_type": "university_affiliation_letter",
-      "institution_id": "INST004"
-    },
-    {
-      "document": "INST004_APP012_fire_safety.pdf",
-      "document_type": "fire_safety_certificate",
-      "institution_id": "INST004"
-    },
-    {
-      "document": "INST004_APP012_noc.pdf",
-      "document_type": "noc",
-      "institution_id": "INST004"
-    },
-    {
-      "document": "INST004_APP012_hindi_cert.pdf",
+      "document": "DOC_0011.pdf",
       "document_type": "noc_hindi",
-      "institution_id": "INST004"
+      "institution_id": "INST011",
+      "application_id": "APP_CLEAN_001_INST011"
     },
     {
-      "document": "INST005_APP013_fire_safety.pdf",
+      "document": "DOC_0012.pdf",
+      "document_type": "affidavit",
+      "institution_id": "INST012",
+      "application_id": "APP_CLEAN_001_INST012"
+    },
+    {
+      "document": "DOC_0013.pdf",
       "document_type": "fire_safety_certificate",
-      "institution_id": "INST005"
+      "institution_id": "INST001",
+      "application_id": "APP_CLEAN_002_INST001"
     },
     {
-      "document": "INST005_APP013_noc.pdf",
+      "document": "DOC_0014.pdf",
       "document_type": "noc",
-      "institution_id": "INST005"
+      "institution_id": "INST002",
+      "application_id": "APP_CLEAN_002_INST002"
     },
     {
-      "document": "INST005_APP013_affiliation.pdf",
+      "document": "DOC_0015.pdf",
+      "document_type": "accreditation_certificate",
+      "institution_id": "INST003",
+      "application_id": "APP_CLEAN_002_INST003"
+    },
+    {
+      "document": "DOC_0016.pdf",
+      "document_type": "land_document",
+      "institution_id": "INST004",
+      "application_id": "APP_CLEAN_002_INST004"
+    },
+    {
+      "document": "DOC_0017.pdf",
       "document_type": "university_affiliation_letter",
-      "institution_id": "INST005"
+      "institution_id": "INST005",
+      "application_id": "APP_CLEAN_002_INST005"
     },
     {
-      "document": "INST005_APP014_fire_safety.pdf",
-      "document_type": "fire_safety_certificate",
-      "institution_id": "INST005"
+      "document": "DOC_0018.pdf",
+      "document_type": "faculty_list",
+      "institution_id": "INST006",
+      "application_id": "APP_CLEAN_002_INST006"
     },
     {
-      "document": "INST005_APP014_noc.pdf",
-      "document_type": "noc",
-      "institution_id": "INST005"
+      "document": "DOC_0019.pdf",
+      "document_type": "electricity_bill",
+      "institution_id": "INST007",
+      "application_id": "APP_CLEAN_002_INST007"
     },
     {
-      "document": "INST005_APP014_affiliation.pdf",
-      "document_type": "university_affiliation_letter",
-      "institution_id": "INST005"
+      "document": "DOC_0020.jpg",
+      "document_type": "infrastructure_photo",
+      "institution_id": "INST008",
+      "application_id": "APP_CLEAN_002_INST008"
     },
     {
-      "document": "INST005_APP015_tamil_cert.pdf",
+      "document": "DOC_0021.pdf",
       "document_type": "noc_tamil",
-      "institution_id": "INST005"
+      "institution_id": "INST009",
+      "application_id": "APP_CLEAN_002_INST009"
     },
     {
-      "document": "INST006_APP016_fire_safety.pdf",
+      "document": "DOC_0022.pdf",
+      "document_type": "noc_hindi",
+      "institution_id": "INST010",
+      "application_id": "APP_CLEAN_002_INST010"
+    },
+    {
+      "document": "DOC_0023.pdf",
+      "document_type": "affidavit",
+      "institution_id": "INST011",
+      "application_id": "APP_CLEAN_002_INST011"
+    },
+    {
+      "document": "DOC_0024.pdf",
       "document_type": "fire_safety_certificate",
-      "institution_id": "INST006"
+      "institution_id": "INST012",
+      "application_id": "APP_CLEAN_002_INST012"
     },
     {
-      "document": "INST006_APP016_noc.pdf",
+      "document": "DOC_0025.pdf",
       "document_type": "noc",
-      "institution_id": "INST006"
+      "institution_id": "INST001",
+      "application_id": "APP_CLEAN_003_INST001"
     },
     {
-      "document": "INST006_APP016_affiliation.pdf",
+      "document": "DOC_0026.pdf",
+      "document_type": "accreditation_certificate",
+      "institution_id": "INST002",
+      "application_id": "APP_CLEAN_003_INST002"
+    },
+    {
+      "document": "DOC_0027.pdf",
+      "document_type": "land_document",
+      "institution_id": "INST003",
+      "application_id": "APP_CLEAN_003_INST003"
+    },
+    {
+      "document": "DOC_0028.pdf",
       "document_type": "university_affiliation_letter",
-      "institution_id": "INST006"
+      "institution_id": "INST004",
+      "application_id": "APP_CLEAN_003_INST004"
     },
     {
-      "document": "INST006_APP017_fire_safety.pdf",
+      "document": "DOC_0029.pdf",
+      "document_type": "faculty_list",
+      "institution_id": "INST005",
+      "application_id": "APP_CLEAN_003_INST005"
+    },
+    {
+      "document": "DOC_0030.pdf",
+      "document_type": "electricity_bill",
+      "institution_id": "INST006",
+      "application_id": "APP_CLEAN_003_INST006"
+    },
+    {
+      "document": "DOC_0031.jpg",
+      "document_type": "infrastructure_photo",
+      "institution_id": "INST007",
+      "application_id": "APP_CLEAN_003_INST007"
+    },
+    {
+      "document": "DOC_0032.pdf",
+      "document_type": "noc_tamil",
+      "institution_id": "INST008",
+      "application_id": "APP_CLEAN_003_INST008"
+    },
+    {
+      "document": "DOC_0033.pdf",
+      "document_type": "noc_hindi",
+      "institution_id": "INST009",
+      "application_id": "APP_CLEAN_003_INST009"
+    },
+    {
+      "document": "DOC_0034.pdf",
+      "document_type": "affidavit",
+      "institution_id": "INST010",
+      "application_id": "APP_CLEAN_003_INST010"
+    },
+    {
+      "document": "DOC_0035.pdf",
       "document_type": "fire_safety_certificate",
-      "institution_id": "INST006"
+      "institution_id": "INST011",
+      "application_id": "APP_CLEAN_003_INST011"
     },
     {
-      "document": "INST006_APP017_noc.pdf",
+      "document": "DOC_0036.pdf",
       "document_type": "noc",
-      "institution_id": "INST006"
+      "institution_id": "INST012",
+      "application_id": "APP_CLEAN_003_INST012"
     },
     {
-      "document": "INST006_APP017_affiliation.pdf",
+      "document": "DOC_0037.pdf",
+      "document_type": "accreditation_certificate",
+      "institution_id": "INST001",
+      "application_id": "APP_CLEAN_004_INST001"
+    },
+    {
+      "document": "DOC_0038.pdf",
+      "document_type": "land_document",
+      "institution_id": "INST002",
+      "application_id": "APP_CLEAN_004_INST002"
+    },
+    {
+      "document": "DOC_0039.pdf",
       "document_type": "university_affiliation_letter",
-      "institution_id": "INST006"
+      "institution_id": "INST003",
+      "application_id": "APP_CLEAN_004_INST003"
     },
     {
-      "document": "INST006_APP018_fire_safety.pdf",
+      "document": "DOC_0040.pdf",
+      "document_type": "faculty_list",
+      "institution_id": "INST004",
+      "application_id": "APP_CLEAN_004_INST004"
+    },
+    {
+      "document": "DOC_0041.pdf",
+      "document_type": "electricity_bill",
+      "institution_id": "INST005",
+      "application_id": "APP_CLEAN_004_INST005"
+    },
+    {
+      "document": "DOC_0042.jpg",
+      "document_type": "infrastructure_photo",
+      "institution_id": "INST006",
+      "application_id": "APP_CLEAN_004_INST006"
+    },
+    {
+      "document": "DOC_0043.pdf",
+      "document_type": "noc_tamil",
+      "institution_id": "INST007",
+      "application_id": "APP_CLEAN_004_INST007"
+    },
+    {
+      "document": "DOC_0044.pdf",
+      "document_type": "noc_hindi",
+      "institution_id": "INST008",
+      "application_id": "APP_CLEAN_004_INST008"
+    },
+    {
+      "document": "DOC_0045.pdf",
+      "document_type": "affidavit",
+      "institution_id": "INST009",
+      "application_id": "APP_CLEAN_004_INST009"
+    },
+    {
+      "document": "DOC_0046.pdf",
       "document_type": "fire_safety_certificate",
-      "institution_id": "INST006"
+      "institution_id": "INST010",
+      "application_id": "APP_CLEAN_004_INST010"
     },
     {
-      "document": "INST006_APP018_affiliation.pdf",
+      "document": "DOC_0047.pdf",
+      "document_type": "noc",
+      "institution_id": "INST011",
+      "application_id": "APP_CLEAN_004_INST011"
+    },
+    {
+      "document": "DOC_0048.pdf",
+      "document_type": "accreditation_certificate",
+      "institution_id": "INST012",
+      "application_id": "APP_CLEAN_004_INST012"
+    },
+    {
+      "document": "DOC_0049.pdf",
+      "document_type": "land_document",
+      "institution_id": "INST001",
+      "application_id": "APP_CLEAN_005_INST001"
+    },
+    {
+      "document": "DOC_0050.pdf",
       "document_type": "university_affiliation_letter",
-      "institution_id": "INST006"
+      "institution_id": "INST002",
+      "application_id": "APP_CLEAN_005_INST002"
+    },
+    {
+      "document": "DOC_0051.pdf",
+      "document_type": "faculty_list",
+      "institution_id": "INST003",
+      "application_id": "APP_CLEAN_005_INST003"
+    },
+    {
+      "document": "DOC_0052.pdf",
+      "document_type": "electricity_bill",
+      "institution_id": "INST004",
+      "application_id": "APP_CLEAN_005_INST004"
+    },
+    {
+      "document": "DOC_0053.jpg",
+      "document_type": "infrastructure_photo",
+      "institution_id": "INST005",
+      "application_id": "APP_CLEAN_005_INST005"
+    },
+    {
+      "document": "DOC_0054.pdf",
+      "document_type": "noc_tamil",
+      "institution_id": "INST006",
+      "application_id": "APP_CLEAN_005_INST006"
+    },
+    {
+      "document": "DOC_0055.pdf",
+      "document_type": "noc_hindi",
+      "institution_id": "INST007",
+      "application_id": "APP_CLEAN_005_INST007"
+    },
+    {
+      "document": "DOC_0056.pdf",
+      "document_type": "affidavit",
+      "institution_id": "INST008",
+      "application_id": "APP_CLEAN_005_INST008"
+    },
+    {
+      "document": "DOC_0057.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST009",
+      "application_id": "APP_CLEAN_005_INST009"
+    },
+    {
+      "document": "DOC_0058.pdf",
+      "document_type": "noc",
+      "institution_id": "INST010",
+      "application_id": "APP_CLEAN_005_INST010"
+    },
+    {
+      "document": "DOC_0059.pdf",
+      "document_type": "accreditation_certificate",
+      "institution_id": "INST011",
+      "application_id": "APP_CLEAN_005_INST011"
+    },
+    {
+      "document": "DOC_0060.pdf",
+      "document_type": "land_document",
+      "institution_id": "INST012",
+      "application_id": "APP_CLEAN_005_INST012"
+    },
+    {
+      "document": "DOC_0061.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST001",
+      "application_id": "APP_CLEAN_006_INST001"
+    },
+    {
+      "document": "DOC_0062.pdf",
+      "document_type": "faculty_list",
+      "institution_id": "INST002",
+      "application_id": "APP_CLEAN_006_INST002"
+    },
+    {
+      "document": "DOC_0063.pdf",
+      "document_type": "electricity_bill",
+      "institution_id": "INST003",
+      "application_id": "APP_CLEAN_006_INST003"
+    },
+    {
+      "document": "DOC_0064.jpg",
+      "document_type": "infrastructure_photo",
+      "institution_id": "INST004",
+      "application_id": "APP_CLEAN_006_INST004"
+    },
+    {
+      "document": "DOC_0065.pdf",
+      "document_type": "noc_tamil",
+      "institution_id": "INST005",
+      "application_id": "APP_CLEAN_006_INST005"
+    },
+    {
+      "document": "DOC_0066.pdf",
+      "document_type": "noc_hindi",
+      "institution_id": "INST006",
+      "application_id": "APP_CLEAN_006_INST006"
+    },
+    {
+      "document": "DOC_0067.pdf",
+      "document_type": "affidavit",
+      "institution_id": "INST007",
+      "application_id": "APP_CLEAN_006_INST007"
+    },
+    {
+      "document": "DOC_0068.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST008",
+      "application_id": "APP_CLEAN_006_INST008"
+    },
+    {
+      "document": "DOC_0069.pdf",
+      "document_type": "noc",
+      "institution_id": "INST009",
+      "application_id": "APP_CLEAN_006_INST009"
+    },
+    {
+      "document": "DOC_0070.pdf",
+      "document_type": "accreditation_certificate",
+      "institution_id": "INST010",
+      "application_id": "APP_CLEAN_006_INST010"
+    },
+    {
+      "document": "DOC_0071.pdf",
+      "document_type": "land_document",
+      "institution_id": "INST011",
+      "application_id": "APP_CLEAN_006_INST011"
+    },
+    {
+      "document": "DOC_0072.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST012",
+      "application_id": "APP_CLEAN_006_INST012"
+    },
+    {
+      "document": "DOC_0073.pdf",
+      "document_type": "faculty_list",
+      "institution_id": "INST001",
+      "application_id": "APP_CLEAN_007_INST001"
+    },
+    {
+      "document": "DOC_0074.pdf",
+      "document_type": "electricity_bill",
+      "institution_id": "INST002",
+      "application_id": "APP_CLEAN_007_INST002"
+    },
+    {
+      "document": "DOC_0075.jpg",
+      "document_type": "infrastructure_photo",
+      "institution_id": "INST003",
+      "application_id": "APP_CLEAN_007_INST003"
+    },
+    {
+      "document": "DOC_0076.pdf",
+      "document_type": "noc_tamil",
+      "institution_id": "INST004",
+      "application_id": "APP_CLEAN_007_INST004"
+    },
+    {
+      "document": "DOC_0077.pdf",
+      "document_type": "noc_hindi",
+      "institution_id": "INST005",
+      "application_id": "APP_CLEAN_007_INST005"
+    },
+    {
+      "document": "DOC_0078.pdf",
+      "document_type": "affidavit",
+      "institution_id": "INST006",
+      "application_id": "APP_CLEAN_007_INST006"
+    },
+    {
+      "document": "DOC_0079.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST007",
+      "application_id": "APP_CLEAN_007_INST007"
+    },
+    {
+      "document": "DOC_0080.pdf",
+      "document_type": "noc",
+      "institution_id": "INST008",
+      "application_id": "APP_CLEAN_007_INST008"
+    },
+    {
+      "document": "DOC_0081.pdf",
+      "document_type": "accreditation_certificate",
+      "institution_id": "INST009",
+      "application_id": "APP_CLEAN_007_INST009"
+    },
+    {
+      "document": "DOC_0082.pdf",
+      "document_type": "land_document",
+      "institution_id": "INST010",
+      "application_id": "APP_CLEAN_007_INST010"
+    },
+    {
+      "document": "DOC_0083.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST011",
+      "application_id": "APP_CLEAN_007_INST011"
+    },
+    {
+      "document": "DOC_0084.pdf",
+      "document_type": "faculty_list",
+      "institution_id": "INST012",
+      "application_id": "APP_CLEAN_007_INST012"
+    },
+    {
+      "document": "DOC_0085.pdf",
+      "document_type": "electricity_bill",
+      "institution_id": "INST001",
+      "application_id": "APP_CLEAN_008_INST001"
+    },
+    {
+      "document": "DOC_0086.jpg",
+      "document_type": "infrastructure_photo",
+      "institution_id": "INST002",
+      "application_id": "APP_CLEAN_008_INST002"
+    },
+    {
+      "document": "DOC_0087.pdf",
+      "document_type": "noc_tamil",
+      "institution_id": "INST003",
+      "application_id": "APP_CLEAN_008_INST003"
+    },
+    {
+      "document": "DOC_0088.pdf",
+      "document_type": "noc_hindi",
+      "institution_id": "INST004",
+      "application_id": "APP_CLEAN_008_INST004"
+    },
+    {
+      "document": "DOC_0089.pdf",
+      "document_type": "affidavit",
+      "institution_id": "INST005",
+      "application_id": "APP_CLEAN_008_INST005"
+    },
+    {
+      "document": "DOC_0090.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST006",
+      "application_id": "APP_CLEAN_008_INST006"
+    },
+    {
+      "document": "DOC_0091.pdf",
+      "document_type": "noc",
+      "institution_id": "INST007",
+      "application_id": "APP_CLEAN_008_INST007"
+    },
+    {
+      "document": "DOC_0092.pdf",
+      "document_type": "accreditation_certificate",
+      "institution_id": "INST008",
+      "application_id": "APP_CLEAN_008_INST008"
+    },
+    {
+      "document": "DOC_0093.pdf",
+      "document_type": "land_document",
+      "institution_id": "INST009",
+      "application_id": "APP_CLEAN_008_INST009"
+    },
+    {
+      "document": "DOC_0094.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST010",
+      "application_id": "APP_CLEAN_008_INST010"
+    },
+    {
+      "document": "DOC_0095.pdf",
+      "document_type": "faculty_list",
+      "institution_id": "INST011",
+      "application_id": "APP_CLEAN_008_INST011"
+    },
+    {
+      "document": "DOC_0096.pdf",
+      "document_type": "electricity_bill",
+      "institution_id": "INST012",
+      "application_id": "APP_CLEAN_008_INST012"
+    },
+    {
+      "document": "DOC_0097.jpg",
+      "document_type": "infrastructure_photo",
+      "institution_id": "INST001",
+      "application_id": "APP_CLEAN_009_INST001"
+    },
+    {
+      "document": "DOC_0098.pdf",
+      "document_type": "noc_tamil",
+      "institution_id": "INST002",
+      "application_id": "APP_CLEAN_009_INST002"
+    },
+    {
+      "document": "DOC_0099.pdf",
+      "document_type": "noc_hindi",
+      "institution_id": "INST003",
+      "application_id": "APP_CLEAN_009_INST003"
+    },
+    {
+      "document": "DOC_0100.pdf",
+      "document_type": "affidavit",
+      "institution_id": "INST004",
+      "application_id": "APP_CLEAN_009_INST004"
+    },
+    {
+      "document": "DOC_0101.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST005",
+      "application_id": "APP_CLEAN_009_INST005"
+    },
+    {
+      "document": "DOC_0102.pdf",
+      "document_type": "noc",
+      "institution_id": "INST006",
+      "application_id": "APP_CLEAN_009_INST006"
+    },
+    {
+      "document": "DOC_0103.pdf",
+      "document_type": "accreditation_certificate",
+      "institution_id": "INST007",
+      "application_id": "APP_CLEAN_009_INST007"
+    },
+    {
+      "document": "DOC_0104.pdf",
+      "document_type": "land_document",
+      "institution_id": "INST008",
+      "application_id": "APP_CLEAN_009_INST008"
+    },
+    {
+      "document": "DOC_0105.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST009",
+      "application_id": "APP_CLEAN_009_INST009"
+    },
+    {
+      "document": "DOC_0106.pdf",
+      "document_type": "faculty_list",
+      "institution_id": "INST010",
+      "application_id": "APP_CLEAN_009_INST010"
+    },
+    {
+      "document": "DOC_0107.pdf",
+      "document_type": "electricity_bill",
+      "institution_id": "INST011",
+      "application_id": "APP_CLEAN_009_INST011"
+    },
+    {
+      "document": "DOC_0108.jpg",
+      "document_type": "infrastructure_photo",
+      "institution_id": "INST012",
+      "application_id": "APP_CLEAN_009_INST012"
+    },
+    {
+      "document": "DOC_0109.pdf",
+      "document_type": "noc_tamil",
+      "institution_id": "INST001",
+      "application_id": "APP_CLEAN_010_INST001"
+    },
+    {
+      "document": "DOC_0110.pdf",
+      "document_type": "noc_hindi",
+      "institution_id": "INST002",
+      "application_id": "APP_CLEAN_010_INST002"
+    },
+    {
+      "document": "DOC_0111.pdf",
+      "document_type": "affidavit",
+      "institution_id": "INST003",
+      "application_id": "APP_CLEAN_010_INST003"
+    },
+    {
+      "document": "DOC_0112.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST004",
+      "application_id": "APP_CLEAN_010_INST004"
+    },
+    {
+      "document": "DOC_0113.pdf",
+      "document_type": "noc",
+      "institution_id": "INST005",
+      "application_id": "APP_CLEAN_010_INST005"
+    },
+    {
+      "document": "DOC_0114.pdf",
+      "document_type": "accreditation_certificate",
+      "institution_id": "INST006",
+      "application_id": "APP_CLEAN_010_INST006"
+    },
+    {
+      "document": "DOC_0115.pdf",
+      "document_type": "land_document",
+      "institution_id": "INST007",
+      "application_id": "APP_CLEAN_010_INST007"
+    },
+    {
+      "document": "DOC_0116.pdf",
+      "document_type": "university_affiliation_letter",
+      "institution_id": "INST008",
+      "application_id": "APP_CLEAN_010_INST008"
+    },
+    {
+      "document": "DOC_0117.pdf",
+      "document_type": "faculty_list",
+      "institution_id": "INST009",
+      "application_id": "APP_CLEAN_010_INST009"
+    },
+    {
+      "document": "DOC_0118.pdf",
+      "document_type": "electricity_bill",
+      "institution_id": "INST010",
+      "application_id": "APP_CLEAN_010_INST010"
+    },
+    {
+      "document": "DOC_0119.jpg",
+      "document_type": "infrastructure_photo",
+      "institution_id": "INST011",
+      "application_id": "APP_CLEAN_010_INST011"
+    },
+    {
+      "document": "DOC_0120.pdf",
+      "document_type": "noc_tamil",
+      "institution_id": "INST012",
+      "application_id": "APP_CLEAN_010_INST012"
+    },
+    {
+      "document": "DOC_0121.pdf",
+      "document_type": "noc_hindi",
+      "institution_id": "INST001",
+      "application_id": "APP_CLEAN_011_INST001"
+    },
+    {
+      "document": "DOC_0122.pdf",
+      "document_type": "affidavit",
+      "institution_id": "INST002",
+      "application_id": "APP_CLEAN_011_INST002"
+    },
+    {
+      "document": "DOC_0123.pdf",
+      "document_type": "fire_safety_certificate",
+      "institution_id": "INST003",
+      "application_id": "APP_CLEAN_011_INST003"
+    },
+    {
+      "document": "DOC_0124.pdf",
+      "document_type": "noc",
+      "institution_id": "INST004",
+      "application_id": "APP_CLEAN_011_INST004"
+    },
+    {
+      "document": "DOC_0125.pdf",
+      "document_type": "accreditation_certificate",
+      "institution_id": "INST005",
+      "application_id": "APP_CLEAN_011_INST005"
     }
   ],
   "institutions": [
     {
       "id": "INST001",
       "name": "Rajiv Gandhi Institute of Technology",
-      "code": "RGIT-MH-001",
+      "code": "1-100101",
       "city": "Pune",
       "state": "Maharashtra",
-      "region": "West",
-      "address": "123 Engineering Road, Pune 411001",
+      "region": "Western",
+      "address": "123 Engineering Highway, Hinjawadi",
       "trust_name": "Rajiv Education Trust",
-      "trust_reg_no": "MH/TRUST/2005/1234",
+      "trust_reg_no": "TR-MH-2005-1234",
       "latitude": 18.5204,
       "longitude": 73.8567,
       "established_year": 2005
@@ -410,13 +2521,13 @@
     {
       "id": "INST002",
       "name": "Sri Lakshmi Engineering College",
-      "code": "SLEC-TN-002",
+      "code": "1-100202",
       "city": "Chennai",
       "state": "Tamil Nadu",
-      "region": "South",
-      "address": "456 College Avenue, Chennai 600028",
+      "region": "Southern",
+      "address": "456 Knowledge Avenue, OMR Highway",
       "trust_name": "Lakshmi Educational Foundation",
-      "trust_reg_no": "TN/TRUST/2008/5678",
+      "trust_reg_no": "TR-TN-2008-5678",
       "latitude": 13.0827,
       "longitude": 80.2707,
       "established_year": 2008
@@ -424,13 +2535,13 @@
     {
       "id": "INST003",
       "name": "Bharati Vidyapeeth College of Engineering",
-      "code": "BVCE-KA-003",
+      "code": "1-100303",
       "city": "Bangalore",
       "state": "Karnataka",
-      "region": "South",
-      "address": "789 Tech Park, Bangalore 560001",
+      "region": "Southern",
+      "address": "789 Electronic City Ring Road",
       "trust_name": "Bharati Education Society",
-      "trust_reg_no": "KA/SOC/2003/9012",
+      "trust_reg_no": "TR-KA-2003-9012",
       "latitude": 12.9716,
       "longitude": 77.5946,
       "established_year": 2003
@@ -438,27 +2549,27 @@
     {
       "id": "INST004",
       "name": "Netaji Subhas Institute of Technology",
-      "code": "NSIT-UP-004",
+      "code": "1-100404",
       "city": "Lucknow",
       "state": "Uttar Pradesh",
-      "region": "North",
-      "address": "101 University Road, Lucknow 226001",
+      "region": "Northern",
+      "address": "101 Vidhan Sabha Marg",
       "trust_name": "Subhas Memorial Trust",
-      "trust_reg_no": "UP/TRUST/2010/3456",
+      "trust_reg_no": "TR-UP-2010-3456",
       "latitude": 26.8467,
       "longitude": 80.9462,
       "established_year": 2010
     },
     {
       "id": "INST005",
-      "name": "Kalam Technical University",
-      "code": "KTU-TN-005",
+      "name": "Kalam Technical University College",
+      "code": "1-100505",
       "city": "Coimbatore",
       "state": "Tamil Nadu",
-      "region": "South",
-      "address": "202 Innovation Drive, Coimbatore 641001",
-      "trust_name": "Kalam Foundation for Education",
-      "trust_reg_no": "TN/TRUST/2012/7890",
+      "region": "Southern",
+      "address": "202 Innovation Corridor",
+      "trust_name": "Lakshmi Educational Foundation",
+      "trust_reg_no": "TR-TN-2008-5678",
       "latitude": 11.0168,
       "longitude": 76.9558,
       "established_year": 2012
@@ -466,2386 +2577,102 @@
     {
       "id": "INST006",
       "name": "Savitribai Phule Polytechnic",
-      "code": "SPP-MH-006",
+      "code": "1-100606",
       "city": "Nagpur",
       "state": "Maharashtra",
-      "region": "West",
-      "address": "303 Education Lane, Nagpur 440001",
+      "region": "Western",
+      "address": "303 Education Park, Wardha Road",
       "trust_name": "Rajiv Education Trust",
-      "trust_reg_no": "MH/TRUST/2005/1234",
+      "trust_reg_no": "TR-MH-2005-1234",
       "latitude": 21.1458,
       "longitude": 79.0882,
       "established_year": 2007
+    },
+    {
+      "id": "INST007",
+      "name": "Jadavpur Institute of Technology",
+      "code": "1-100707",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "region": "Eastern",
+      "address": "88 Salt Lake Sector V",
+      "trust_name": "Tagore Educational Trust",
+      "trust_reg_no": "TR-WB-2001-1122",
+      "latitude": 22.5726,
+      "longitude": 88.3639,
+      "established_year": 2001
+    },
+    {
+      "id": "INST008",
+      "name": "Malaviya Engineering Institute",
+      "code": "1-100808",
+      "city": "Jaipur",
+      "state": "Rajasthan",
+      "region": "Northern",
+      "address": "55 JLN Marg, Malviya Nagar",
+      "trust_name": "Malaviya Foundation",
+      "trust_reg_no": "TR-RJ-2006-3344",
+      "latitude": 26.9124,
+      "longitude": 75.7873,
+      "established_year": 2006
+    },
+    {
+      "id": "INST009",
+      "name": "Visvesvaraya Technical Campus",
+      "code": "1-100909",
+      "city": "Hyderabad",
+      "state": "Telangana",
+      "region": "South-Central",
+      "address": "90 Gachibowli Tech Enclave",
+      "trust_name": "Deccan Shiksha Samiti",
+      "trust_reg_no": "TR-TS-2011-5566",
+      "latitude": 17.385,
+      "longitude": 78.4867,
+      "established_year": 2011
+    },
+    {
+      "id": "INST010",
+      "name": "Aryabhata College of Engineering",
+      "code": "1-101010",
+      "city": "Patna",
+      "state": "Bihar",
+      "region": "Eastern",
+      "address": "14 Bailey Road",
+      "trust_name": "Aryabhata Research Society",
+      "trust_reg_no": "TR-BR-2014-7788",
+      "latitude": 25.5941,
+      "longitude": 85.1376,
+      "established_year": 2014
+    },
+    {
+      "id": "INST011",
+      "name": "Sardar Patel Institute of Technology",
+      "code": "1-101111",
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "region": "Western",
+      "address": "77 Ashram Road",
+      "trust_name": "Sardar Patel Vidyapeeth",
+      "trust_reg_no": "TR-GJ-2004-9900",
+      "latitude": 23.0225,
+      "longitude": 72.5714,
+      "established_year": 2004
+    },
+    {
+      "id": "INST012",
+      "name": "Chanakya Technical Institute",
+      "code": "1-101212",
+      "city": "Bhopal",
+      "state": "Madhya Pradesh",
+      "region": "Central",
+      "address": "32 Hoshangabad Road",
+      "trust_name": "Central Bharat Trust",
+      "trust_reg_no": "TR-MP-2009-2233",
+      "latitude": 23.2599,
+      "longitude": 77.4126,
+      "established_year": 2009
     }
   ],
-  "faculty_assignments": {
-    "INST001": [
-      "FAC001",
-      "FAC002",
-      "FAC003",
-      "FAC005",
-      "FAC011"
-    ],
-    "INST002": [
-      "FAC004",
-      "FAC006",
-      "FAC007",
-      "FAC009",
-      "FAC011"
-    ],
-    "INST003": [
-      "FAC002",
-      "FAC008",
-      "FAC010",
-      "FAC012"
-    ],
-    "INST004": [
-      "FAC003",
-      "FAC005",
-      "FAC006",
-      "FAC012"
-    ],
-    "INST005": [
-      "FAC001",
-      "FAC007",
-      "FAC009",
-      "FAC010"
-    ],
-    "INST006": [
-      "FAC004",
-      "FAC008"
-    ]
-  },
-  "applications": [
-    {
-      "id": "APP001",
-      "institution_id": "INST001",
-      "institution_name": "Rajiv Gandhi Institute of Technology",
-      "category": "extension_of_approval",
-      "academic_year": "2024",
-      "intake": 120,
-      "documents": [
-        {
-          "filename": "INST001_APP001_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP001",
-            "category": "extension_of_approval",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "institution_id": "RGIT-MH-001",
-            "intake": 120,
-            "actual_intake": 120
-          }
-        },
-        {
-          "filename": "INST001_APP001_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ma/2024/9919",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "institution_id": "RGIT-MH-001",
-            "intake": 120,
-            "issue_date": "01-04-2024",
-            "trust_name": "Rajiv Education Trust"
-          }
-        },
-        {
-          "filename": "INST001_APP001_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ma/2024/1900",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "issue_date": "01-01-2024",
-            "expiry_date": "31-12-2024",
-            "issuing_authority": "City Fire Department, Pune"
-          }
-        },
-        {
-          "filename": "INST001_APP001_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ma/2024/8435",
-            "issue_date": "15-03-2024",
-            "expiry_date": "14-03-2025",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "institution_id": "RGIT-MH-001"
-          }
-        },
-        {
-          "filename": "INST001_APP001_accreditation.pdf",
-          "type": "accreditation_certificate",
-          "meta": {
-            "ref_number": "ACC/2024/36072",
-            "qr_ref_number": "ACC/2024/36072",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "issue_date": "01-07-2022",
-            "expiry_date": "30-06-2027"
-          }
-        },
-        {
-          "filename": "INST001_APP001_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "MH/PUNE/SUR/2005/001",
-            "area_acres": 12.61,
-            "trust_name": "Rajiv Education Trust",
-            "institution_name": "Rajiv Gandhi Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST001_APP001_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ma/2024/6841",
-            "university_name": "State Technical University, Maharashtra (SIMULATED)",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "issue_date": "15-05-2024"
-          }
-        },
-        {
-          "filename": "INST001_APP001_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "faculty_count": 5,
-            "faculty_ids": [
-              "FAC001",
-              "FAC002",
-              "FAC003",
-              "FAC005",
-              "FAC011"
-            ],
-            "displayed_count": 5
-          }
-        },
-        {
-          "filename": "INST001_APP001_electricity_bill.pdf",
-          "type": "electricity_bill",
-          "meta": {
-            "bill_number": "EB/PUN/2024/639242",
-            "institution_name": "Rajiv Education Trust",
-            "bill_date": "01-02-2024"
-          }
-        },
-        {
-          "filename": "INST001_APP001_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Rajiv Gandhi Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST001_APP001_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Rajiv Gandhi Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST001_APP001_photo_3.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Rajiv Gandhi Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST001_APP001_photo_4.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Rajiv Gandhi Institute of Technology"
-          }
-        }
-      ],
-      "planted_faults": [],
-      "region": "West",
-      "status": "submitted"
-    },
-    {
-      "id": "APP002",
-      "institution_id": "INST001",
-      "institution_name": "Rajiv Gandhi Institute of Technology",
-      "category": "extension_of_approval",
-      "academic_year": "2025",
-      "intake": 270,
-      "documents": [
-        {
-          "filename": "INST001_APP002_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP002",
-            "category": "extension_of_approval",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "institution_id": "RGIT-MH-001",
-            "intake": 270,
-            "actual_intake": 270
-          }
-        },
-        {
-          "filename": "INST001_APP002_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ma/2025/6987",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "institution_id": "RGIT-MH-001",
-            "intake": 270,
-            "issue_date": "01-04-2025",
-            "trust_name": "Rajiv Education Trust"
-          }
-        },
-        {
-          "filename": "INST001_APP002_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ma/2025/5213",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "issue_date": "01-01-2025",
-            "expiry_date": "31-12-2025",
-            "issuing_authority": "City Fire Department, Pune"
-          }
-        },
-        {
-          "filename": "INST001_APP002_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ma/2025/6684",
-            "issue_date": "15-03-2025",
-            "expiry_date": "14-03-2026",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "institution_id": "RGIT-MH-001"
-          }
-        },
-        {
-          "filename": "INST001_APP002_accreditation.pdf",
-          "type": "accreditation_certificate",
-          "meta": {
-            "ref_number": "ACC/2025/75169",
-            "qr_ref_number": "ACC/2025/75169",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "issue_date": "01-07-2023",
-            "expiry_date": "30-06-2028"
-          }
-        },
-        {
-          "filename": "INST001_APP002_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "MH/PUNE/SUR/2005/001",
-            "area_acres": 12.6,
-            "trust_name": "Rajiv Education Trust",
-            "institution_name": "Rajiv Gandhi Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST001_APP002_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ma/2025/3422",
-            "university_name": "State Technical University, Maharashtra (SIMULATED)",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "issue_date": "15-05-2025"
-          }
-        },
-        {
-          "filename": "INST001_APP002_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "faculty_count": 5,
-            "faculty_ids": [
-              "FAC001",
-              "FAC002",
-              "FAC003",
-              "FAC005",
-              "FAC011"
-            ],
-            "displayed_count": 5
-          }
-        },
-        {
-          "filename": "INST001_APP002_electricity_bill.pdf",
-          "type": "electricity_bill",
-          "meta": {
-            "bill_number": "EB/PUN/2025/436843",
-            "institution_name": "Rajiv Education Trust",
-            "bill_date": "01-02-2025"
-          }
-        },
-        {
-          "filename": "INST001_APP002_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Rajiv Gandhi Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST001_APP002_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Rajiv Gandhi Institute of Technology"
-          }
-        }
-      ],
-      "planted_faults": [],
-      "region": "West",
-      "status": "submitted"
-    },
-    {
-      "id": "APP003",
-      "institution_id": "INST001",
-      "institution_name": "Rajiv Gandhi Institute of Technology",
-      "category": "increase_of_intake",
-      "academic_year": "2026",
-      "intake": 300,
-      "documents": [
-        {
-          "filename": "INST001_APP003_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP003",
-            "category": "increase_of_intake",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "institution_id": "RGIT-MH-001",
-            "intake": 600,
-            "actual_intake": 300
-          }
-        },
-        {
-          "filename": "INST001_APP003_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ma/2026/4562",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "institution_id": "RGIT-MH-001",
-            "intake": 300,
-            "issue_date": "01-04-2026",
-            "trust_name": "Rajiv Education Trust"
-          }
-        },
-        {
-          "filename": "INST001_APP003_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ma/2026/9907",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "issue_date": "01-01-2026",
-            "expiry_date": "31-12-2026",
-            "issuing_authority": "City Fire Department, Pune"
-          }
-        },
-        {
-          "filename": "INST001_APP003_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ma/2026/5041",
-            "issue_date": "15-03-2026",
-            "expiry_date": "14-03-2027",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "institution_id": "RGIT-MH-001"
-          }
-        },
-        {
-          "filename": "INST001_APP003_accreditation.pdf",
-          "type": "accreditation_certificate",
-          "meta": {
-            "ref_number": "ACC/2026/60703",
-            "qr_ref_number": "ACC/2026/60703",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "issue_date": "01-07-2024",
-            "expiry_date": "30-06-2029"
-          }
-        },
-        {
-          "filename": "INST001_APP003_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "MH/PUNE/SUR/2005/001",
-            "area_acres": 5.91,
-            "trust_name": "Rajiv Education Trust",
-            "institution_name": "Rajiv Gandhi Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST001_APP003_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ma/2026/8034",
-            "university_name": "State Technical University, Maharashtra (SIMULATED)",
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "issue_date": "15-05-2026"
-          }
-        },
-        {
-          "filename": "INST001_APP003_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Rajiv Gandhi Institute of Technology",
-            "faculty_count": 5,
-            "faculty_ids": [
-              "FAC001",
-              "FAC002",
-              "FAC003",
-              "FAC005",
-              "FAC011"
-            ],
-            "displayed_count": 5
-          }
-        },
-        {
-          "filename": "INST001_APP003_electricity_bill.pdf",
-          "type": "electricity_bill",
-          "meta": {
-            "bill_number": "EB/PUN/2026/247485",
-            "institution_name": "Rajiv Education Trust",
-            "bill_date": "01-02-2026"
-          }
-        },
-        {
-          "filename": "INST001_APP003_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Rajiv Gandhi Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST001_APP003_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Rajiv Gandhi Institute of Technology"
-          }
-        }
-      ],
-      "planted_faults": [
-        "intake_mismatch_form_vs_affidavit",
-        "wrong_gps"
-      ],
-      "region": "West",
-      "status": "submitted"
-    },
-    {
-      "id": "APP004",
-      "institution_id": "INST002",
-      "institution_name": "Sri Lakshmi Engineering College",
-      "category": "extension_of_approval",
-      "academic_year": "2024",
-      "intake": 120,
-      "documents": [
-        {
-          "filename": "INST002_APP004_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP004",
-            "category": "extension_of_approval",
-            "institution_name": "Sri Lakshmi Engineering College",
-            "institution_id": "SLEC-TN-002",
-            "intake": 120,
-            "actual_intake": 120
-          }
-        },
-        {
-          "filename": "INST002_APP004_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ta/2024/9719",
-            "institution_name": "Sri Lakshmi Engineering College",
-            "institution_id": "SLEC-TN-002",
-            "intake": 120,
-            "issue_date": "01-04-2024",
-            "trust_name": "Lakshmi Educational Foundation"
-          }
-        },
-        {
-          "filename": "INST002_APP004_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ta/2024/8486",
-            "institution_name": "Sri Lakshmi Engineering College",
-            "issue_date": "01-01-2024",
-            "expiry_date": "31-12-2024",
-            "issuing_authority": "City Fire Department, Chennai"
-          }
-        },
-        {
-          "filename": "INST002_APP004_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ta/2024/8226",
-            "issue_date": "15-03-2024",
-            "expiry_date": "14-03-2025",
-            "institution_name": "Sri Lakshmi Engineering College",
-            "institution_id": "SLEC-TN-002"
-          }
-        },
-        {
-          "filename": "INST002_APP004_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "TN/CHN/SUR/2008/002",
-            "area_acres": 17.81,
-            "trust_name": "Lakshmi Educational Foundation",
-            "institution_name": "Sri Lakshmi Engineering College"
-          }
-        },
-        {
-          "filename": "INST002_APP004_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ta/2024/6861",
-            "university_name": "State Technical University, Tamil Nadu (SIMULATED)",
-            "institution_name": "Sri Lakshmi Engineering College",
-            "issue_date": "15-05-2024"
-          }
-        },
-        {
-          "filename": "INST002_APP004_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Sri Lakshmi Engineering College",
-            "faculty_count": 5,
-            "faculty_ids": [
-              "FAC004",
-              "FAC006",
-              "FAC007",
-              "FAC009",
-              "FAC011"
-            ],
-            "displayed_count": 5
-          }
-        },
-        {
-          "filename": "INST002_APP004_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Sri Lakshmi Engineering College"
-          }
-        },
-        {
-          "filename": "INST002_APP004_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Sri Lakshmi Engineering College"
-          }
-        }
-      ],
-      "planted_faults": [],
-      "region": "South",
-      "status": "submitted"
-    },
-    {
-      "id": "APP005",
-      "institution_id": "INST002",
-      "institution_name": "Sri Lakshmi Engineering College",
-      "category": "extension_of_approval",
-      "academic_year": "2025",
-      "intake": 150,
-      "documents": [
-        {
-          "filename": "INST002_APP005_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP005",
-            "category": "extension_of_approval",
-            "institution_name": "Sri Lakshmi Engineering College",
-            "institution_id": "SLEC-TN-002",
-            "intake": 150,
-            "actual_intake": 150
-          }
-        },
-        {
-          "filename": "INST002_APP005_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ta/2025/1851",
-            "institution_name": "Sri Lakshmi Engineering College",
-            "institution_id": "SLEC-TN-002",
-            "intake": 150,
-            "issue_date": "01-04-2025",
-            "trust_name": "Lakshmi Educational Foundation"
-          }
-        },
-        {
-          "filename": "INST002_APP005_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ta/2025/1496",
-            "institution_name": "Sri Lakshmi Engineering College",
-            "issue_date": "01-01-2025",
-            "expiry_date": "31-12-2025",
-            "issuing_authority": "City Fire Department, Chennai"
-          }
-        },
-        {
-          "filename": "INST002_APP005_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ta/2025/2971",
-            "issue_date": "15-03-2025",
-            "expiry_date": "14-03-2026",
-            "institution_name": "Sri Lakshmi Engineering College",
-            "institution_id": "SLEC-TN-002"
-          }
-        },
-        {
-          "filename": "INST002_APP005_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "TN/CHN/SUR/2008/002",
-            "area_acres": 17.66,
-            "trust_name": "Lakshmi Educational Foundation",
-            "institution_name": "Sri Lakshmi Engineering College"
-          }
-        },
-        {
-          "filename": "INST002_APP005_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ta/2025/9323",
-            "university_name": "State Technical University, Tamil Nadu (SIMULATED)",
-            "institution_name": "Sri Lakshmi Engineering College",
-            "issue_date": "15-05-2025"
-          }
-        },
-        {
-          "filename": "INST002_APP005_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Sri Lakshmi Engineering College",
-            "faculty_count": 5,
-            "faculty_ids": [
-              "FAC004",
-              "FAC006",
-              "FAC007",
-              "FAC009",
-              "FAC011"
-            ],
-            "displayed_count": 5
-          }
-        },
-        {
-          "filename": "INST002_APP005_electricity_bill.pdf",
-          "type": "electricity_bill",
-          "meta": {
-            "bill_number": "EB/CHE/2025/534197",
-            "institution_name": "Lakshmi Educational Foundation",
-            "bill_date": "01-02-2025"
-          }
-        },
-        {
-          "filename": "INST002_APP005_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Sri Lakshmi Engineering College"
-          }
-        },
-        {
-          "filename": "INST002_APP005_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Sri Lakshmi Engineering College"
-          }
-        },
-        {
-          "filename": "INST002_APP005_photo_3.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Sri Lakshmi Engineering College"
-          }
-        },
-        {
-          "filename": "INST002_APP005_photo_4.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Sri Lakshmi Engineering College"
-          }
-        }
-      ],
-      "planted_faults": [],
-      "region": "South",
-      "status": "submitted"
-    },
-    {
-      "id": "APP006",
-      "institution_id": "INST002",
-      "institution_name": "Sri Lakshmi Engineering College",
-      "category": "extension_of_approval",
-      "academic_year": "2026",
-      "intake": 120,
-      "documents": [
-        {
-          "filename": "INST002_APP006_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP006",
-            "category": "extension_of_approval",
-            "institution_name": "Sri Lakshmi Engineering College",
-            "institution_id": "SLEC-TN-002",
-            "intake": 120,
-            "actual_intake": 120
-          }
-        },
-        {
-          "filename": "INST002_APP006_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ta/2026/2650",
-            "institution_name": "Sri Lakshmi Engineering College (Misspelled)",
-            "institution_id": "SLEC-TN-002",
-            "intake": 120,
-            "issue_date": "01-04-2026",
-            "trust_name": "Lakshmi Educational Foundation"
-          }
-        },
-        {
-          "filename": "INST002_APP006_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ta/2026/4986",
-            "institution_name": "Sri Lakshmi Engineering College",
-            "issue_date": "01-01-2026",
-            "expiry_date": "31-12-2026",
-            "issuing_authority": "City Fire Department, Chennai"
-          }
-        },
-        {
-          "filename": "INST002_APP006_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ta/2026/3321",
-            "issue_date": "15-03-2026",
-            "expiry_date": "14-03-2027",
-            "institution_name": "Sri Lakshmi Engineering College",
-            "institution_id": "SLEC-TN-002"
-          }
-        },
-        {
-          "filename": "INST002_APP006_accreditation.pdf",
-          "type": "accreditation_certificate",
-          "meta": {
-            "ref_number": "ACC/2026/28165",
-            "qr_ref_number": "ACC/2026/28165",
-            "institution_name": "Sri Lakshmi Engineering College",
-            "issue_date": "01-07-2024",
-            "expiry_date": "30-06-2029"
-          }
-        },
-        {
-          "filename": "INST002_APP006_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "TN/CHN/SUR/2008/002",
-            "area_acres": 10.8,
-            "trust_name": "Lakshmi Educational Foundation",
-            "institution_name": "Sri Lakshmi Engineering College"
-          }
-        },
-        {
-          "filename": "INST002_APP006_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ta/2026/7136",
-            "university_name": "State Technical University, Tamil Nadu (SIMULATED)",
-            "institution_name": "Sri Lakshmi Engineering College",
-            "issue_date": "15-05-2026"
-          }
-        },
-        {
-          "filename": "INST002_APP006_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Sri Lakshmi Engineering College",
-            "faculty_count": 5,
-            "faculty_ids": [
-              "FAC004",
-              "FAC006",
-              "FAC007",
-              "FAC009",
-              "FAC011"
-            ],
-            "displayed_count": 5
-          }
-        },
-        {
-          "filename": "INST002_APP006_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Sri Lakshmi Engineering College"
-          }
-        },
-        {
-          "filename": "INST002_APP006_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Sri Lakshmi Engineering College"
-          }
-        },
-        {
-          "filename": "INST002_APP006_photo_3.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Sri Lakshmi Engineering College"
-          }
-        },
-        {
-          "filename": "INST002_APP006_tamil_cert.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "TN/CERT/2026/5811",
-            "language": "tamil",
-            "institution_name": "Sri Lakshmi Engineering College"
-          }
-        }
-      ],
-      "planted_faults": [
-        "name_mismatch",
-        "old_photo"
-      ],
-      "region": "South",
-      "status": "submitted"
-    },
-    {
-      "id": "APP007",
-      "institution_id": "INST003",
-      "institution_name": "Bharati Vidyapeeth College of Engineering",
-      "category": "extension_of_approval",
-      "academic_year": "2024",
-      "intake": 60,
-      "documents": [
-        {
-          "filename": "INST003_APP007_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP007",
-            "category": "extension_of_approval",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "institution_id": "BVCE-KA-003",
-            "intake": 60,
-            "actual_intake": 60
-          }
-        },
-        {
-          "filename": "INST003_APP007_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ka/2024/1251",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "institution_id": "BVCE-KA-003",
-            "intake": 60,
-            "issue_date": "01-04-2024",
-            "trust_name": "Bharati Education Society"
-          }
-        },
-        {
-          "filename": "INST003_APP007_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ka/2024/9412",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "issue_date": "01-01-2024",
-            "expiry_date": "31-12-2024",
-            "issuing_authority": "City Fire Department, Bangalore"
-          }
-        },
-        {
-          "filename": "INST003_APP007_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ka/2024/9655",
-            "issue_date": "15-03-2024",
-            "expiry_date": "14-03-2025",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "institution_id": "BVCE-KA-003"
-          }
-        },
-        {
-          "filename": "INST003_APP007_accreditation.pdf",
-          "type": "accreditation_certificate",
-          "meta": {
-            "ref_number": "ACC/2024/24961",
-            "qr_ref_number": "ACC/2024/24961",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "issue_date": "01-07-2022",
-            "expiry_date": "30-06-2027"
-          }
-        },
-        {
-          "filename": "INST003_APP007_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "KA/BLR/SUR/2003/003",
-            "area_acres": 5.36,
-            "trust_name": "Bharati Education Society",
-            "institution_name": "Bharati Vidyapeeth College of Engineering"
-          }
-        },
-        {
-          "filename": "INST003_APP007_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ka/2024/5126",
-            "university_name": "State Technical University, Karnataka (SIMULATED)",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "issue_date": "15-05-2024"
-          }
-        },
-        {
-          "filename": "INST003_APP007_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "faculty_count": 4,
-            "faculty_ids": [
-              "FAC002",
-              "FAC008",
-              "FAC010",
-              "FAC012"
-            ],
-            "displayed_count": 4
-          }
-        },
-        {
-          "filename": "INST003_APP007_electricity_bill.pdf",
-          "type": "electricity_bill",
-          "meta": {
-            "bill_number": "EB/BAN/2024/986818",
-            "institution_name": "Bharati Education Society",
-            "bill_date": "01-02-2024"
-          }
-        },
-        {
-          "filename": "INST003_APP007_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Bharati Vidyapeeth College of Engineering"
-          }
-        },
-        {
-          "filename": "INST003_APP007_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Bharati Vidyapeeth College of Engineering"
-          }
-        },
-        {
-          "filename": "INST003_APP007_photo_3.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Bharati Vidyapeeth College of Engineering"
-          }
-        }
-      ],
-      "planted_faults": [],
-      "region": "South",
-      "status": "submitted"
-    },
-    {
-      "id": "APP008",
-      "institution_id": "INST003",
-      "institution_name": "Bharati Vidyapeeth College of Engineering",
-      "category": "extension_of_approval",
-      "academic_year": "2025",
-      "intake": 90,
-      "documents": [
-        {
-          "filename": "INST003_APP008_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP008",
-            "category": "extension_of_approval",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "institution_id": "BVCE-KA-003",
-            "intake": 90,
-            "actual_intake": 90
-          }
-        },
-        {
-          "filename": "INST003_APP008_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ka/2025/4336",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "institution_id": "BVCE-KA-003",
-            "intake": 90,
-            "issue_date": "01-04-2025",
-            "trust_name": "Bharati Education Society"
-          }
-        },
-        {
-          "filename": "INST003_APP008_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ka/2025/5271",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "issue_date": "01-01-2023",
-            "expiry_date": "31-12-2024",
-            "issuing_authority": "City Fire Department, Bangalore"
-          }
-        },
-        {
-          "filename": "INST003_APP008_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ka/2025/6550",
-            "issue_date": "15-03-2025",
-            "expiry_date": "14-03-2026",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "institution_id": "BVCE-KA-003"
-          }
-        },
-        {
-          "filename": "INST003_APP008_accreditation.pdf",
-          "type": "accreditation_certificate",
-          "meta": {
-            "ref_number": "ACC/2025/29176",
-            "qr_ref_number": "ACC/2025/29176",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "issue_date": "01-07-2023",
-            "expiry_date": "30-06-2028"
-          }
-        },
-        {
-          "filename": "INST003_APP008_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "KA/BLR/SUR/2003/003",
-            "area_acres": 23.97,
-            "trust_name": "Bharati Education Society",
-            "institution_name": "Bharati Vidyapeeth College of Engineering"
-          }
-        },
-        {
-          "filename": "INST003_APP008_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ka/2025/3908",
-            "university_name": "State Technical University, Karnataka (SIMULATED)",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "issue_date": "15-05-2025"
-          }
-        },
-        {
-          "filename": "INST003_APP008_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "faculty_count": 4,
-            "faculty_ids": [
-              "FAC002",
-              "FAC008",
-              "FAC010",
-              "FAC012"
-            ],
-            "displayed_count": 4
-          }
-        },
-        {
-          "filename": "INST003_APP008_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Bharati Vidyapeeth College of Engineering"
-          }
-        },
-        {
-          "filename": "INST003_APP008_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Bharati Vidyapeeth College of Engineering"
-          }
-        }
-      ],
-      "planted_faults": [
-        "expired_certificate"
-      ],
-      "region": "South",
-      "status": "submitted"
-    },
-    {
-      "id": "APP009",
-      "institution_id": "INST003",
-      "institution_name": "Bharati Vidyapeeth College of Engineering",
-      "category": "new_course",
-      "academic_year": "2026",
-      "intake": 120,
-      "documents": [
-        {
-          "filename": "INST003_APP009_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP009",
-            "category": "new_course",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "institution_id": "BVCE-KA-003",
-            "intake": 120,
-            "actual_intake": 120
-          }
-        },
-        {
-          "filename": "INST003_APP009_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ka/2026/7449",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "institution_id": "BVCE-KA-003",
-            "intake": 120,
-            "issue_date": "01-04-2026",
-            "trust_name": "Bharati Education Society"
-          }
-        },
-        {
-          "filename": "INST003_APP009_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ka/2026/3850",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "issue_date": "01-01-2026",
-            "expiry_date": "31-12-2026",
-            "issuing_authority": "City Fire Department, Bangalore"
-          }
-        },
-        {
-          "filename": "INST003_APP009_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ka/2026/3304",
-            "issue_date": "15-03-2026",
-            "expiry_date": "14-03-2027",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "institution_id": "BVCE-KA-003"
-          }
-        },
-        {
-          "filename": "INST003_APP009_accreditation.pdf",
-          "type": "accreditation_certificate",
-          "meta": {
-            "ref_number": "ACC/2026/95902",
-            "qr_ref_number": "ACC/2026/95902",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "issue_date": "01-07-2024",
-            "expiry_date": "30-06-2029"
-          }
-        },
-        {
-          "filename": "INST003_APP009_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "KA/BLR/SUR/2003/003",
-            "area_acres": 12.87,
-            "trust_name": "Bharati Education Society",
-            "institution_name": "Bharati Vidyapeeth College of Engineering"
-          }
-        },
-        {
-          "filename": "INST003_APP009_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ka/2026/7632",
-            "university_name": "State Technical University, Karnataka (SIMULATED)",
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "issue_date": "15-05-2026"
-          }
-        },
-        {
-          "filename": "INST003_APP009_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Bharati Vidyapeeth College of Engineering",
-            "faculty_count": 4,
-            "faculty_ids": [
-              "FAC002",
-              "FAC008",
-              "FAC010",
-              "FAC012"
-            ],
-            "displayed_count": 4
-          }
-        },
-        {
-          "filename": "INST003_APP009_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Bharati Vidyapeeth College of Engineering"
-          }
-        },
-        {
-          "filename": "INST003_APP009_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Bharati Vidyapeeth College of Engineering"
-          }
-        },
-        {
-          "filename": "INST003_APP009_duplicate_cert.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {}
-        }
-      ],
-      "planted_faults": [
-        "duplicate_document"
-      ],
-      "region": "South",
-      "status": "submitted"
-    },
-    {
-      "id": "APP010",
-      "institution_id": "INST004",
-      "institution_name": "Netaji Subhas Institute of Technology",
-      "category": "extension_of_approval",
-      "academic_year": "2024",
-      "intake": 120,
-      "documents": [
-        {
-          "filename": "INST004_APP010_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP010",
-            "category": "extension_of_approval",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "institution_id": "NSIT-UP-004",
-            "intake": 120,
-            "actual_intake": 120
-          }
-        },
-        {
-          "filename": "INST004_APP010_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ut/2024/7652",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "institution_id": "NSIT-UP-004",
-            "intake": 120,
-            "issue_date": "01-04-2024",
-            "trust_name": "Subhas Memorial Trust"
-          }
-        },
-        {
-          "filename": "INST004_APP010_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ut/2024/6294",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "issue_date": "01-01-2024",
-            "expiry_date": "31-12-2024",
-            "issuing_authority": "City Fire Department, Lucknow"
-          }
-        },
-        {
-          "filename": "INST004_APP010_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ut/2024/3778",
-            "issue_date": "15-03-2024",
-            "expiry_date": "14-03-2025",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "institution_id": "NSIT-UP-004"
-          }
-        },
-        {
-          "filename": "INST004_APP010_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "UP/LKO/SUR/2010/004",
-            "area_acres": 21.27,
-            "trust_name": "Subhas Memorial Trust",
-            "institution_name": "Netaji Subhas Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST004_APP010_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ut/2024/7033",
-            "university_name": "State Technical University, Uttar Pradesh (SIMULATED)",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "issue_date": "15-05-2024"
-          }
-        },
-        {
-          "filename": "INST004_APP010_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "faculty_count": 4,
-            "faculty_ids": [
-              "FAC003",
-              "FAC005",
-              "FAC006",
-              "FAC012"
-            ],
-            "displayed_count": 4
-          }
-        },
-        {
-          "filename": "INST004_APP010_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Netaji Subhas Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST004_APP010_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Netaji Subhas Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST004_APP010_photo_3.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Netaji Subhas Institute of Technology"
-          }
-        }
-      ],
-      "planted_faults": [],
-      "region": "North",
-      "status": "submitted"
-    },
-    {
-      "id": "APP011",
-      "institution_id": "INST004",
-      "institution_name": "Netaji Subhas Institute of Technology",
-      "category": "increase_of_intake",
-      "academic_year": "2025",
-      "intake": 270,
-      "documents": [
-        {
-          "filename": "INST004_APP011_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP011",
-            "category": "increase_of_intake",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "institution_id": "NSIT-UP-004",
-            "intake": 270,
-            "actual_intake": 270
-          }
-        },
-        {
-          "filename": "INST004_APP011_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ut/2025/8811",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "institution_id": "NSIT-UP-004",
-            "intake": 270,
-            "issue_date": "01-04-2025",
-            "trust_name": "Subhas Memorial Trust"
-          }
-        },
-        {
-          "filename": "INST004_APP011_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ut/2025/3559",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "issue_date": "01-01-2025",
-            "expiry_date": "31-12-2025",
-            "issuing_authority": "City Fire Department, Lucknow"
-          }
-        },
-        {
-          "filename": "INST004_APP011_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ut/2025/2499",
-            "issue_date": "15-03-2025",
-            "expiry_date": "14-03-2026",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "institution_id": "NSIT-UP-004"
-          }
-        },
-        {
-          "filename": "INST004_APP011_accreditation.pdf",
-          "type": "accreditation_certificate",
-          "meta": {
-            "ref_number": "ACC/2025/23382",
-            "qr_ref_number": "ACC/2025/23382",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "issue_date": "01-07-2023",
-            "expiry_date": "30-06-2028"
-          }
-        },
-        {
-          "filename": "INST004_APP011_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "UP/LKO/SUR/2010/004",
-            "area_acres": 9.17,
-            "trust_name": "Subhas Memorial Trust",
-            "institution_name": "Netaji Subhas Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST004_APP011_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ut/2025/5353",
-            "university_name": "State Technical University, Uttar Pradesh (SIMULATED)",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "issue_date": "15-05-2025"
-          }
-        },
-        {
-          "filename": "INST004_APP011_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "faculty_count": 4,
-            "faculty_ids": [
-              "FAC003",
-              "FAC005",
-              "FAC006",
-              "FAC012"
-            ],
-            "displayed_count": 4
-          }
-        },
-        {
-          "filename": "INST004_APP011_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Netaji Subhas Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST004_APP011_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Netaji Subhas Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST004_APP011_photo_3.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Netaji Subhas Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST004_APP011_photo_4.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Netaji Subhas Institute of Technology"
-          }
-        }
-      ],
-      "planted_faults": [],
-      "region": "North",
-      "status": "submitted"
-    },
-    {
-      "id": "APP012",
-      "institution_id": "INST004",
-      "institution_name": "Netaji Subhas Institute of Technology",
-      "category": "extension_of_approval",
-      "academic_year": "2026",
-      "intake": 180,
-      "documents": [
-        {
-          "filename": "INST004_APP012_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP012",
-            "category": "extension_of_approval",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "institution_id": "NSIT-UP-004",
-            "intake": 180,
-            "actual_intake": 180
-          }
-        },
-        {
-          "filename": "INST004_APP012_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ut/2026/4677",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "institution_id": "NSIT-UP-004",
-            "intake": 180,
-            "issue_date": "01-04-2026",
-            "trust_name": "Subhas Memorial Trust"
-          }
-        },
-        {
-          "filename": "INST004_APP012_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ut/2026/1654",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "issue_date": "01-01-2026",
-            "expiry_date": "31-12-2026",
-            "issuing_authority": "City Fire Department, Lucknow"
-          }
-        },
-        {
-          "filename": "INST004_APP012_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ut/2026/4782",
-            "issue_date": "15-03-2026",
-            "expiry_date": "14-03-2027",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "institution_id": "NSIT-UP-004"
-          }
-        },
-        {
-          "filename": "INST004_APP012_accreditation.pdf",
-          "type": "accreditation_certificate",
-          "meta": {
-            "ref_number": "ACC/2026/67529",
-            "qr_ref_number": "ACC/2026/78940",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "issue_date": "01-07-2024",
-            "expiry_date": "30-06-2029"
-          }
-        },
-        {
-          "filename": "INST004_APP012_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "UP/LKO/SUR/2010/004",
-            "area_acres": 16.71,
-            "trust_name": "Subhas Memorial Trust",
-            "institution_name": "Netaji Subhas Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST004_APP012_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ut/2026/8563",
-            "university_name": "State Technical University, Uttar Pradesh (SIMULATED)",
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "issue_date": "15-05-2026"
-          }
-        },
-        {
-          "filename": "INST004_APP012_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Netaji Subhas Institute of Technology",
-            "faculty_count": 4,
-            "faculty_ids": [
-              "FAC003",
-              "FAC005",
-              "FAC006",
-              "FAC012"
-            ],
-            "displayed_count": 4
-          }
-        },
-        {
-          "filename": "INST004_APP012_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Netaji Subhas Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST004_APP012_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Netaji Subhas Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST004_APP012_photo_3.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Netaji Subhas Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST004_APP012_hindi_cert.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "UP/CERT/2026/6168",
-            "language": "hindi",
-            "institution_name": "Netaji Subhas Institute of Technology"
-          }
-        },
-        {
-          "filename": "INST004_APP012_photo_dup.jpg",
-          "type": "infrastructure_photo",
-          "meta": {}
-        }
-      ],
-      "planted_faults": [
-        "qr_mismatch",
-        "duplicate_photo"
-      ],
-      "region": "North",
-      "status": "submitted"
-    },
-    {
-      "id": "APP013",
-      "institution_id": "INST005",
-      "institution_name": "Kalam Technical University",
-      "category": "extension_of_approval",
-      "academic_year": "2024",
-      "intake": 60,
-      "documents": [
-        {
-          "filename": "INST005_APP013_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP013",
-            "category": "extension_of_approval",
-            "institution_name": "Kalam Technical University",
-            "institution_id": "KTU-TN-005",
-            "intake": 60,
-            "actual_intake": 60
-          }
-        },
-        {
-          "filename": "INST005_APP013_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ta/2024/1727",
-            "institution_name": "Kalam Technical University",
-            "institution_id": "KTU-TN-005",
-            "intake": 60,
-            "issue_date": "01-04-2024",
-            "trust_name": "Kalam Foundation for Education"
-          }
-        },
-        {
-          "filename": "INST005_APP013_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ta/2024/4183",
-            "institution_name": "Kalam Technical University",
-            "issue_date": "01-01-2024",
-            "expiry_date": "31-12-2024",
-            "issuing_authority": "City Fire Department, Coimbatore"
-          }
-        },
-        {
-          "filename": "INST005_APP013_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ta/2024/7031",
-            "issue_date": "15-03-2024",
-            "expiry_date": "14-03-2025",
-            "institution_name": "Kalam Technical University",
-            "institution_id": "KTU-TN-005"
-          }
-        },
-        {
-          "filename": "INST005_APP013_accreditation.pdf",
-          "type": "accreditation_certificate",
-          "meta": {
-            "ref_number": "ACC/2024/42981",
-            "qr_ref_number": "ACC/2024/42981",
-            "institution_name": "Kalam Technical University",
-            "issue_date": "01-07-2022",
-            "expiry_date": "30-06-2027"
-          }
-        },
-        {
-          "filename": "INST005_APP013_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "TN/CBE/SUR/2012/005",
-            "area_acres": 6.9,
-            "trust_name": "Kalam Foundation for Education",
-            "institution_name": "Kalam Technical University"
-          }
-        },
-        {
-          "filename": "INST005_APP013_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ta/2024/8995",
-            "university_name": "State Technical University, Tamil Nadu (SIMULATED)",
-            "institution_name": "Kalam Technical University",
-            "issue_date": "15-05-2024"
-          }
-        },
-        {
-          "filename": "INST005_APP013_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Kalam Technical University",
-            "faculty_count": 4,
-            "faculty_ids": [
-              "FAC001",
-              "FAC007",
-              "FAC009",
-              "FAC010"
-            ],
-            "displayed_count": 4
-          }
-        },
-        {
-          "filename": "INST005_APP013_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Kalam Technical University"
-          }
-        },
-        {
-          "filename": "INST005_APP013_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Kalam Technical University"
-          }
-        },
-        {
-          "filename": "INST005_APP013_photo_3.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Kalam Technical University"
-          }
-        },
-        {
-          "filename": "INST005_APP013_photo_4.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Kalam Technical University"
-          }
-        }
-      ],
-      "planted_faults": [],
-      "region": "South",
-      "status": "submitted"
-    },
-    {
-      "id": "APP014",
-      "institution_id": "INST005",
-      "institution_name": "Kalam Technical University",
-      "category": "increase_of_intake",
-      "academic_year": "2025",
-      "intake": 270,
-      "documents": [
-        {
-          "filename": "INST005_APP014_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP014",
-            "category": "increase_of_intake",
-            "institution_name": "Kalam Technical University",
-            "institution_id": "KTU-TN-005",
-            "intake": 270,
-            "actual_intake": 270
-          }
-        },
-        {
-          "filename": "INST005_APP014_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ta/2025/9370",
-            "institution_name": "Kalam Technical University",
-            "institution_id": "KTU-TN-005",
-            "intake": 270,
-            "issue_date": "01-04-2025",
-            "trust_name": "Kalam Foundation for Education"
-          }
-        },
-        {
-          "filename": "INST005_APP014_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ta/2025/4105",
-            "institution_name": "Kalam Technical University",
-            "issue_date": "01-01-2025",
-            "expiry_date": "31-12-2025",
-            "issuing_authority": "City Fire Department, Coimbatore"
-          }
-        },
-        {
-          "filename": "INST005_APP014_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ta/2025/9978",
-            "issue_date": "15-03-2025",
-            "expiry_date": "14-03-2026",
-            "institution_name": "Kalam Technical University",
-            "institution_id": "KTU-TN-005"
-          }
-        },
-        {
-          "filename": "INST005_APP014_accreditation.pdf",
-          "type": "accreditation_certificate",
-          "meta": {
-            "ref_number": "ACC/2025/75759",
-            "qr_ref_number": "ACC/2025/75759",
-            "institution_name": "Kalam Technical University",
-            "issue_date": "01-07-2023",
-            "expiry_date": "30-06-2028"
-          }
-        },
-        {
-          "filename": "INST005_APP014_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "TN/CBE/SUR/2012/005",
-            "area_acres": 7.06,
-            "trust_name": "Kalam Foundation for Education",
-            "institution_name": "Kalam Technical University"
-          }
-        },
-        {
-          "filename": "INST005_APP014_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ta/2025/1842",
-            "university_name": "State Technical University, Tamil Nadu (SIMULATED)",
-            "institution_name": "Kalam Technical University",
-            "issue_date": "15-05-2025"
-          }
-        },
-        {
-          "filename": "INST005_APP014_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Kalam Technical University",
-            "faculty_count": 4,
-            "faculty_ids": [
-              "FAC001",
-              "FAC007",
-              "FAC009",
-              "FAC010"
-            ],
-            "displayed_count": 4
-          }
-        },
-        {
-          "filename": "INST005_APP014_electricity_bill.pdf",
-          "type": "electricity_bill",
-          "meta": {
-            "bill_number": "EB/COI/2025/253159",
-            "institution_name": "Kalam Foundation for Education",
-            "bill_date": "01-02-2025"
-          }
-        },
-        {
-          "filename": "INST005_APP014_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Kalam Technical University"
-          }
-        },
-        {
-          "filename": "INST005_APP014_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Kalam Technical University"
-          }
-        },
-        {
-          "filename": "INST005_APP014_photo_3.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Kalam Technical University"
-          }
-        },
-        {
-          "filename": "INST005_APP014_photo_4.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Kalam Technical University"
-          }
-        },
-        {
-          "filename": "INST005_APP014_edited_metadata.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "MET/2025/8399",
-            "producer": "Adobe Acrobat Pro DC (edited)",
-            "extra_eof": true
-          }
-        }
-      ],
-      "planted_faults": [
-        "edited_metadata"
-      ],
-      "region": "South",
-      "status": "submitted"
-    },
-    {
-      "id": "APP015",
-      "institution_id": "INST005",
-      "institution_name": "Kalam Technical University",
-      "category": "increase_of_intake",
-      "academic_year": "2026",
-      "intake": 300,
-      "documents": [
-        {
-          "filename": "INST005_APP015_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP015",
-            "category": "increase_of_intake",
-            "institution_name": "Kalam Technical University",
-            "institution_id": "KTU-TN-005",
-            "intake": 300,
-            "actual_intake": 300
-          }
-        },
-        {
-          "filename": "INST005_APP015_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ta/2026/1008",
-            "institution_name": "Kalam Technical University",
-            "institution_id": "KTU-TN-005",
-            "intake": 300,
-            "issue_date": "01-04-2026",
-            "trust_name": "Kalam Foundation for Education"
-          }
-        },
-        {
-          "filename": "INST005_APP015_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ta/2026/7283",
-            "institution_name": "Kalam Technical University",
-            "issue_date": "01-01-2026",
-            "expiry_date": "31-12-2026",
-            "issuing_authority": "City Fire Department, Coimbatore"
-          }
-        },
-        {
-          "filename": "INST005_APP015_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ta/2026/2120",
-            "issue_date": "15-03-2026",
-            "expiry_date": "14-03-2027",
-            "institution_name": "Kalam Technical University",
-            "institution_id": "KTU-TN-005"
-          }
-        },
-        {
-          "filename": "INST005_APP015_accreditation.pdf",
-          "type": "accreditation_certificate",
-          "meta": {
-            "ref_number": "ACC/2026/54182",
-            "qr_ref_number": "ACC/2026/54182",
-            "institution_name": "Kalam Technical University",
-            "issue_date": "01-07-2024",
-            "expiry_date": "30-06-2029"
-          }
-        },
-        {
-          "filename": "INST005_APP015_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "TN/CBE/SUR/2012/005",
-            "area_acres": 6.71,
-            "trust_name": "Kalam Foundation for Education",
-            "institution_name": "Kalam Technical University"
-          }
-        },
-        {
-          "filename": "INST005_APP015_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ta/2026/4601",
-            "university_name": "State Technical University, Tamil Nadu (SIMULATED)",
-            "institution_name": "Kalam Technical University",
-            "issue_date": "15-05-2026"
-          }
-        },
-        {
-          "filename": "INST005_APP015_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Kalam Technical University",
-            "faculty_count": 4,
-            "faculty_ids": [
-              "FAC001",
-              "FAC007",
-              "FAC009",
-              "FAC010"
-            ],
-            "displayed_count": 4
-          }
-        },
-        {
-          "filename": "INST005_APP015_electricity_bill.pdf",
-          "type": "electricity_bill",
-          "meta": {
-            "bill_number": "EB/COI/2026/404880",
-            "institution_name": "Kalam Foundation for Education",
-            "bill_date": "01-02-2026"
-          }
-        },
-        {
-          "filename": "INST005_APP015_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Kalam Technical University"
-          }
-        },
-        {
-          "filename": "INST005_APP015_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Kalam Technical University"
-          }
-        },
-        {
-          "filename": "INST005_APP015_photo_3.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Kalam Technical University"
-          }
-        },
-        {
-          "filename": "INST005_APP015_tamil_cert.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "TN/CERT/2026/8699",
-            "language": "tamil",
-            "institution_name": "Kalam Technical University"
-          }
-        }
-      ],
-      "planted_faults": [
-        "font_inconsistency"
-      ],
-      "region": "South",
-      "status": "submitted"
-    },
-    {
-      "id": "APP016",
-      "institution_id": "INST006",
-      "institution_name": "Savitribai Phule Polytechnic",
-      "category": "extension_of_approval",
-      "academic_year": "2024",
-      "intake": 120,
-      "documents": [
-        {
-          "filename": "INST006_APP016_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP016",
-            "category": "extension_of_approval",
-            "institution_name": "Savitribai Phule Polytechnic",
-            "institution_id": "SPP-MH-006",
-            "intake": 120,
-            "actual_intake": 120
-          }
-        },
-        {
-          "filename": "INST006_APP016_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ma/2024/1398",
-            "institution_name": "Savitribai Phule Polytechnic",
-            "institution_id": "SPP-MH-006",
-            "intake": 120,
-            "issue_date": "01-04-2024",
-            "trust_name": "Rajiv Education Trust"
-          }
-        },
-        {
-          "filename": "INST006_APP016_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ma/2024/4471",
-            "institution_name": "Savitribai Phule Polytechnic",
-            "issue_date": "01-01-2024",
-            "expiry_date": "31-12-2024",
-            "issuing_authority": "City Fire Department, Nagpur"
-          }
-        },
-        {
-          "filename": "INST006_APP016_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ma/2024/2134",
-            "issue_date": "15-03-2024",
-            "expiry_date": "14-03-2025",
-            "institution_name": "Savitribai Phule Polytechnic",
-            "institution_id": "SPP-MH-006"
-          }
-        },
-        {
-          "filename": "INST006_APP016_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "MH/PUNE/SUR/2005/001",
-            "area_acres": 10.81,
-            "trust_name": "Rajiv Education Trust",
-            "institution_name": "Savitribai Phule Polytechnic"
-          }
-        },
-        {
-          "filename": "INST006_APP016_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ma/2024/3973",
-            "university_name": "State Technical University, Maharashtra (SIMULATED)",
-            "institution_name": "Savitribai Phule Polytechnic",
-            "issue_date": "15-05-2024"
-          }
-        },
-        {
-          "filename": "INST006_APP016_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Savitribai Phule Polytechnic",
-            "faculty_count": 2,
-            "faculty_ids": [
-              "FAC004",
-              "FAC008"
-            ],
-            "displayed_count": 2
-          }
-        },
-        {
-          "filename": "INST006_APP016_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Savitribai Phule Polytechnic"
-          }
-        },
-        {
-          "filename": "INST006_APP016_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Savitribai Phule Polytechnic"
-          }
-        }
-      ],
-      "planted_faults": [],
-      "region": "West",
-      "status": "submitted"
-    },
-    {
-      "id": "APP017",
-      "institution_id": "INST006",
-      "institution_name": "Savitribai Phule Polytechnic",
-      "category": "increase_of_intake",
-      "academic_year": "2025",
-      "intake": 90,
-      "documents": [
-        {
-          "filename": "INST006_APP017_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP017",
-            "category": "increase_of_intake",
-            "institution_name": "Savitribai Phule Polytechnic",
-            "institution_id": "SPP-MH-006",
-            "intake": 90,
-            "actual_intake": 90
-          }
-        },
-        {
-          "filename": "INST006_APP017_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ma/2025/2737",
-            "institution_name": "Savitribai Phule Polytechnic",
-            "institution_id": "SPP-MH-006",
-            "intake": 90,
-            "issue_date": "01-04-2025",
-            "trust_name": "Rajiv Education Trust"
-          }
-        },
-        {
-          "filename": "INST006_APP017_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ma/2025/9796",
-            "institution_name": "Savitribai Phule Polytechnic",
-            "issue_date": "01-01-2025",
-            "expiry_date": "31-12-2025",
-            "issuing_authority": "City Fire Department, Nagpur"
-          }
-        },
-        {
-          "filename": "INST006_APP017_noc.pdf",
-          "type": "noc",
-          "meta": {
-            "ref_number": "NOC/Ma/2025/7392",
-            "issue_date": "15-03-2025",
-            "expiry_date": "14-03-2026",
-            "institution_name": "Savitribai Phule Polytechnic",
-            "institution_id": "SPP-MH-006"
-          }
-        },
-        {
-          "filename": "INST006_APP017_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "MH/PUNE/SUR/2005/001",
-            "area_acres": 12.98,
-            "trust_name": "Rajiv Education Trust",
-            "institution_name": "Savitribai Phule Polytechnic"
-          }
-        },
-        {
-          "filename": "INST006_APP017_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ma/2025/4437",
-            "university_name": "State Technical University, Maharashtra (SIMULATED)",
-            "institution_name": "Savitribai Phule Polytechnic",
-            "issue_date": "15-05-2025"
-          }
-        },
-        {
-          "filename": "INST006_APP017_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Savitribai Phule Polytechnic",
-            "faculty_count": 2,
-            "faculty_ids": [
-              "FAC004",
-              "FAC008"
-            ],
-            "displayed_count": 2
-          }
-        },
-        {
-          "filename": "INST006_APP017_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Savitribai Phule Polytechnic"
-          }
-        },
-        {
-          "filename": "INST006_APP017_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Savitribai Phule Polytechnic"
-          }
-        }
-      ],
-      "planted_faults": [],
-      "region": "West",
-      "status": "submitted"
-    },
-    {
-      "id": "APP018",
-      "institution_id": "INST006",
-      "institution_name": "Savitribai Phule Polytechnic",
-      "category": "closure",
-      "academic_year": "2026",
-      "intake": 240,
-      "documents": [
-        {
-          "filename": "INST006_APP018_application_form.pdf",
-          "type": "application_form",
-          "meta": {
-            "application_id": "APP018",
-            "category": "closure",
-            "institution_name": "Savitribai Phule Polytechnic",
-            "institution_id": "SPP-MH-006",
-            "intake": 240,
-            "actual_intake": 240
-          }
-        },
-        {
-          "filename": "INST006_APP018_affidavit.pdf",
-          "type": "affidavit",
-          "meta": {
-            "ref_number": "AFF/Ma/2026/3754",
-            "institution_name": "Savitribai Phule Polytechnic",
-            "institution_id": "SPP-MH-006",
-            "intake": 240,
-            "issue_date": "01-04-2026",
-            "trust_name": "Rajiv Education Trust"
-          }
-        },
-        {
-          "filename": "INST006_APP018_fire_safety.pdf",
-          "type": "fire_safety_certificate",
-          "meta": {
-            "ref_number": "FSC/Ma/2026/9716",
-            "institution_name": "Savitribai Phule Polytechnic",
-            "issue_date": "01-01-2026",
-            "expiry_date": "31-12-2026",
-            "issuing_authority": "City Fire Department, Nagpur"
-          }
-        },
-        {
-          "filename": "INST006_APP018_land_document.pdf",
-          "type": "land_document",
-          "meta": {
-            "survey_number": "MH/PUNE/SUR/2005/001",
-            "area_acres": 16.78,
-            "trust_name": "Rajiv Education Trust",
-            "institution_name": "Savitribai Phule Polytechnic"
-          }
-        },
-        {
-          "filename": "INST006_APP018_affiliation.pdf",
-          "type": "university_affiliation_letter",
-          "meta": {
-            "ref_number": "AFFL/Ma/2026/2319",
-            "university_name": "State Technical University, Maharashtra (SIMULATED)",
-            "institution_name": "Savitribai Phule Polytechnic",
-            "issue_date": "15-05-2026"
-          }
-        },
-        {
-          "filename": "INST006_APP018_faculty_list.pdf",
-          "type": "faculty_list",
-          "meta": {
-            "institution_name": "Savitribai Phule Polytechnic",
-            "faculty_count": 2,
-            "faculty_ids": [
-              "FAC004",
-              "FAC008"
-            ],
-            "displayed_count": 2
-          }
-        },
-        {
-          "filename": "INST006_APP018_photo_1.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Savitribai Phule Polytechnic"
-          }
-        },
-        {
-          "filename": "INST006_APP018_photo_2.jpg",
-          "type": "infrastructure_photo",
-          "meta": {
-            "institution_name": "Savitribai Phule Polytechnic"
-          }
-        }
-      ],
-      "planted_faults": [
-        "blurry_photo"
-      ],
-      "region": "West",
-      "status": "submitted"
-    }
-  ],
-  "verification_statuses": [
-    {
-      "status": "verified",
-      "institution": "INST001",
-      "doc": "fire_safety"
-    },
-    {
-      "status": "mismatch_detected",
-      "institution": "INST004",
-      "doc": "accreditation"
-    },
-    {
-      "status": "expired",
-      "institution": "INST003",
-      "doc": "fire_safety"
-    },
-    {
-      "status": "verification_pending",
-      "institution": "INST005",
-      "doc": "noc"
-    },
-    {
-      "status": "source_unavailable",
-      "institution": "INST006",
-      "doc": "noc"
-    },
-    {
-      "status": "manual_review_required",
-      "institution": "INST002",
-      "doc": "affidavit"
-    }
-  ]
+  "applications": [],
+  "verification_statuses": []
 }

@@ -72,8 +72,11 @@ class ForensicsFinding(BaseModel):
     """Single forensic anomaly or verification check."""
     check: str
     passed: bool
+    status: str = "passed"  # "passed", "flagged", "not_run"
     details: str
+    reason: Optional[str] = None
     severity: str = "info"  # info, low, medium, high, critical
+    confidence: Optional[str] = None  # "low", "medium", "high"
     indicator: str = "preliminary indicator - human verification required"
 
 

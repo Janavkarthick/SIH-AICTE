@@ -1,7 +1,9 @@
 """Document Classification Service.
 
-Categorizes uploaded regulatory documents into recognized AICTE artifact categories
-using keyword frequency, layout features, title matching, and heuristics.
+Categorizes uploaded regulatory documents into 11 recognized statutory AICTE categories
+using deterministic weighted regex keyword pattern frequency, title matching, and layout heuristics.
+Method: Rule-based regex scoring (11 statutory classes, zero-shot statutory vocabulary).
+No black-box machine learning model is claimed or used here; this provides 100% auditable and explainable categorization.
 """
 
 import re
@@ -9,7 +11,22 @@ from typing import Dict, List, Optional, Tuple
 
 
 class ClassifierService:
-    """Rule, keyword, and layout-based document classifier for statutory AICTE filings."""
+    """Rule-based weighted keyword and regex pattern matcher across 11 statutory document categories."""
+
+    # 11 statutory AICTE document categories
+    SUPPORTED_CLASSES = [
+        "affidavit",
+        "fire_safety_certificate",
+        "noc",
+        "accreditation_certificate",
+        "land_document",
+        "university_affiliation_letter",
+        "faculty_list",
+        "electricity_bill",
+        "infrastructure_photo",
+        "application_form",
+        "audited_balance_sheet",
+    ]
 
     def __init__(self):
         # Keyword patterns for each document type with relative weights

@@ -1,38 +1,66 @@
 {
   "_meta": {
-    "description": "SIMULATED accreditation and ranking entries for outside-signals check (A8)",
+    "description": "SIMULATED NIRF and NAAC accreditation records",
     "simulated": true
   },
   "accredited_institutions": [
     {
-      "code": "RGIT-MH-001",
+      "code": "1-100101",
       "name": "Rajiv Gandhi Institute of Technology",
-      "grade": "A",
-      "valid_until": "2028-06-30"
+      "grade": "A+",
+      "valid_until": "2028-12-31"
     },
     {
-      "code": "SLEC-TN-002",
+      "code": "1-100202",
       "name": "Sri Lakshmi Engineering College",
-      "grade": "B+",
-      "valid_until": "2027-06-30"
+      "grade": "A+",
+      "valid_until": "2028-12-31"
     },
     {
-      "code": "BVCE-KA-003",
+      "code": "1-100303",
       "name": "Bharati Vidyapeeth College of Engineering",
       "grade": "A+",
-      "valid_until": "2029-06-30"
+      "valid_until": "2028-12-31"
+    },
+    {
+      "code": "1-100404",
+      "name": "Netaji Subhas Institute of Technology",
+      "grade": "A+",
+      "valid_until": "2028-12-31"
+    },
+    {
+      "code": "1-100505",
+      "name": "Kalam Technical University College",
+      "grade": "A+",
+      "valid_until": "2028-12-31"
+    },
+    {
+      "code": "1-100606",
+      "name": "Savitribai Phule Polytechnic",
+      "grade": "A+",
+      "valid_until": "2028-12-31"
     }
   ],
   "ranked_institutions": [
     {
-      "code": "RGIT-MH-001",
-      "rank": 45,
-      "year": 2026
+      "code": "1-100101",
+      "rank": 25,
+      "year": 2025
     },
     {
-      "code": "BVCE-KA-003",
-      "rank": 32,
-      "year": 2026
+      "code": "1-100202",
+      "rank": 35,
+      "year": 2025
+    },
+    {
+      "code": "1-100303",
+      "rank": 45,
+      "year": 2025
+    },
+    {
+      "code": "1-100404",
+      "rank": 55,
+      "year": 2025
     }
   ]
 }

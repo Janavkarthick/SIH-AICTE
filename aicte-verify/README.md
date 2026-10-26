@@ -85,33 +85,44 @@ Set `DATABASE_URL=postgresql://aicte:aicte_verify_dev@postgres:5432/aicte_verify
 
 ## Demo Credentials
 
-| Username | Password | Role | Access |
-|----------|----------|------|--------|
-| `admin` | `admin123` | Admin | Full access, all regions, user management |
-| `officer1` | `officer123` | Officer | West region applications, review & approve |
-| `officer2` | `officer123` | Officer | South region applications, review & approve |
-| `college1` | `college123` | College User | Own institution applications only |
-| `college2` | `college123` | College User | Own institution applications only |
+| Username | Password | Role | Region / Scope |
+|----------|----------|------|----------------|
+| `admin` | `admin123` | Central Admin | Full access, all regions, user management |
+| `officer1` | `officer123` | Regional Officer | Southern Region (OMR / Chennai / Bangalore) |
+| `officer2` | `officer123` | Regional Officer | Northern Region (Lucknow / Delhi / Jaipur) |
+| `college1` | `college123` | College User | Apex Institute of Technology (PID: 1-100234) |
+| `college2` | `college123` | College User | Zenith College of Engineering (PID: 1-100567) |
 
 ## Features
 
 ### Core Features
-- **C1. Application Validation**: Checklist-based validation per application category
-- **C2. OCR & Extraction**: Tesseract OCR (English/Tamil/Hindi) + PyMuPDF for native PDFs
-- **C3. Forensics**: PDF metadata, font analysis, ELA, copy-move, digital signatures, duplicates
-- **C4. Verification**: SIMULATED issuer verification with all 6 statuses
-- **C5. Compliance**: Infrastructure norms, photo checks, capacity calculator
-- **C6. Dashboard**: Applications, review queue, alerts, analytics, audit log
-- **C7. Evidence Viewer**: Document pages with highlights, overlays, and flag details
-- **C8. Safeguards**: RBAC, PII masking, audit trail, upload validation
+- **C1. Application Validation**: Checklist-based validation per Approval Process Handbook category with configurable 30-day grace periods.
+- **C2. Classification & Entity Extraction**: Deterministic rule-based regex scoring across 11 statutory categories + Tesseract OCR (English/Tamil/Hindi) + PyMuPDF text fallback.
+- **C3. Forensics Suite**: PDF metadata revision inspection (distinguishing compressor utilities from image editors), font consistency analysis, ELA visual inspection aid, copy-move duplication detection, and pyHanko cryptographic integrity check.
+- **C4. Verification**: SIMULATED issuer verification with all 6 statutory statuses (`verified`, `mismatch_detected`, `expired`, `verification_pending`, `source_unavailable`, `manual_review_required`).
+- **C5. Compliance Engine**: APH built-up infrastructure norms, classroom/lab capacity solver, and geofenced photo compliance.
+- **C6. Review Dashboard**: Risk-scored queue (0-100 score with weighted breakdown, uncalibrated heuristic thresholds), alerts, and immutable hash-chained audit log.
+- **C7. Evidence Viewer**: Interactive document viewer with bounding box callouts, ELA overlay toggles, and preliminary indicator advisory tags.
+- **C8. Institutional Safeguards**: Role-based access control, PII masking (Aadhaar/phone), tamper-evident audit trails, and officer confirmation workflows.
 
-### Add-on Features
-- **A1. Capacity Calculator**: Maximum intake from infrastructure
-- **A2. YoY Jump Detector**: Flag unexplained intake/faculty jumps
-- **A3. Resubmission Diff**: Show changes between versions
-- **A4. Deficiency Letters**: Jinja2 templates (EN/TA/HI) + optional Gemini improvement
-- **A5. Knowledge Graph**: Ghost faculty, shared land/trust detection with Cytoscape.js
-- **A6. Regional OCR**: Tamil and Hindi certificate processing
+### Differentiator Features
+- **A1. Capacity & Deficit Solver**: Computes maximum intake capacity directly from instructional built-up area and faculty roster.
+- **A2. YoY Intake Jump Detector**: Flags uncalibrated >100% year-over-year intake jumps without infrastructure expansion.
+- **A3. Multi-Campus Collusion Graph**: Cytoscape.js visual graph detecting ghost faculty (shared across cities) and shared land parcels, with intelligent sponsoring trust resolution (sister campuses under the same trust are not flagged as collusion).
+- **A4. Draft Deficiency Notices**: Tri-lingual (English, Tamil, Hindi) deficiency notice drafts with statutory clause references requiring explicit officer scrutiny, confirmation, and written justification before status updates.
+- **A5. Hash-Chained Audit Ledger**: Cryptographically chained SHA-256 ledger recording every officer action, flag resolution, and application decision.
+
+## System Limitations & Transparency
+
+> [!WARNING]
+> **Key Limitations & Operating Boundaries:**
+> 1. **Skilled-Forger Bypass**: Flattening PDFs to raster scans or stripping metadata eliminates digital editing artifacts. Digital heuristics (metadata, font splices) are preliminary advisory signals, not silver bullets; absolute authenticity relies on cryptographic issuer verification (e.g. DigiLocker APIs).
+> 2. **Simulated Issuing Authorities**: Third-party verification (state technical education depts, fire authorities, municipal corporations) is simulated via an internal mock issuer registry. Real deployment requires production API integrations.
+> 3. **Illustrative Normative Thresholds**: Area requirements, faculty ratios, and intake bounds are illustrative administrative heuristics calibrated to the 2024-27 Approval Process Handbook; actual approvals depend on expert scrutiny committee evaluations.
+> 4. **Synthetic-Only Benchmark**: The evaluation suite evaluates against 285 synthetic test units with neutral IDs (`DOC_0001`..`DOC_0295`) to prevent data leakage. Real-world documents exhibit physical paper textures, skewed scans, and hand-inked notary stamps requiring human-in-the-loop review.
+> 5. **Document Classification**: Operates via deterministic statutory keyword and regex scoring across 11 statutory categories (no black-box machine learning).
+> 6. **Deficiency Notices**: Deficiency notices are strictly marked as **DRAFT DEFICIENCY NOTICES** requiring regional officer scrutiny and approval; no letters are dispatched automatically. Any rejection requires officer confirmation, a written justification of at least 10 characters, and is cryptographically audit-logged.
+> 7. **Sister Campuses vs Collusion**: Colleges operated under the same sponsoring trust sharing land or faculty are recognized as legitimate sister campuses and not falsely flagged as collusion. Collusion is flagged only across unrelated sponsoring trusts.
 
 ## Project Structure
 

@@ -5,8 +5,10 @@ and cross-document consistency rules.
 All thresholds are marked: illustrative: replace with Approval Process Handbook values.
 """
 
+import difflib
 import json
-from datetime import date, datetime
+import re
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from sqlalchemy import select
@@ -18,6 +20,81 @@ from app.models.document import Document, ExtractedData
 from app.models.flag import Flag
 from app.schemas.application import FlagItem, RiskBreakdown, RiskContribution, ValidationReport
 from app.services.risk.service import risk_service
+
+
+def normalize_institution_name(name: str) -> str:
+    """Normalize institutional names for resilient fuzzy equivalence comparison."""
+    if not name:
+        return ""
+    text = name.lower().strip()
+    text = text.replace("&", " and ")
+    text = re.sub(r"[,\.\-\/\\_\(\)]", " ", text)
+    abbreviations = {
+        r"\bengg\b": "engineering",
+        r"\btech\b": "technology",
+        r"\binst\b": "institute",
+        r"\bcoll\b": "college",
+        r"\bpoly\b": "polytechnic",
+        r"\bgovt\b": "government",
+        r"\buniv\b": "university",
+    }
+    for pattern, repl in abbreviations.items():
+        text = re.sub(pattern, repl, text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def normalize_survey_number(survey: str) -> str:
+    """Normalize land survey / khasra numbers (e.g., 'Survey No. 12/3-A' -> '12/3a')."""
+    if not survey:
+        return ""
+    text = survey.lower().strip()
+    text = re.sub(r"\b(survey|sy|s|khasra|plot|rs)\s*(no|number)?[\.:\s]*", "", text)
+    text = re.sub(r"-\s*([a-zA-Z])", r"\1", text)
+    text = re.sub(r"\s*[\/]\s*", "/", text)
+    return re.sub(r"[\s\-_]+", "", text).strip()
+
+
+def are_field_values_equivalent(field_name: str, val1: str, val2: str) -> bool:
+    """Determine if two regulatory field extractions are semantically equivalent."""
+    if not val1 or not val2:
+        return False
+    v1_raw = val1.strip().lower()
+    v2_raw = val2.strip().lower()
+    if v1_raw == v2_raw:
+        return True
+
+    if any(k in field_name.lower() for k in ["institution", "trust", "college", "applicant"]):
+        n1 = normalize_institution_name(val1)
+        n2 = normalize_institution_name(val2)
+        if n1 == n2:
+            return True
+        ratio = difflib.SequenceMatcher(None, n1, n2).ratio()
+        if ratio >= 0.85:
+            return True
+        # Check token set containment
+        s1, s2 = set(n1.split()), set(n2.split())
+        if len(s1.intersection(s2)) >= min(len(s1), len(s2)) * 0.8:
+            return True
+
+    if any(k in field_name.lower() for k in ["survey", "khasra", "plot", "land"]):
+        s1 = normalize_survey_number(val1)
+        s2 = normalize_survey_number(val2)
+        if s1 == s2:
+            return True
+        # Handle subdivision e.g. 12/3 vs 12/3a
+        if s1.startswith(s2) or s2.startswith(s1):
+            return True
+
+    if any(k in field_name.lower() for k in ["area", "acres", "intake"]):
+        try:
+            num1 = float(re.findall(r"[\d\.]+", val1)[0])
+            num2 = float(re.findall(r"[\d\.]+", val2)[0])
+            if abs(num1 - num2) < 0.1:
+                return True
+        except (IndexError, ValueError):
+            pass
+
+    return False
 
 
 class ValidationService:
@@ -129,14 +206,17 @@ class ValidationService:
                 )
 
         # B. Check validity and date logic on uploaded documents
+        submission_date = application.created_at.date() if application.created_at else date.today()
+        GRACE_PERIOD_DAYS = 30
+
         for doc in documents:
             dtype = doc.document_type
             extracted = extracted_map.get(doc.id, {})
             issue_date = self._parse_date(extracted.get("issue_date"))
             expiry_date = self._parse_date(extracted.get("expiry_date"))
 
-            # 1. Check if future dated
-            if issue_date and issue_date > today:
+            # 1. Check if future dated relative to submission
+            if issue_date and issue_date > submission_date:
                 new_flags.append(
                     Flag(
                         application_id=application.id,
@@ -145,8 +225,8 @@ class ValidationService:
                         severity="high",
                         code="VAL-DATE-FUTURE",
                         title="Document Issue Date in Future",
-                        reason=f"Document issue date {issue_date} is set in the future.",
-                        evidence_json=json.dumps({"issue_date": str(issue_date), "today": str(today)}),
+                        reason=f"Document issue date {issue_date} is set in the future relative to submission date {submission_date}.",
+                        evidence_json=json.dumps({"issue_date": str(issue_date), "submission_date": str(submission_date)}),
                         rule_id="DATE-FUTURE-CHECK",
                         check_name="Chronological Sanity Check",
                     )
@@ -169,23 +249,41 @@ class ValidationService:
                     )
                 )
 
-            # 3. Check expiration
-            if expiry_date and expiry_date < today:
-                expired_docs.append(f"{doc.document_type} (Expired on {expiry_date})")
-                new_flags.append(
-                    Flag(
-                        application_id=application.id,
-                        document_id=doc.id,
-                        flag_type="validation",
-                        severity="high",
-                        code="VAL-DOC-EXPIRED",
-                        title="Statutory Document Expired",
-                        reason=f"The document expired on {expiry_date} prior to current academic verification.",
-                        evidence_json=json.dumps({"expiry_date": str(expiry_date), "today": str(today)}),
-                        rule_id="DOC-EXPIRY-CHECK",
-                        check_name="Validity Window Check",
-                    )
-                )
+            # 3. Check expiration against submission date with grace period
+            if expiry_date:
+                if expiry_date < submission_date:
+                    days_past = (submission_date - expiry_date).days
+                    if days_past <= GRACE_PERIOD_DAYS:
+                        new_flags.append(
+                            Flag(
+                                application_id=application.id,
+                                document_id=doc.id,
+                                flag_type="validation",
+                                severity="medium",
+                                code="VAL-DOC-GRACE-PERIOD",
+                                title="Statutory Document Renewal in Progress (30-Day Grace Period)",
+                                reason=f"Document expired on {expiry_date} ({days_past} days prior to submission date {submission_date}). Falls within 30-day grace period; requires proof of renewal application.",
+                                evidence_json=json.dumps({"expiry_date": str(expiry_date), "submission_date": str(submission_date), "days_past": days_past}),
+                                rule_id="DOC-GRACE-CHECK",
+                                check_name="Validity Window Grace Check",
+                            )
+                        )
+                    else:
+                        expired_docs.append(f"{doc.document_type} (Expired on {expiry_date})")
+                        new_flags.append(
+                            Flag(
+                                application_id=application.id,
+                                document_id=doc.id,
+                                flag_type="validation",
+                                severity="high",
+                                code="VAL-DOC-EXPIRED",
+                                title="Statutory Document Expired Prior to Submission",
+                                reason=f"The document expired on {expiry_date} prior to submission date {submission_date} (exceeds 30-day grace window).",
+                                evidence_json=json.dumps({"expiry_date": str(expiry_date), "submission_date": str(submission_date)}),
+                                rule_id="DOC-EXPIRY-CHECK",
+                                check_name="Validity Window Check",
+                            )
+                        )
 
         # C. Cross-document consistency checks
         cross_checks = checklist_cfg.get("cross_checks", [])
@@ -202,12 +300,23 @@ class ValidationService:
                     if doc and doc.id in extracted_map:
                         val = extracted_map[doc.id].get(field_name)
                         if val:
-                            values_found[doc_type] = val.strip().lower()
+                            values_found[doc_type] = val.strip()
 
-                # If 2 or more values exist, check matching
+                # If 2 or more values exist, check matching using fuzzy and semantic normalizers
                 if len(values_found) >= 2:
-                    unique_vals = set(values_found.values())
-                    if len(unique_vals) > 1:
+                    val_items = list(values_found.items())
+                    has_genuine_mismatch = False
+                    for i in range(len(val_items)):
+                        for j in range(i + 1, len(val_items)):
+                            d1, v1 = val_items[i]
+                            d2, v2 = val_items[j]
+                            if not are_field_values_equivalent(field_name, v1, v2):
+                                has_genuine_mismatch = True
+                                break
+                        if has_genuine_mismatch:
+                            break
+
+                    if has_genuine_mismatch:
                         mismatch_desc = f"{field_name} differs across: {values_found}"
                         cross_check_mismatches.append(mismatch_desc)
                         new_flags.append(
