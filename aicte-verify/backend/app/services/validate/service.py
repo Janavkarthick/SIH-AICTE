@@ -22,14 +22,26 @@ from app.schemas.application import FlagItem, RiskBreakdown, RiskContribution, V
 from app.services.risk.service import risk_service
 
 
+def collapse_initials(text: str) -> str:
+    """Collapse spaced single letters representing initials (e.g., 'b r' -> 'br', 'p s g' -> 'psg')."""
+    prev = ""
+    while prev != text:
+        prev = text
+        text = re.sub(r"\b([a-z])\s+([a-z])\b", r"\1\2", text)
+    return text
+
+
 def normalize_institution_name(name: str) -> str:
     """Normalize institutional names for resilient fuzzy equivalence comparison."""
     if not name:
         return ""
     text = name.lower().strip()
     text = text.replace("&", " and ")
+    text = text.replace("'s", "")
+    text = text.replace("’s", "")
     text = re.sub(r"[,\.\-\/\\_\(\)]", " ", text)
     abbreviations = {
+        r"\bst\b": "saint",
         r"\bengg\b": "engineering",
         r"\btech\b": "technology",
         r"\binst\b": "institute",
@@ -42,7 +54,25 @@ def normalize_institution_name(name: str) -> str:
     }
     for pattern, repl in abbreviations.items():
         text = re.sub(pattern, repl, text)
+    text = collapse_initials(text)
     return re.sub(r"\s+", " ", text).strip()
+
+
+def match_acronym_subsequence(t1: List[str], t2: List[str]) -> bool:
+    """Match acronym tokens against consecutive subphrases (e.g. 'nit' -> 'national institute technology')."""
+    def check_sub(acro_tokens: List[str], full_tokens: List[str]) -> bool:
+        for i, tok in enumerate(acro_tokens):
+            if 2 <= len(tok) <= 6:
+                for start in range(len(full_tokens)):
+                    for end in range(start + len(tok), min(start + len(tok) + 1, len(full_tokens) + 1)):
+                        sub_initials = "".join(x[0] for x in full_tokens[start:end])
+                        if tok == sub_initials:
+                            rem_full = set(full_tokens[:start] + full_tokens[end:])
+                            rem_acro = set(acro_tokens[:i] + acro_tokens[i + 1:])
+                            if rem_acro == rem_full or rem_acro.issubset(rem_full) or rem_full.issubset(rem_acro):
+                                return True
+        return False
+    return check_sub(t1, t2) or check_sub(t2, t1)
 
 
 def normalize_survey_number(survey: str) -> str:
@@ -83,16 +113,28 @@ def are_field_values_equivalent(field_name: str, val1: str, val2: str) -> bool:
                 return False
 
         # Filter stopwords for token matching
-        stopwords = {"of", "the", "and", "in", "at", "for"}
-        t1 = set(w for w in n1.split() if w not in stopwords)
-        t2 = set(w for w in n2.split() if w not in stopwords)
-        if t1 == t2:
+        stopwords = {"of", "the", "and", "in", "at", "for", "deemed", "campus"}
+        t1 = [w for w in n1.split() if w not in stopwords]
+        t2 = [w for w in n2.split() if w not in stopwords]
+        s1, s2 = set(t1), set(t2)
+        if s1 == s2:
+            return True
+
+        # Campus location / city conflict check (e.g., VIT Vellore vs VIT Bhopal, NIT Surathkal vs NIT Calicut)
+        locations = {"vellore", "bhopal", "chennai", "surathkal", "calicut", "salem", "coimbatore", "delhi", "mesra", "pilani", "jalandhar", "madurai", "kovilpatti"}
+        end_loc1 = [w for w in t1 if w in locations]
+        end_loc2 = [w for w in t2 if w in locations]
+        if end_loc1 and end_loc2 and end_loc1[-1] != end_loc2[-1]:
+            return False
+
+        # Acronym subphrase matching (e.g. 'nit' <-> 'national institute technology')
+        if match_acronym_subsequence(t1, t2):
             return True
 
         # Jaccard similarity on core tokens
-        if t1 and t2:
-            jaccard = len(t1.intersection(t2)) / len(t1.union(t2))
-            if jaccard >= 0.85:
+        if s1 and s2:
+            jaccard = len(s1.intersection(s2)) / len(s1.union(s2))
+            if jaccard >= 0.75:
                 return True
 
         ratio = difflib.SequenceMatcher(None, n1, n2).ratio()

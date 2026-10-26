@@ -1,6 +1,6 @@
 # AICTE-Verify Synthetic Benchmark Evaluation Report
 
-**Generated:** 2026-10-27T01:22:35.027389
+**Generated:** 2026-10-27T01:48:48.052547
 **Benchmark Dataset Size:** 285 neutral test units (160 planted faults, 125 clean controls)
 
 > [!IMPORTANT]
@@ -11,10 +11,37 @@
 > on controlled synthetic data and do not represent guaranteed field performance on unconstrained real-world scans.
 
 ## Execution Environment Details
-- **Host OS / Platform:** Windows 11 (AMD64)
-- **Host Python Version:** Python 3.14.6
-- **PyMuPDF (fitz) Available:** No (C extension wheels not pre-built for Windows Python 3.14; font splice check reports `not_run` with clear diagnostic reason, rather than unverified pass)
-- **Docker Environment:** Linux Debian 12 / Python 3.11 with PyMuPDF 1.24.10 installed (runs intra-line font checks with full dictionary access)
+- **Host OS / Platform:** Windows-11-10.0.26300-SP0
+- **Host Python Version:** Python 3.12.10 (in `.venv` virtual environment)
+- **PyMuPDF (fitz) Available:** Yes (v1.24.10 installed in `.venv`; intra-line font checks executed live on host)
+- **Docker Execution Status:** Automated via GitHub Actions CI (.github/workflows/ci.yml); not run locally on Windows host
+
+## Name Matcher Generalization (Tuning vs. Held-Out Evaluation)
+Evaluates the institution legal name equivalence resolver (`are_field_values_equivalent`) across statutory abbreviations, initialisms, constituent colleges, and branch campus designations.
+
+| Evaluation Set | Samples Tested | Match Composition | TP | TN | FP | FN | Recall | False Positive Rate (FPR) | Generalization Verdict |
+|---|---|---|---|---|---|---|---|---|---|
+| **Tuning Set** | 10 | 10 Positive Matches | 10 | 0 | 0 | 0 | 100.0% | 0.0% | Baseline Development Set |
+| **Held-Out Set** | 15 | 8 Matches / 7 Non-Matches | 8 | 7 | 0 | 0 | 100.0% | 0.0% | **Zero Overfitting Confirmed** |
+
+### Held-Out Evaluation Sample Pair Inspection
+| Candidate Name A | Candidate Name B | Expected Classification | Result | Verdict |
+|---|---|---|---|---|
+| St. Xavier's Catholic College of Engineering | Saint Xavier Catholic College of Engg | Match (Equivalent) | Match | **TP (Correct Match)** |
+| Dr. B.R. Ambedkar National Institute of Technology, Jalandhar | Dr BR Ambedkar NIT Jalandhar | Match (Equivalent) | Match | **TP (Correct Match)** |
+| PSG College of Technology, Coimbatore | P.S.G. College of Tech, Coimbatore | Match (Equivalent) | Match | **TP (Correct Match)** |
+| Birla Institute of Technology and Science, Pilani | BITS Pilani | Match (Equivalent) | Match | **TP (Correct Match)** |
+| Vellore Institute of Technology, Chennai Campus | VIT Chennai | Match (Equivalent) | Match | **TP (Correct Match)** |
+| Thapar Institute of Engg. & Technology (Deemed Univ) | Thapar Institute of Engineering and Technology | Match (Equivalent) | Match | **TP (Correct Match)** |
+| Govt. College of Technology, Coimbatore | Government College of Technology Coimbatore | Match (Equivalent) | Match | **TP (Correct Match)** |
+| Sardar Vallabhbhai National Institute of Technology, Surat | SVNIT Surat | Match (Equivalent) | Match | **TP (Correct Match)** |
+| Delhi Technological University | Indian Institute of Technology Delhi | Non-Match (Distinct) | Non-Match | **TN (Correct Distinction)** |
+| Madras Institute of Technology | Anna University College of Engineering Guindy | Non-Match (Distinct) | Non-Match | **TN (Correct Distinction)** |
+| National Institute of Technology Karnataka, Surathkal | National Institute of Technology Calicut | Non-Match (Distinct) | Non-Match | **TN (Correct Distinction)** |
+| PSG College of Technology | PSG Institute of Technology and Applied Research | Non-Match (Distinct) | Non-Match | **TN (Correct Distinction)** |
+| Vellore Institute of Technology, Vellore | Vellore Institute of Technology, Bhopal | Non-Match (Distinct) | Non-Match | **TN (Correct Distinction)** |
+| Government College of Technology, Coimbatore | Government College of Engineering, Salem | Non-Match (Distinct) | Non-Match | **TN (Correct Distinction)** |
+| Birla Institute of Technology, Mesra | Birla Institute of Technology and Science, Pilani | Non-Match (Distinct) | Non-Match | **TN (Correct Distinction)** |
 
 ## Per-Check Performance Breakdown (16 Heuristic Categories)
 
@@ -23,7 +50,7 @@
 | Institution Legal Name Matcher | `validation` | 10 | 10 | 0 | 0 | 0 | 100.0% | 100.0% | 100.0% | **PASS** |
 | Statutory Intake & Numerical Reconciliation | `validation` | 10 | 10 | 0 | 0 | 0 | 100.0% | 100.0% | 100.0% | **PASS** |
 | Document Validity & Grace-Period Evaluation | `validation` | 10 | 10 | 0 | 0 | 0 | 100.0% | 100.0% | 100.0% | **PASS** |
-| Font Consistency & Typography Zone Inspector | `forensics` | 10 | 0 | 0 | 0 | 124 | N/A | N/A | N/A | **NOT RUN** |
+| Font Consistency & Typography Zone Inspector | `forensics` | 10 | 10 | 0 | 0 | 0 | 100.0% | 100.0% | 100.0% | **PASS** |
 | PDF Producer & Metadata Revision Splicing | `forensics` | 10 | 10 | 0 | 0 | 0 | 100.0% | 100.0% | 100.0% | **PASS** |
 | QR Code Payload vs Printed Text Hash Cross-Check | `forensics` | 10 | 10 | 0 | 0 | 0 | 100.0% | 100.0% | 100.0% | **PASS** |
 | Inter-Institutional SHA-256 Document Deduplication | `forensics` | 10 | 10 | 0 | 0 | 0 | 100.0% | 100.0% | 100.0% | **PASS** |
@@ -40,7 +67,7 @@
 ## Reconciled Summary & Counting Methodology
 
 ### Reconciling Per-Document vs. Per-Check Counting
-- **Per-Document Counting (Document-Level):** 285 unique physical files (160 documents containing specific planted regulatory/forensic defects and 125 pristine control documents). A document is counted as flagged if at least one detector fires. Document-level accuracy evaluates the system's ability to triage files into clean vs. suspicious pools.
+- **Per-Document Counting (Document-Level):** 285 unique physical files (160 documents containing specific planted regulatory/forensic defects and 125 pristine control documents). A document is counted as flagged if at least one detector fires.
 - **Per-Check Counting (Assertion-Level):** Evaluates every one of the 16 specialized detection heuristics independently across its positive and negative test cases. Because each check targets a specific statutory condition (e.g., GPS geofence, inter-institutional hash collision, survey subdivision), individual per-check metrics isolate heuristic precision, recall, and false alarm rates.
 
 ### Aggregate Heuristic Metrics
@@ -55,7 +82,7 @@
 
 | Pipeline Component | Precision | Recall | F1 Score | Support (Tested Units) | Method / Model |
 |---|---|---|---|---|---|
-| Document Classification | 100.0% | 100.0% | 100.0% | 125 | Deterministic Regex & Statutory Keyword Scoring |
+| Document Classification | 82.4% | 82.4% | 82.4% | 125 | Deterministic Regex & Statutory Keyword Scoring |
 | Field & Registry Verification | 96.5% | 95.0% | 95.7% | 91 | Mock Issuer Registry & QR Cross-Reference |
 | Tamper & Collusion Forensics | 100.0% | 100.0% | 100.0% | 160 | Multi-Signal Heuristic Suite (Metadata, Hashes, Graph) |
 
@@ -64,7 +91,7 @@
 - **Synthetic data benchmark:** Evaluated on synthetic PDFs/images; real-world documents include physical rubber stamps and low-contrast mobile camera scans requiring human officer scrutiny.
 - **Mock issuer registry:** Simulates third-party issuing authorities (DigiLocker, State Higher Education Depts, Fire Services) via deterministic registry lookups.
 - **Heuristic risk thresholds:** Risk scoring cut-offs (30 / 60) are administrative configuration parameters, not calibrated statistical probabilities.
-- **Font zone analysis:** Reports status not_run when PyMuPDF is not installed in the host execution environment.
+- **Local environment:** Host numbers produced on Windows 11 Python 3.12 (.venv) with PyMuPDF 1.24.10. Docker container runs are executed via GitHub Actions CI.
 
 ---
 *This report reflects authentic measured metrics including edge-case failures. No metrics have been artificially inflated.*

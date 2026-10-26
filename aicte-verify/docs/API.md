@@ -1,17 +1,19 @@
 # AICTE-Verify API Documentation
 
 ## Base URL
-- Development: `http://localhost:8000`
-- API docs (Swagger): `http://localhost:8000/docs`
-- ReDoc: `http://localhost:8000/redoc`
+- Development Server: `http://127.0.0.1:8000`
+- API Root Prefix: `http://127.0.0.1:8000/api/v1`
+- Interactive Swagger UI: `http://127.0.0.1:8000/api/v1/docs`
+- OpenAPI JSON Specification: `http://127.0.0.1:8000/api/v1/openapi.json`
+- Frontend Portal: `http://localhost:3000`
 
 ## Authentication
 
-All endpoints (except `/auth/login` and `/health`) require a JWT Bearer token.
+All endpoints (except `/api/v1/auth/login` and `/health`) require a JWT Bearer token.
 
 ### Login
 ```
-POST /auth/login
+POST /api/v1/auth/login
 Content-Type: application/x-www-form-urlencoded
 
 username=admin&password=admin123

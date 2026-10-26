@@ -247,6 +247,7 @@ class ForensicsService:
 
         try:
             suspicious_lines = 0
+            symbol_fonts = {"zapfdingbats", "symbol", "wingdings"}
             doc = fitz.open(file_path)
             for page_idx, page in enumerate(doc):
                 page_dict = page.get_text("dict")
@@ -256,6 +257,12 @@ class ForensicsService:
                             spans = line.get("spans", [])
                             text_spans = [s for s in spans if s.get("text", "").strip()]
                             if len(text_spans) > 1:
+                                # Skip benign bilingual / fallback or dingbat rendering
+                                if any(any(sym in str(s.get("font", "")).lower() for sym in symbol_fonts) for s in text_spans):
+                                    continue
+                                if any(any(ord(c) > 127 for c in s.get("text", "")) for s in text_spans):
+                                    continue
+
                                 # Intra-line splice: font family change within the same line at the same size
                                 size_groups: Dict[float, set] = {}
                                 for s in text_spans:

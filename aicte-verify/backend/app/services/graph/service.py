@@ -124,8 +124,9 @@ class GraphService:
                             cities.add(inst.city.strip().lower())
 
                     # Impermissible full-time faculty duplication:
-                    # Sister campuses (same trust) may legitimately share land parcels, but a single person
-                    # CANNOT hold multiple full-time teaching appointments, especially across different cities.
+                    # Sister campuses (same trust) may legitimately share land parcels (SHARED SPONSOR),
+                    # but a single person CANNOT hold multiple full-time teaching appointments.
+                    # Multi-city concurrent claims are CRITICAL; same-city concurrent claims are HIGH.
                     if len(cities) > 1:
                         conflict_reason = (
                             f"CRITICAL GHOST FACULTY: Faculty member with Unique ID '{faculty_unique_id}' ({data.get('name')}) "
@@ -138,23 +139,13 @@ class GraphService:
                                 relations_db[rel_id].is_flagged = True
                                 relations_db[rel_id].flag_reason = conflict_reason
                                 flagged_count += 1
-                    elif len(trusts) > 1:
-                        conflict_reason = (
-                            f"CRITICAL GHOST FACULTY: Faculty member with Unique ID '{faculty_unique_id}' ({data.get('name')}) "
-                            f"is simultaneously listed as full-time staff across {len(connected_inst_edges)} institutions "
-                            f"under distinct, unrelated trusts ({', '.join(trusts)})."
-                        )
-                        for rel_id, _, _ in connected_inst_edges:
-                            if rel_id in relations_db:
-                                relations_db[rel_id].is_flagged = True
-                                relations_db[rel_id].flag_reason = conflict_reason
-                                flagged_count += 1
                     else:
-                        # Same city, same trust: still prohibited for concurrent full-time appointments per APH norms
+                        city_name = list(cities)[0] if cities else "the same city"
                         conflict_reason = (
-                            f"DUPLICATE FACULTY RECORD: Faculty Unique ID '{faculty_unique_id}' ({data.get('name')}) "
-                            f"is claimed full-time by multiple sister colleges under trust '{list(trusts)[0]}'. "
-                            f"Each institution must maintain a dedicated full-time faculty roster."
+                            f"HIGH GHOST FACULTY: Faculty member with Unique ID '{faculty_unique_id}' ({data.get('name')}) "
+                            f"is concurrently claimed as full-time teaching staff across {len(connected_inst_edges)} institutions "
+                            f"in the same city ({city_name}). Holding simultaneous full-time faculty appointments is prohibited "
+                            f"under AICTE APH norms, even within the same municipal zone or sponsoring trust."
                         )
                         for rel_id, _, _ in connected_inst_edges:
                             if rel_id in relations_db:

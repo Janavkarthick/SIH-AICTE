@@ -22,16 +22,19 @@ cp .env.example .env
 docker compose up --build
 ```
 
-- Frontend: http://localhost:5173
+- Frontend: http://localhost:3000
 - Backend API: http://localhost:8000
-- API Docs: http://localhost:8000/docs
+- API Docs (Swagger): http://127.0.0.1:8000/api/v1/docs
+- OpenAPI JSON: http://127.0.0.1:8000/api/v1/openapi.json
 
 ### Option 2: Local Development
 
 #### Prerequisites
-- Python 3.12+
+- Python 3.12+ (in virtual environment `.venv`)
 - Node.js 20+
-- Tesseract OCR with language packs:
+- Tesseract OCR (Optional for local Windows run; Docker recommended for full multilingual OCR):
+  > [!NOTE]
+  > **Multilingual OCR Verification:** Multilingual OCR (Tamil/Hindi) is verified only in the Docker container image (which includes `tesseract-ocr-tam` and `tesseract-ocr-hin` packages). Tesseract is not installed on the Windows host.
   ```bash
   # Ubuntu/Debian
   sudo apt install tesseract-ocr tesseract-ocr-eng tesseract-ocr-tam tesseract-ocr-hin
@@ -122,8 +125,8 @@ Set `DATABASE_URL=postgresql://aicte:aicte_verify_dev@postgres:5432/aicte_verify
 > 3. **Illustrative Normative Thresholds**: Area requirements, faculty ratios, and intake bounds are illustrative administrative heuristics calibrated to the 2024-27 Approval Process Handbook; actual approvals depend on expert scrutiny committee evaluations.
 > 4. **Synthetic-Only Benchmark**: The evaluation suite evaluates against 285 synthetic test units with neutral IDs (`DOC_0001`..`DOC_0295`) to prevent data leakage. Real-world documents exhibit physical paper textures, skewed scans, and hand-inked notary stamps requiring human-in-the-loop review.
 > 5. **Document Classification**: Operates via deterministic statutory keyword and regex scoring across 11 statutory categories (no black-box machine learning).
-> 6. **Deficiency Notices**: Deficiency notices are strictly marked as **DRAFT DEFICIENCY NOTICES** requiring regional officer scrutiny and approval; no letters are dispatched automatically. Any rejection requires officer confirmation, a written justification of at least 10 characters, and is cryptographically audit-logged.
-> 7. **Sister Campuses vs Collusion**: Colleges operated under the same sponsoring trust sharing land or faculty are recognized as legitimate sister campuses and not falsely flagged as collusion. Collusion is flagged only across unrelated sponsoring trusts.
+> 6. **Deficiency Notices & Adverse Recommendations**: Deficiency notices are strictly generated as **DRAFT DEFICIENCY NOTICES** with statutory clause placeholders requiring regional officer scrutiny and approval; no letters are dispatched automatically. Adverse decisions are phrased as **"Recommend rejection"**; the final decision rests exclusively with the competent statutory authority. Recommending rejection requires officer confirmation, a written justification of at least 10 characters, and is cryptographically audit-logged.
+> 7. **Sister Campuses vs Collusion**: Colleges operated under the same sponsoring trust sharing land parcels are recognized as legitimate sister campuses (shared land = INFO). However, duplication of full-time faculty across campuses is strictly flagged as ghost faculty (HIGH within same city, CRITICAL across different cities) because an individual cannot hold simultaneous full-time teaching appointments.
 
 ## Project Structure
 
@@ -182,8 +185,8 @@ All validation rules are in `config/rules/`:
 
 ## API Documentation
 
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+- Swagger UI: http://127.0.0.1:8000/api/v1/docs
+- OpenAPI JSON: http://127.0.0.1:8000/api/v1/openapi.json
 - See [docs/API.md](docs/API.md) for detailed endpoint documentation
 
 ## Testing

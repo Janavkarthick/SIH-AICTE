@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     fonts-noto \
     fonts-noto-cjk \
     poppler-utils \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
     curl \
     build-essential \
@@ -18,12 +18,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # Copy requirements and install
-COPY requirements.txt /app/requirements.txt
+COPY backend/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application source code
-COPY app /app/app
-COPY ../config /app/config
+# Copy application source code and runtime assets
+COPY backend/app /app/app
+COPY backend/tests /app/tests
+COPY config /app/config
+COPY scripts /app/scripts
+COPY data /app/data
 
 # Environment variables
 ENV PYTHONUNBUFFERED=1 \

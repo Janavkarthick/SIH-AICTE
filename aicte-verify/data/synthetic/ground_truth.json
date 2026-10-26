@@ -4,7 +4,7 @@
     "simulated": true,
     "neutral_filenames": true,
     "naming_scheme": "DOC_0001.pdf / DOC_XXXX.jpg (no semantic hints in filenames)",
-    "generated_at": "2026-10-27T01:22:25.938060",
+    "generated_at": "2026-10-27T01:42:25.103135",
     "total_documents": 295,
     "total_planted_faults": 160,
     "total_clean_controls": 125

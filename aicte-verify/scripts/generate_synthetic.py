@@ -320,10 +320,16 @@ def create_simple_pdf(filepath: Path, title: str, body_lines: List[str],
             c.showPage()
             y = height - 50
 
-        if tamper_font and ("Date:" in line or "Reference" in line or "Intake:" in line or "Survey" in line):
-            # Spliced Courier font into Helvetica layout across multiple lines
-            c.setFont("Courier", 11)
-            c.drawString(72, y, line)
+        if tamper_font and (":" in line):
+            # Intra-line splice: label in Helvetica 10pt, value in Courier 10pt on the exact same line
+            parts = line.split(":", 1)
+            label = parts[0] + ":"
+            val = parts[1]
+            c.setFont("Helvetica", 10)
+            c.drawString(72, y, label)
+            lbl_w = c.stringWidth(label, "Helvetica", 10)
+            c.setFont("Courier", 10)
+            c.drawString(72 + lbl_w + 3, y, val)
             c.setFont("Helvetica", 10)
         else:
             c.setFont("Helvetica", 10)

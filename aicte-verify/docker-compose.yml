@@ -1,8 +1,8 @@
 services:
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: backend/Dockerfile
     ports:
       - "8000:8000"
     volumes:
@@ -16,7 +16,7 @@ services:
       - ACCESS_TOKEN_EXPIRE_MINUTES=480
       - MAX_UPLOAD_SIZE_MB=50
       - UPLOAD_DIR=./data/uploads
-      - FRONTEND_URL=http://localhost:5173
+      - FRONTEND_URL=http://localhost:3000
       - DEBUG=true
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
     healthcheck:
@@ -31,7 +31,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "5173:5173"
+      - "3000:3000"
     environment:
       - VITE_API_URL=http://localhost:8000
     depends_on:

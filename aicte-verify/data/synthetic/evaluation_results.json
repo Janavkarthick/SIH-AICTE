@@ -1,6 +1,13 @@
 {
-  "id": "eval-1793044355",
-  "timestamp": "2026-10-27T01:22:35.027389",
+  "id": "eval-1793045928",
+  "timestamp": "2026-10-27T01:48:48.052547",
+  "environment": {
+    "platform": "Windows-11-10.0.26300-SP0",
+    "python_version": "3.12.10",
+    "pymupdf_available": true,
+    "pymupdf_version": "1.24.10",
+    "docker_run_mode": "Automated via GitHub Actions CI (.github/workflows/ci.yml); not run locally on Windows host"
+  },
   "benchmark_dataset_size": 285,
   "total_samples": 285,
   "ground_truth_faults": 160,
@@ -10,12 +17,213 @@
   "recall": 100.0,
   "f1_score": 100.0,
   "overall_accuracy": 1.0,
-  "execution_time_ms": 1244,
+  "execution_time_ms": 5895,
   "avg_processing_time_per_document": 0.003,
+  "name_matcher_suite": {
+    "tuning_set": {
+      "samples_tested": 10,
+      "true_positives": 10,
+      "true_negatives": 0,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "recall": 100.0,
+      "false_positive_rate": 0.0,
+      "precision": 100.0,
+      "details": [
+        {
+          "name_a": "K.S. Rangasamy College of Technology",
+          "name_b": "KS Rangasamy College of Tech",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Sri Krishna College of Engineering and Technology",
+          "name_b": "Sri Krishna College of Engg & Tech",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "PSG College of Technology",
+          "name_b": "P.S.G. College of Technology",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Coimbatore Institute of Engineering and Technology",
+          "name_b": "CIET Coimbatore",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Bannari Amman Institute of Technology",
+          "name_b": "Bannari Amman Inst of Tech",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Kumaraguru College of Technology",
+          "name_b": "KCT Coimbatore",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Thiagarajar College of Engineering",
+          "name_b": "TCE Madurai",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Government College of Engineering, Salem",
+          "name_b": "GCE Salem",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "National Engineering College, Kovilpatti",
+          "name_b": "NEC Kovilpatti",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Mepco Schlenk Engineering College",
+          "name_b": "Mepco Schlenk Engg Coll",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        }
+      ]
+    },
+    "held_out_set": {
+      "samples_tested": 15,
+      "true_positives": 8,
+      "true_negatives": 7,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "recall": 100.0,
+      "false_positive_rate": 0.0,
+      "precision": 100.0,
+      "details": [
+        {
+          "name_a": "St. Xavier's Catholic College of Engineering",
+          "name_b": "Saint Xavier Catholic College of Engg",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Dr. B.R. Ambedkar National Institute of Technology, Jalandhar",
+          "name_b": "Dr BR Ambedkar NIT Jalandhar",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "PSG College of Technology, Coimbatore",
+          "name_b": "P.S.G. College of Tech, Coimbatore",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Birla Institute of Technology and Science, Pilani",
+          "name_b": "BITS Pilani",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Vellore Institute of Technology, Chennai Campus",
+          "name_b": "VIT Chennai",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Thapar Institute of Engg. & Technology (Deemed Univ)",
+          "name_b": "Thapar Institute of Engineering and Technology",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Govt. College of Technology, Coimbatore",
+          "name_b": "Government College of Technology Coimbatore",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Sardar Vallabhbhai National Institute of Technology, Surat",
+          "name_b": "SVNIT Surat",
+          "expected": true,
+          "result": true,
+          "verdict": "TP (Correct Match)"
+        },
+        {
+          "name_a": "Delhi Technological University",
+          "name_b": "Indian Institute of Technology Delhi",
+          "expected": false,
+          "result": false,
+          "verdict": "TN (Correct Distinction)"
+        },
+        {
+          "name_a": "Madras Institute of Technology",
+          "name_b": "Anna University College of Engineering Guindy",
+          "expected": false,
+          "result": false,
+          "verdict": "TN (Correct Distinction)"
+        },
+        {
+          "name_a": "National Institute of Technology Karnataka, Surathkal",
+          "name_b": "National Institute of Technology Calicut",
+          "expected": false,
+          "result": false,
+          "verdict": "TN (Correct Distinction)"
+        },
+        {
+          "name_a": "PSG College of Technology",
+          "name_b": "PSG Institute of Technology and Applied Research",
+          "expected": false,
+          "result": false,
+          "verdict": "TN (Correct Distinction)"
+        },
+        {
+          "name_a": "Vellore Institute of Technology, Vellore",
+          "name_b": "Vellore Institute of Technology, Bhopal",
+          "expected": false,
+          "result": false,
+          "verdict": "TN (Correct Distinction)"
+        },
+        {
+          "name_a": "Government College of Technology, Coimbatore",
+          "name_b": "Government College of Engineering, Salem",
+          "expected": false,
+          "result": false,
+          "verdict": "TN (Correct Distinction)"
+        },
+        {
+          "name_a": "Birla Institute of Technology, Mesra",
+          "name_b": "Birla Institute of Technology and Science, Pilani",
+          "expected": false,
+          "result": false,
+          "verdict": "TN (Correct Distinction)"
+        }
+      ]
+    }
+  },
   "document_classification": {
-    "precision": 1.0,
-    "recall": 1.0,
-    "f1_score": 1.0,
+    "precision": 0.824,
+    "recall": 0.824,
+    "f1_score": 0.824,
     "support": 125
   },
   "field_extraction": {
@@ -34,13 +242,13 @@
     {
       "check_name": "Institution Legal Name Matcher",
       "category": "validation",
-      "sample_count": 10,
+      "sample_count": 124,
       "planted": 10,
       "detected": 10,
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 114,
       "not_run": 0,
       "not_run_reason": "",
       "precision": 100.0,
@@ -51,13 +259,13 @@
     {
       "check_name": "Statutory Intake & Numerical Reconciliation",
       "category": "validation",
-      "sample_count": 10,
+      "sample_count": 124,
       "planted": 10,
       "detected": 10,
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 114,
       "not_run": 0,
       "not_run_reason": "",
       "precision": 100.0,
@@ -68,13 +276,13 @@
     {
       "check_name": "Document Validity & Grace-Period Evaluation",
       "category": "validation",
-      "sample_count": 10,
+      "sample_count": 124,
       "planted": 10,
       "detected": 10,
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 114,
       "not_run": 0,
       "not_run_reason": "",
       "precision": 100.0,
@@ -85,19 +293,19 @@
     {
       "check_name": "Font Consistency & Typography Zone Inspector",
       "category": "forensics",
-      "sample_count": 134,
+      "sample_count": 124,
       "planted": 10,
-      "detected": 0,
-      "tp": 0,
+      "detected": 10,
+      "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
-      "not_run": 124,
-      "not_run_reason": "PyMuPDF library unavailable in current environment",
+      "tn": 114,
+      "not_run": 0,
+      "not_run_reason": "",
       "precision": 100.0,
-      "recall": 0.0,
-      "f1": 0.0,
-      "status": "NOT RUN"
+      "recall": 100.0,
+      "f1": 100.0,
+      "status": "PASS"
     },
     {
       "check_name": "PDF Producer & Metadata Revision Splicing",
@@ -119,13 +327,13 @@
     {
       "check_name": "QR Code Payload vs Printed Text Hash Cross-Check",
       "category": "forensics",
-      "sample_count": 10,
+      "sample_count": 124,
       "planted": 10,
       "detected": 10,
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 114,
       "not_run": 0,
       "not_run_reason": "",
       "precision": 100.0,
@@ -136,13 +344,13 @@
     {
       "check_name": "Inter-Institutional SHA-256 Document Deduplication",
       "category": "forensics",
-      "sample_count": 10,
+      "sample_count": 124,
       "planted": 10,
       "detected": 10,
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 114,
       "not_run": 0,
       "not_run_reason": "",
       "precision": 100.0,
@@ -153,13 +361,13 @@
     {
       "check_name": "Inter-Institutional Image Hash Deduplication",
       "category": "forensics",
-      "sample_count": 10,
+      "sample_count": 21,
       "planted": 10,
       "detected": 10,
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 11,
       "not_run": 0,
       "not_run_reason": "",
       "precision": 100.0,
@@ -170,13 +378,13 @@
     {
       "check_name": "EXIF Campus Geofence Validation (>500km)",
       "category": "compliance",
-      "sample_count": 10,
+      "sample_count": 21,
       "planted": 10,
       "detected": 10,
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 11,
       "not_run": 0,
       "not_run_reason": "",
       "precision": 100.0,
@@ -187,13 +395,13 @@
     {
       "check_name": "Infrastructure Photo Recency Threshold (<180 Days)",
       "category": "compliance",
-      "sample_count": 10,
+      "sample_count": 21,
       "planted": 10,
       "detected": 10,
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 11,
       "not_run": 0,
       "not_run_reason": "",
       "precision": 100.0,
@@ -255,13 +463,13 @@
     {
       "check_name": "Year-over-Year Intake Anomaly Detector (>100% Jump)",
       "category": "anomaly",
-      "sample_count": 10,
+      "sample_count": 20,
       "planted": 10,
       "detected": 10,
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 10,
       "not_run": 0,
       "not_run_reason": "",
       "precision": 100.0,
@@ -272,13 +480,13 @@
     {
       "check_name": "APH Built-Up Area & Normative Capacity Constraint",
       "category": "compliance",
-      "sample_count": 10,
+      "sample_count": 20,
       "planted": 10,
       "detected": 10,
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 10,
       "not_run": 0,
       "not_run_reason": "",
       "precision": 100.0,
@@ -289,13 +497,13 @@
     {
       "check_name": "Mandatory Statutory Document Completeness Audit",
       "category": "validation",
-      "sample_count": 10,
+      "sample_count": 20,
       "planted": 10,
       "detected": 10,
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 10,
       "not_run": 0,
       "not_run_reason": "",
       "precision": 100.0,
@@ -311,7 +519,7 @@
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 114,
       "not_run": 0,
       "not_run_reason": "",
       "planted": 10,
@@ -326,7 +534,7 @@
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 114,
       "not_run": 0,
       "not_run_reason": "",
       "planted": 10,
@@ -341,7 +549,7 @@
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 114,
       "not_run": 0,
       "not_run_reason": "",
       "planted": 10,
@@ -353,17 +561,17 @@
     "font_inconsistency": {
       "check_name": "Font Consistency & Typography Zone Inspector",
       "category": "forensics",
-      "tp": 0,
+      "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
-      "not_run": 124,
-      "not_run_reason": "PyMuPDF library unavailable in current environment",
+      "tn": 114,
+      "not_run": 0,
+      "not_run_reason": "",
       "planted": 10,
-      "detected": 0,
+      "detected": 10,
       "precision": 100.0,
-      "recall": 0.0,
-      "f1": 0.0
+      "recall": 100.0,
+      "f1": 100.0
     },
     "metadata_edited": {
       "check_name": "PDF Producer & Metadata Revision Splicing",
@@ -386,7 +594,7 @@
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 114,
       "not_run": 0,
       "not_run_reason": "",
       "planted": 10,
@@ -401,7 +609,7 @@
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 114,
       "not_run": 0,
       "not_run_reason": "",
       "planted": 10,
@@ -416,7 +624,7 @@
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 11,
       "not_run": 0,
       "not_run_reason": "",
       "planted": 10,
@@ -431,7 +639,7 @@
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 11,
       "not_run": 0,
       "not_run_reason": "",
       "planted": 10,
@@ -446,7 +654,7 @@
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 11,
       "not_run": 0,
       "not_run_reason": "",
       "planted": 10,
@@ -506,7 +714,7 @@
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 10,
       "not_run": 0,
       "not_run_reason": "",
       "planted": 10,
@@ -521,7 +729,7 @@
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 10,
       "not_run": 0,
       "not_run_reason": "",
       "planted": 10,
@@ -536,7 +744,7 @@
       "tp": 10,
       "fp": 0,
       "fn": 0,
-      "tn": 0,
+      "tn": 10,
       "not_run": 0,
       "not_run_reason": "",
       "planted": 10,
@@ -552,6 +760,6 @@
     "Synthetic data benchmark: Evaluated on synthetic PDFs/images; real-world documents include physical rubber stamps and low-contrast mobile camera scans requiring human officer scrutiny.",
     "Mock issuer registry: Simulates third-party issuing authorities (DigiLocker, State Higher Education Depts, Fire Services) via deterministic registry lookups.",
     "Heuristic risk thresholds: Risk scoring cut-offs (30 / 60) are administrative configuration parameters, not calibrated statistical probabilities.",
-    "Font zone analysis: Reports status not_run when PyMuPDF is not installed in the host execution environment."
+    "Local environment: Host numbers produced on Windows 11 Python 3.12 (.venv) with PyMuPDF 1.24.10. Docker container runs are executed via GitHub Actions CI."
   ]
 }

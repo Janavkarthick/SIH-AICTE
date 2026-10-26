@@ -248,6 +248,51 @@ async def test_same_trust_faculty_duplication_across_cities_flagged(in_memory_db
 
 
 @pytest.mark.asyncio
+async def test_same_city_faculty_duplication_flagged_high(in_memory_db):
+    """Test (3): Faculty member claimed full-time at two institutions in the SAME city
+
+    must be flagged as HIGH GHOST FACULTY. Dual full-time appointments in the same city are prohibited.
+    """
+    # 1. Two institutions in the SAME city (Pune)
+    inst1 = Institution(
+        id=70, name="City Engineering College", code="1-701", city="Pune",
+        state="Maharashtra", region="Western", address="Deccan Gymkhana, Pune",
+        trust_name="City Education Foundation", trust_registration_number="TR-PUNE-70",
+    )
+    inst2 = Institution(
+        id=80, name="City Polytechnic Institute", code="1-801", city="Pune",
+        state="Maharashtra", region="Western", address="Kothrud, Pune",
+        trust_name="City Education Foundation", trust_registration_number="TR-PUNE-70",
+    )
+    in_memory_db.add_all([inst1, inst2])
+
+    # 2. Graph entities
+    e_inst1 = GraphEntity(id=70, entity_type="institution", entity_id="1-701", name="City Engineering College", metadata_json="{}")
+    e_inst2 = GraphEntity(id=80, entity_type="institution", entity_id="1-801", name="City Polytechnic Institute", metadata_json="{}")
+    e_faculty = GraphEntity(id=90, entity_type="faculty", entity_id="FAC_SAME_CITY_01", name="Prof. Sunita Deshmukh", metadata_json="{}")
+    in_memory_db.add_all([e_inst1, e_inst2, e_faculty])
+
+    # 3. Relations: Both claim the same faculty full-time in Pune
+    r_fac1 = GraphRelation(id=701, source_entity_id=90, target_entity_id=70, relation_type="employed_at", is_flagged=False)
+    r_fac2 = GraphRelation(id=702, source_entity_id=90, target_entity_id=80, relation_type="employed_at", is_flagged=False)
+    in_memory_db.add_all([r_fac1, r_fac2])
+    await in_memory_db.commit()
+
+    # 4. Run Graph Collusion Detection
+    graph_service = GraphService()
+    await graph_service.detect_anomalies_and_flag(in_memory_db)
+
+    # 5. Fetch relations from DB
+    res_rels = (await in_memory_db.execute(select(GraphRelation))).scalars().all()
+    rel_map = {r.id: r for r in res_rels}
+
+    # Faculty duplication in the SAME city MUST be flagged HIGH GHOST FACULTY
+    assert rel_map[701].is_flagged is True
+    assert "HIGH GHOST FACULTY" in rel_map[701].flag_reason
+    assert "same city (pune)" in rel_map[701].flag_reason.lower()
+
+
+@pytest.mark.asyncio
 async def test_submission_date_used_never_created_at_for_expiry(in_memory_db):
     """Test (b): Expiry checking strictly uses application.submission_date,
 

@@ -7,7 +7,7 @@ No black-box machine learning model is claimed or used here; this provides 100% 
 """
 
 import re
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 
 class ClassifierService:

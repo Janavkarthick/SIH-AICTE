@@ -8,14 +8,14 @@ This script walks through the key features of AICTE-Verify using the seeded synt
 
 ### Prerequisites
 - Application running: `docker compose up --build` or local dev setup
-- Frontend at http://localhost:5173
-- Backend at http://localhost:8000
+- Frontend at http://localhost:3000
+- Backend API at http://localhost:8000 (Swagger docs at http://127.0.0.1:8000/api/v1/docs)
 
 ---
 
 ### Step 1: Login as Admin (30 seconds)
 
-1. Open http://localhost:5173
+1. Open http://localhost:3000
 2. Note the advisory banner: "Decision-support only. Final decisions rest with authorised AICTE officials."
 3. Login with: **admin / admin123**
 4. You'll see the Dashboard with summary cards showing applications, flags, and verification stats.
@@ -89,7 +89,7 @@ This script walks through the key features of AICTE-Verify using the seeded synt
 3. Preview the draft notice listing open discrepancies with statutory clause placeholders: `[Clause reference - verify against Approval Process Handbook]`
 4. Notice prominent warning banner: `*** DRAFT DEFICIENCY NOTICE - PENDING REGIONAL OFFICER SCRUTINY & APPROVAL ***`
 5. Select language template (English, Tamil, or Hindi)
-6. Any status transition to `Rejected` requires officer confirmation, a written justification of at least 10 characters, and is cryptographically audit-logged (no automatic email dispatch).
+6. Adverse decisions are phrased as **"Recommend rejection"**; the final decision rests exclusively with the competent statutory authority. Recommending rejection requires officer confirmation, a written justification of at least 10 characters, and is cryptographically audit-logged (no automatic email dispatch).
 
 ---
 
@@ -108,7 +108,8 @@ This script walks through the key features of AICTE-Verify using the seeded synt
 - ✅ **Advisory only**: Every finding explicitly tagged "preliminary indicator — human verification required"
 - ✅ **Explainable**: Every flag has code, reason, evidence, confidence, and rule ID (no black-box ML claims)
 - ✅ **Auditable**: Every action is cryptographically chained in a SHA-256 tamper-evident audit ledger
-- ✅ **No auto-reject / No auto-dispatch**: Officers must confirm every adverse action and provide written justification
-- ✅ **Sister Campus Recognition**: Sister colleges under the same sponsoring trust sharing land or faculty are recognized as legitimate sister campuses, not flagged as collusion rings
+- ✅ **No auto-reject / No auto-dispatch**: Officers must confirm every adverse action; phrased as "Recommend rejection", final decision rests with the competent authority
+- ✅ **Sister Campus Recognition**: Sister colleges under the same sponsoring trust sharing land are recognized as legitimate sister campuses (INFO). Duplication of full-time faculty across campuses is strictly flagged as ghost faculty (HIGH within same city, CRITICAL across different cities)
 - ✅ **Simulated**: All verification services are clearly labelled SIMULATED
+- ✅ **Multilingual OCR Note**: Tamil & Hindi OCR verified inside the Docker image (`tesseract-ocr-tam`, `tesseract-ocr-hin`); not installed on Windows host
 - ✅ **Configurable**: All normative thresholds stored in JSON config files, easily updated to official Approval Process Handbook updates
