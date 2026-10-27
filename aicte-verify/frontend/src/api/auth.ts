@@ -23,13 +23,25 @@ export const authApi = {
       localStorage.setItem('aicte_token', token);
       localStorage.setItem('aicte_user', JSON.stringify(user));
       return { token, user };
-    } catch {
-      // Fallback for demonstration / local testing
+    } catch (err: any) {
+      // If server responded with an authentication rejection (401, 400, 403, 429), propagate error so user sees real message
+      if (err.response && (err.response.status === 401 || err.response.status === 400 || err.response.status === 403 || err.response.status === 429)) {
+        throw new Error(err.response.data?.detail || 'Authentication failed: Incorrect username or password.');
+      }
+
+      // Offline fallback only when backend is completely unreachable
+      const cleanUser = credentials.username.trim().toLowerCase().replace(/\s+/g, '').replace(/_/g, '');
+      const mappedUser = cleanUser.startsWith('clg') ? cleanUser.replace('clg', 'college') : credentials.username.toLowerCase();
+
       const foundUser = mockUsers.find(
         (u) =>
-          u.username.toLowerCase() === credentials.username.toLowerCase() ||
-          u.email.toLowerCase() === credentials.username.toLowerCase()
-      ) || mockUsers[0];
+          u.username.toLowerCase() === mappedUser ||
+          u.email.toLowerCase() === mappedUser
+      );
+
+      if (!foundUser) {
+        throw new Error(`User '${credentials.username}' not found. Please verify credentials or select a Quick Demo Persona.`);
+      }
 
       const mockResponse: AuthResponse = {
         token: `mock_jwt_token_${foundUser.role}_${Date.now()}`,

@@ -20,8 +20,14 @@ export const LoginPage: React.FC = () => {
     setError('');
     setIsLoading(true);
 
+    let cleanUsername = username.trim();
+    const compact = cleanUsername.toLowerCase().replace(/\s+/g, '').replace(/_/g, '');
+    if (['clg1', 'clg2', 'clg3', 'clg4', 'clg5', 'clg6'].includes(compact)) {
+      cleanUsername = compact.replace('clg', 'college');
+    }
+
     try {
-      await authApi.login({ username, password });
+      await authApi.login({ username: cleanUsername, password });
       let target = (location.state as any)?.from?.pathname;
       if (!target || target === '/login') {
         target = '/dashboard';
@@ -117,13 +123,13 @@ export const LoginPage: React.FC = () => {
             <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2 text-center">
               Quick Demo Personas (1-Click Fill)
             </p>
-            <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
               <button
                 type="button"
                 onClick={() => setDemoRole('admin', 'admin123')}
                 className="p-2 border border-rose-200 bg-rose-50 hover:bg-rose-100 rounded text-rose-900 font-semibold text-left transition"
               >
-                ⚙️ Tech Admin
+                ⚙️ Central Admin
                 <span className="block text-[10px] text-rose-600 font-normal">admin / admin123</span>
               </button>
               <button
@@ -144,11 +150,35 @@ export const LoginPage: React.FC = () => {
               </button>
               <button
                 type="button"
+                onClick={() => setDemoRole('officer3', 'officer123')}
+                className="p-2 border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 rounded text-indigo-900 font-semibold text-left transition"
+              >
+                👮 RO West (Zenith)
+                <span className="block text-[10px] text-indigo-600 font-normal">officer3 / officer123</span>
+              </button>
+              <button
+                type="button"
                 onClick={() => setDemoRole('college1', 'college123')}
                 className="p-2 border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 rounded text-emerald-900 font-semibold text-left transition"
               >
-                🏛️ College User
+                🏛️ College 1 (Apex)
                 <span className="block text-[10px] text-emerald-600 font-normal">college1 / college123</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setDemoRole('college2', 'college123')}
+                className="p-2 border border-teal-200 bg-teal-50 hover:bg-teal-100 rounded text-teal-900 font-semibold text-left transition"
+              >
+                🏛️ College 2 (Zenith)
+                <span className="block text-[10px] text-teal-600 font-normal">college2 / college123</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setDemoRole('college3', 'college123')}
+                className="p-2 border border-amber-200 bg-amber-50 hover:bg-amber-100 rounded text-amber-900 font-semibold text-left transition"
+              >
+                🏛️ College 3 (Northern)
+                <span className="block text-[10px] text-amber-600 font-normal">college3 / college123</span>
               </button>
             </div>
           </div>

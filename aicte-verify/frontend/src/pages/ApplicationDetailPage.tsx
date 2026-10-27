@@ -60,6 +60,7 @@ export const ApplicationDetailPage: React.FC = () => {
 
   // Status Change Modal State
   const [statusModalOpen, setStatusModalOpen] = useState(false);
+  const [statusModalError, setStatusModalError] = useState<string>('');
   const [targetStatus, setTargetStatus] = useState<ApplicationStatus>('under_review');
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
@@ -138,21 +139,31 @@ export const ApplicationDetailPage: React.FC = () => {
 
   const handleOpenStatusModal = (status: ApplicationStatus) => {
     setTargetStatus(status);
+    setStatusModalError('');
     setStatusModalOpen(true);
   };
 
   const handleConfirmStatusChange = async (notes?: string) => {
     if (!application) return;
     setIsUpdatingStatus(true);
+    setStatusModalError('');
     try {
       const updatedApp = await applicationsApi.updateStatus(application.id, targetStatus, notes);
-      setApplication(updatedApp);
+      setApplication((prev: any) => ({
+        ...prev,
+        ...updatedApp,
+        // Retain detailed nested collections
+        documents: prev?.documents || [],
+        flags: prev?.flags || [],
+        compliance_results: prev?.compliance_results || [],
+      }));
       // Reload timeline
       const updatedTimeline = await applicationsApi.getTimeline(appId);
       setTimeline(updatedTimeline);
       setStatusModalOpen(false);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Status update failed', err);
+      setStatusModalError(err?.message || 'Failed to update application status.');
     } finally {
       setIsUpdatingStatus(false);
     }
@@ -910,6 +921,7 @@ export const ApplicationDetailPage: React.FC = () => {
         requiresNotes={true}
         notesPlaceholder="Enter mandatory statutory remarks for the AICTE record..."
         isLoading={isUpdatingStatus}
+        errorMessage={statusModalError}
         onConfirm={handleConfirmStatusChange}
         onClose={() => setStatusModalOpen(false)}
       />

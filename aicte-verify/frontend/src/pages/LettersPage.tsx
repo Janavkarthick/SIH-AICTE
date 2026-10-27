@@ -204,10 +204,10 @@ export const LettersPage: React.FC = () => {
         {/* Ref and Date line */}
         <div className="flex justify-between text-xs font-sans mb-6 border-b border-slate-200 pb-3">
           <div>
-            <strong>F.No. AICTE/SRO/APH-2025/DEF-{(letter.application_number || letter.reference_number || String(letter.application_id || '001')).split('/').pop()}</strong>
+            <strong>F.No. AICTE/SRO/APH-2025/DEF-{(letter.application_number || (letter as any).reference_number || String((letter as any).application_id || '001')).split('/').pop()}</strong>
           </div>
           <div>
-            <strong>Date:</strong> {letter.date || letter.date_issued || new Date().toISOString().split('T')[0]}
+            <strong>Date:</strong> {letter.date || (letter as any).date_issued || new Date().toISOString().split('T')[0]}
           </div>
         </div>
 
@@ -239,7 +239,7 @@ export const LettersPage: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-300">
-              {(letter.deficiency_items || letter.items || []).map((item: any, idx: number) => (
+              {(letter.deficiency_items || (letter as any).items || []).map((item: any, idx: number) => (
                 <tr key={idx}>
                   <td className="p-2.5 border-r border-slate-300 text-center font-bold">{idx + 1}</td>
                   <td className="p-2.5 border-r border-slate-300 font-mono text-[11px]">{item.rule_id || item.clause_reference || 'APH-2025'}</td>

@@ -9,6 +9,7 @@ interface ConfirmModalProps {
   confirmVariant?: 'primary' | 'danger' | 'warning';
   requiresNotes?: boolean;
   notesPlaceholder?: string;
+  errorMessage?: string;
   onConfirm: (notes?: string) => void;
   onClose: () => void;
   isLoading?: boolean;
@@ -23,6 +24,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   confirmVariant = 'primary',
   requiresNotes = false,
   notesPlaceholder = 'Provide regulatory justification or official remarks...',
+  errorMessage = '',
   onConfirm,
   onClose,
   isLoading = false,
@@ -35,6 +37,10 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   const handleConfirm = () => {
     if (requiresNotes && !notes.trim()) {
       setError('Official justification remarks are required for this action.');
+      return;
+    }
+    if ((confirmVariant === 'danger' || title.toLowerCase().includes('reject')) && notes.trim().length < 10) {
+      setError('Statutory requirement: Official written justification must be at least 10 characters.');
       return;
     }
     setError('');
@@ -110,7 +116,12 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
                 rows={3}
                 className="w-full text-sm border border-slate-300 rounded-lg p-2.5 focus:ring-2 focus:ring-aicte-500 focus:border-aicte-500 outline-none"
               />
-              {error && <p className="text-xs text-rose-600 mt-1">{error}</p>}
+              {(error || errorMessage) && (
+                <div className="mt-2 p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-center gap-2">
+                  <span>⚠️</span>
+                  <span>{error || errorMessage}</span>
+                </div>
+              )}
             </div>
           )}
         </div>

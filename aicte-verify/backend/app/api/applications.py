@@ -219,6 +219,7 @@ async def get_application_detail(
 
 
 @router.put("/{application_id}/status", response_model=ApplicationResponse, dependencies=[Depends(role_required("officer", "admin"))])
+@router.patch("/{application_id}/status", response_model=ApplicationResponse, dependencies=[Depends(role_required("officer", "admin"))])
 async def update_application_status(
     application_id: int,
     payload: ApplicationStatusUpdate,
@@ -270,7 +271,20 @@ async def update_application_status(
         note=payload.reason,
     )
 
-    return ApplicationResponse.model_validate(app)
+    # Enrich response with institution metadata for frontend
+    inst = await db.get(Institution, app.institution_id) if app.institution_id else None
+    resp = ApplicationResponse.model_validate(app)
+    if inst:
+        reg_code = (inst.region[:3] if inst.region else "RO").upper()
+        resp.application_number = f"AICTE/{reg_code}/2025/{app.id:04d}"
+        resp.institution_name = inst.name
+        resp.region = inst.region
+        resp.state = inst.state
+    else:
+        resp.application_number = f"AICTE/RO/2025/{app.id:04d}"
+    resp.applied_intake = app.intake_applied
+    resp.approved_intake = app.current_intake
+    return resp
 
 
 @router.get("/{application_id}/validation-report", response_model=ValidationReport)
@@ -429,7 +443,20 @@ async def resubmit_application(
     await db.commit()
     await db.refresh(app)
 
-    return ApplicationResponse.model_validate(app)
+    # Enrich response with institution metadata for frontend
+    inst = await db.get(Institution, app.institution_id) if app.institution_id else None
+    resp = ApplicationResponse.model_validate(app)
+    if inst:
+        reg_code = (inst.region[:3] if inst.region else "RO").upper()
+        resp.application_number = f"AICTE/{reg_code}/2025/{app.id:04d}"
+        resp.institution_name = inst.name
+        resp.region = inst.region
+        resp.state = inst.state
+    else:
+        resp.application_number = f"AICTE/RO/2025/{app.id:04d}"
+    resp.applied_intake = app.intake_applied
+    resp.approved_intake = app.current_intake
+    return resp
 
 
 @router.get("/{application_id}/compliance")

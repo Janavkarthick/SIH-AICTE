@@ -88,6 +88,11 @@ async def seed_database(db: AsyncSession, wipe: bool = True) -> None:
         {"username": "officer2", "email": "officer.north@aicte.gov.in.simulated", "password": "officer123", "full_name": "Prof. R. K. Sharma (RO North)", "role": "officer", "region": "Northern", "institution_id": None},
         {"username": "college1", "email": "registrar@apextech.edu.simulated", "password": "college123", "full_name": "Registrar, Apex Tech", "role": "college_user", "region": "Southern", "institution_id": 1},
         {"username": "college2", "email": "dean@zenitheng.edu.simulated", "password": "college123", "full_name": "Dean Admin, Zenith Eng", "role": "college_user", "region": "Western", "institution_id": 2},
+        {"username": "officer3", "email": "officer.west@aicte.gov.in.simulated", "password": "officer123", "full_name": "Dr. A. P. Deshmukh (RO West)", "role": "officer", "region": "Western", "institution_id": None},
+        {"username": "college3", "email": "registrar@northernpoly.edu.simulated", "password": "college123", "full_name": "Registrar, Northern Poly", "role": "college_user", "region": "Northern", "institution_id": 3},
+        {"username": "college4", "email": "principal@bengalbits.edu.simulated", "password": "college123", "full_name": "Principal, Bengal BITS", "role": "college_user", "region": "Eastern", "institution_id": 4},
+        {"username": "college5", "email": "dean@deccaneng.edu.simulated", "password": "college123", "full_name": "Dean, Deccan Institute", "role": "college_user", "region": "South-Central", "institution_id": 5},
+        {"username": "college6", "email": "director@centralvalley.edu.simulated", "password": "college123", "full_name": "Director, Central Valley Engg", "role": "college_user", "region": "Central", "institution_id": 6},
     ]
 
     for u in users_data:

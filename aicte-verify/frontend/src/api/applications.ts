@@ -156,28 +156,34 @@ export const applicationsApi = {
     reason?: string
   ): Promise<Application> => {
     try {
-      const response = await apiClient.patch<Application>(`/applications/${id}/status`, {
+      const response = await apiClient.put<Application>('/applications/' + id + '/status', {
         status,
         reason,
       });
       return response.data;
-    } catch {
+    } catch (err: any) {
+      if (err.response?.data?.detail) {
+        throw new Error(err.response.data.detail);
+      }
+      if (err.message && !err.message.includes('Network Error')) {
+        throw err;
+      }
       const app = mockApplications.find((a) => a.id === id);
       if (app) {
         app.status = status;
         app.updated_at = new Date().toISOString();
         mockTimelineEvents.unshift({
-          id: `evt-${Date.now()}`,
+          id: 'evt-' + Date.now(),
           application_id: id,
           timestamp: new Date().toISOString(),
-          title: `Status Changed to ${status.replace('_', ' ').toUpperCase()}`,
-          description: reason || `Application updated by officer.`,
+          title: 'Status Changed to ' + status.replace('_', ' ').toUpperCase(),
+          description: reason || 'Application updated by officer.',
           actor: 'Authorized Officer',
           type: 'status_change'
         });
         return { ...app };
       }
-      throw new Error('Application not found');
+      throw new Error('Application status update failed');
     }
   },
 

@@ -96,7 +96,15 @@ async def login(
             detail="Username and password are required",
         )
 
-    stmt = select(User).where(User.username == username)
+    # Normalize username: trim whitespace and support shorthand aliases (e.g., clg3, clg 3 -> college3)
+    clean_user = username.strip()
+    compact = clean_user.lower().replace(" ", "").replace("_", "").replace("-", "")
+    if compact in ["clg1", "clg2", "clg3", "clg4", "clg5", "clg6"]:
+        normalized_username = compact.replace("clg", "college")
+    else:
+        normalized_username = clean_user
+
+    stmt = select(User).where((User.username == normalized_username) | (User.email == normalized_username))
     result = await db.execute(stmt)
     user = result.scalar_one_or_none()
 
