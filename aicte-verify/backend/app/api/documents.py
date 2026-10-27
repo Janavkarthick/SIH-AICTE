@@ -17,6 +17,8 @@ from app.core.database import get_db
 from app.core.security import get_current_user
 from app.models.application import Application
 from app.models.document import Document, DocumentClassification, ExtractedData
+from app.models.flag import Flag
+from app.services.risk.service import risk_service
 from app.models.user import User
 from app.schemas.document import (
     DocumentDetailResponse,
@@ -101,8 +103,63 @@ async def process_document_pipeline(
         )
         db.add(ext_entry)
 
+    # 4. Forensic Document Inspection & Automated Flag Generation
+    forensic_res = forensics_service.analyze_document(
+        document_id=doc.id,
+        file_path=doc.file_path,
+        page_image_path=rendered_page,
+    )
+
+    code_map = {
+        "PDF Metadata Inspection": "FOR-METADATA-EDITOR",
+        "Font Consistency Analysis": "FOR-FONT-SPLICE",
+        "Digital Signature Verification": "FOR-SIG-INVALID",
+        "Cross-Application Hash Matching": "FOR-DUP-HASH",
+        "Error Level Analysis (ELA)": "FOR-ELA-TAMPER",
+        "Copy-Move Tampering Detection": "FOR-COPY-MOVE",
+    }
+
+    all_findings = (
+        forensic_res.metadata_checks
+        + forensic_res.font_consistency
+        + forensic_res.image_forensics
+        + forensic_res.digital_signature
+        + forensic_res.duplicate_checks
+        + ([forensic_res.qr_match_check] if forensic_res.qr_match_check else [])
+    )
+
+    for finding in all_findings:
+        if getattr(finding, "status", "") == "flagged" and getattr(finding, "severity", "") in ["low", "medium", "high", "critical"]:
+            check_label = getattr(finding, "check", "Forensic Inspection")
+            code = code_map.get(check_label, "FOR-GENERIC")
+            flag = Flag(
+                application_id=doc.application_id,
+                document_id=doc.id,
+                flag_type="forensic",
+                severity=finding.severity,
+                code=code,
+                title=check_label,
+                reason=finding.reason or finding.details or "Forensic anomaly detected in document inspection.",
+                confidence=0.88,
+                rule_id=f"FORENSIC-{code}",
+                check_name=check_label,
+                is_resolved=False,
+            )
+            db.add(flag)
+
     doc.status = "processed"
     await db.commit()
+
+    # 5. Dynamic Application Risk Score Recalculation
+    flags_stmt = select(Flag).where(Flag.application_id == doc.application_id, Flag.is_resolved == False)
+    app_flags = list((await db.execute(flags_stmt)).scalars().all())
+    breakdown = risk_service.compute_risk(app_flags)
+    app = await db.get(Application, doc.application_id)
+    if app:
+        app.risk_score = getattr(breakdown, 'risk_score', 50.0)
+        app.risk_level = getattr(breakdown, 'risk_level', 'Medium')
+        app.risk_breakdown = breakdown.model_dump_json() if hasattr(breakdown, 'model_dump_json') else json.dumps(breakdown)
+        await db.commit()
 
 
 @router.post("/upload", response_model=DocumentResponse, status_code=status.HTTP_201_CREATED)

@@ -903,6 +903,7 @@ export const ApplicationDetailPage: React.FC = () => {
       {selectedFlagForEvidence && (
         <EvidenceViewer
           flag={selectedFlagForEvidence}
+          document={documents.find((d) => String(d.id) === String(selectedFlagForEvidence.document_id))}
           onClose={() => setSelectedFlagForEvidence(null)}
         />
       )}

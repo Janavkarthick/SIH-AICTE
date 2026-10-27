@@ -129,39 +129,154 @@ export const EvidenceViewer: React.FC<EvidenceViewerProps> = ({ flag, document, 
                 height: `${800 * (zoomLevel / 100)}px`,
               }}
             >
-              {/* Layer 1: Simulated High-Res Document Scan */}
+              {/* Layer 1: Dynamic High-Res Document Scan Matching Specific Flag */}
               <div className="absolute inset-0 p-8 flex flex-col justify-between text-slate-800 bg-[#fdfdfc] font-serif select-none pointer-events-none">
-                <div>
-                  <div className="text-center border-b-2 border-slate-900 pb-4">
-                    <p className="text-[10px] uppercase tracking-widest text-slate-500 font-sans">
-                      Government of Tamil Nadu • Registration Department
-                    </p>
-                    <h2 className="text-lg font-bold uppercase mt-1">
-                      Deed of Absolute Title Conveyance & Trust Endorsement
-                    </h2>
-                    <p className="text-xs italic mt-0.5">
-                      Sub-Registrar Office, Pollachi • Document No. 8421/2018
-                    </p>
-                  </div>
+                {/* 1. Fire Safety / Expiry Flag */}
+                {(flag.code.includes('EXPIRED') || flag.code === 'VER-EXPIRED' || flag.title.toLowerCase().includes('fire')) && (
+                  <div>
+                    <div className="text-center border-b-2 border-slate-900 pb-4">
+                      <p className="text-[10px] uppercase tracking-widest text-slate-500 font-sans">
+                        Department of Fire & Emergency Services • Fire Safety Wing
+                      </p>
+                      <h2 className="text-lg font-bold uppercase mt-1">
+                        Fire Safety Clearance & Life Safety Certificate
+                      </h2>
+                      <p className="text-xs italic mt-0.5">
+                        Certificate Reference: CFD/2023/FS-1042-EXPIRED • Issuing Circle #4
+                      </p>
+                    </div>
 
-                  <div className="mt-6 space-y-3 text-xs leading-relaxed font-mono">
-                    <p>
-                      THIS DEED OF CONVEYANCE made this twelfth day of June 2018 between the vendor and the
-                      purchaser SRI KRISHNA EDUCATIONAL AND CHARITABLE TRUST for the dedicated purpose of
-                      operating an institution of higher technical education.
-                    </p>
-                    <p>
-                      SCHEDULE OF PROPERTY: District: Coimbatore, Taluk: Pollachi, Village: Achipatti.
-                      Old Survey No. 412, Resurvey No. <span className="bg-amber-100 font-bold px-1">412/A-1</span>{' '}
-                      comprising an extent of 7.50 Acres bounded on the North by S.F. No. 411 and South by Canal.
-                    </p>
-                    <p>
-                      Encumbrance Nil. The vendor confirms uninterrupted contiguous possession and
-                      DTCP educational conversion sanction.
-                    </p>
+                    <div className="mt-6 space-y-3 text-xs leading-relaxed font-mono">
+                      <p>
+                        This is to certify that the institutional building premises comprising instructional, administrative, and amenity blocks have undergone statutory fire inspection.
+                      </p>
+                      <div className="p-3 bg-rose-50 border border-rose-300 rounded text-rose-900 space-y-1">
+                        <p><strong>Inspection Date:</strong> 10-January-2023</p>
+                        <p>
+                          <strong>Statutory Validity Expiry:</strong>{' '}
+                          <span className="bg-rose-200 text-rose-900 font-bold px-1.5 py-0.5 rounded border border-rose-400">
+                            09-January-2024 [EXPIRED - LAPSED]
+                          </span>
+                        </p>
+                        <p><strong>AICTE Submission Date:</strong> 10-April-2025</p>
+                      </div>
+                      <p>
+                        REGULATORY DEFICIENCY: Certificate expired 457 days prior to application submission. The statutory 30-day grace window has lapsed. A renewed No Objection Certificate (NOC) is mandatory.
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
 
+                {/* 2. Intake Hike / Growth Cap Flag */}
+                {(flag.code.includes('INTAKE') || flag.title.toLowerCase().includes('intake')) && (
+                  <div>
+                    <div className="text-center border-b-2 border-slate-900 pb-4">
+                      <p className="text-[10px] uppercase tracking-widest text-slate-500 font-sans">
+                        All India Council for Technical Education • Scrutiny Bureau
+                      </p>
+                      <h2 className="text-lg font-bold uppercase mt-1">
+                        Regulatory Schedule of Student Intake & Cadre Ratios
+                      </h2>
+                      <p className="text-xs italic mt-0.5">
+                        Application Form Schedule 3 • AY 2025-2026 Regulatory Filing
+                      </p>
+                    </div>
+
+                    <div className="mt-6 space-y-3 text-xs leading-relaxed font-mono">
+                      <p>
+                        The applicant institution requests approval for student enrollment capacity under Chapter II (Extension of Approval / Variation in Intake):
+                      </p>
+                      <div className="p-3 bg-amber-50 border border-amber-300 rounded text-amber-900 space-y-1">
+                        <p><strong>Current Approved Base Intake:</strong> 420 Seats</p>
+                        <p>
+                          <strong>Applied New Student Intake:</strong>{' '}
+                          <span className="bg-amber-200 text-amber-900 font-bold px-1.5 py-0.5 rounded border border-amber-400">
+                            600 Seats (+180 seats / +42.8% surge)
+                          </span>
+                        </p>
+                        <p><strong>AICTE Statutory Expansion Limit:</strong> Max +60 seats or 20% annual increase</p>
+                      </div>
+                      <p>
+                        FINDING: Requested intake expansion exceeds the annual regulatory ceiling of +60 seats. Available faculty and built-up instructional space do not meet teacher-student norms.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* 3. Ghost Faculty Flag */}
+                {(flag.code.includes('FACULTY') || flag.title.toLowerCase().includes('faculty')) && (
+                  <div>
+                    <div className="text-center border-b-2 border-slate-900 pb-4">
+                      <p className="text-[10px] uppercase tracking-widest text-slate-500 font-sans">
+                        Institutional Regulatory Roster • Statutory Faculty Declaration
+                      </p>
+                      <h2 className="text-lg font-bold uppercase mt-1">
+                        Declaration of Regular Full-Time Teaching Staff
+                      </h2>
+                      <p className="text-xs italic mt-0.5">
+                        Form A-7: Cadre Compliance & Statutory Payroll Audit AY 2025-26
+                      </p>
+                    </div>
+
+                    <div className="mt-6 space-y-3 text-xs leading-relaxed font-mono">
+                      <p>
+                        The following faculty member is solemnly declared under oath as a full-time, regular teaching staff member:
+                      </p>
+                      <div className="p-3 bg-rose-50 border border-rose-300 rounded text-rose-900 space-y-1">
+                        <p>
+                          <strong>Faculty Name:</strong>{' '}
+                          <span className="bg-rose-200 text-rose-900 font-bold px-1.5 py-0.5 rounded border border-rose-400">
+                            Dr. Vikram Singh (Unique ID: FAC011)
+                          </span>
+                        </p>
+                        <p><strong>Designation:</strong> Professor & Head, Computer Science</p>
+                        <p><strong>PAN:</strong> ABCPS8821K | <strong>Biometric ID:</strong> BIO-99201</p>
+                        <p><strong>Declared Status:</strong> Full-Time Regular (100% Academic Load)</p>
+                      </div>
+                      <p>
+                        COLLUSION ANOMALY: Automated cross-registry graph analysis identified concurrent active full-time payroll listings in Pune and Chennai for the same academic cycle.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* 4. Land Document / Duplication / Title Deed (Default) */}
+                {(!flag.code.includes('EXPIRED') && !flag.code.includes('INTAKE') && !flag.code.includes('FACULTY') && !flag.title.toLowerCase().includes('fire') && !flag.title.toLowerCase().includes('intake') && !flag.title.toLowerCase().includes('faculty')) && (
+                  <div>
+                    <div className="text-center border-b-2 border-slate-900 pb-4">
+                      <p className="text-[10px] uppercase tracking-widest text-slate-500 font-sans">
+                        Government Registration Department • Land Revenue Authority
+                      </p>
+                      <h2 className="text-lg font-bold uppercase mt-1">
+                        Deed of Absolute Title Conveyance & Land Endorsement
+                      </h2>
+                      <p className="text-xs italic mt-0.5">
+                        Sub-Registrar Office • Document No. 8421/2018 • Permanent Title Deed
+                      </p>
+                    </div>
+
+                    <div className="mt-6 space-y-3 text-xs leading-relaxed font-mono">
+                      <p>
+                        THIS DEED OF CONVEYANCE confirms absolute possession and title of property for the dedicated establishment and operation of a technical campus:
+                      </p>
+                      <div className="p-3 bg-amber-50 border border-amber-300 rounded text-amber-900 space-y-1">
+                        <p>
+                          <strong>SCHEDULE OF PROPERTY:</strong> Survey Parcel No.{' '}
+                          <span className="bg-amber-200 text-amber-900 font-bold px-1.5 py-0.5 rounded border border-amber-400">
+                            441/2 (Old SF #412/A-1)
+                          </span>
+                        </p>
+                        <p><strong>Total Contiguous Land Extent:</strong> 10.50 Acres</p>
+                        <p><strong>Enrolled Trust:</strong> Sri Krishna Educational & Charitable Trust</p>
+                      </div>
+                      <p>
+                        FINDING: Cross-institution knowledge graph flagged this parcel as concurrently registered in multiple independent institution filings across unrelated trusts.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Bottom Authority Seal */}
                 <div className="border-t border-slate-400 pt-4 flex justify-between items-end text-xs font-sans">
                   <div>
                     <div className="w-24 h-12 border border-slate-400 rounded flex items-center justify-center text-[10px] text-slate-400">
@@ -170,8 +285,8 @@ export const EvidenceViewer: React.FC<EvidenceViewerProps> = ({ flag, document, 
                     <span className="text-[10px] text-slate-500 block mt-1">Registrar Stamp #88192</span>
                   </div>
                   <div className="text-right">
-                    <span className="italic text-slate-600 block">Digitally Signed & Sealed</span>
-                    <span className="font-bold">Sub-Registrar, Pollachi</span>
+                    <span className="italic text-slate-600 block">Digitally Signed & Verified</span>
+                    <span className="font-bold">Authorized AICTE Regulatory Registry</span>
                   </div>
                 </div>
               </div>
